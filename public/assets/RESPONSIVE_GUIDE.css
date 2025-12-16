@@ -1,0 +1,173 @@
+/* ============================================
+   RESPONSIVE BREAKPOINTS QUICK REFERENCE
+   ============================================ */
+
+/*
+  DEVICE BREAKPOINTS:
+  
+  📱 Extra Small Mobile (< 375px)
+     - Smallest phones
+     - Font sizes: 9vw (h2), 3.5vw (menu)
+     - 2 column product grid
+     - Stacked layout
+  
+  📱 Mobile Portrait (320px - 575px)
+     - Standard mobile phones
+     - Font sizes: 8vw (h2), 3vw (menu)
+     - 2 column product grid
+     - Vertical navigation
+     - Centered content
+  
+  📱 Mobile Landscape / Small Tablet (576px - 767px)
+     - Phones in landscape
+     - Small tablets
+     - Font sizes: 6vw (h2), 2vw (menu)
+     - 2 column product grid
+     - Horizontal scrolling menu
+  
+  📱 Tablet Portrait (768px - 991px)
+     - iPads, Android tablets
+     - Font sizes: 5vw (h2), 1.6vw (menu)
+     - 3 column product grid
+     - Wrapped navigation
+     - Stacked banner content
+  
+  💻 Laptop / Tablet Landscape (992px - 1199px)
+     - Small laptops
+     - Tablets in landscape
+     - Font sizes: 4.5vw (h2), 1.4vw (menu)
+     - 4 column product grid
+     - Side-by-side banner content
+  
+  💻 Desktop (1200px - 1399px)
+     - Standard desktops
+     - Font sizes: 4vw (h2)
+     - 5 column product grid
+     - Full navigation
+  
+  🖥️ Large Desktop (1400px+)
+     - Large monitors
+     - Max width: 1400px
+     - Optimal spacing
+     - 5 column product grid
+  
+  🔄 Landscape Orientation (height < 500px)
+     - Any device in landscape with short height
+     - Reduced vertical spacing
+     - Compact header
+     - Optimized carousel height
+*/
+
+/* ============================================
+   PERCENTAGE-BASED UNITS USED:
+   ============================================ */
+
+/*
+  WIDTH & SPACING:
+  - Wrapper: 90-95% (responsive to screen)
+  - Gaps: 2-5% (proportional spacing)
+  - Padding: 2-12% (context-dependent)
+  
+  TYPOGRAPHY:
+  - Headings: 4-9vw (viewport width)
+  - Body text: 1.4-4.5vw (viewport width)
+  - Buttons: 1.8-4.5vw (viewport width)
+  
+  LAYOUT:
+  - Grid columns: fr units (flexible)
+  - Heights: vh units or auto
+  - Max-widths: px for readability
+  
+  IMAGES:
+  - Width: 100% (container-based)
+  - Height: auto (maintain aspect ratio)
+  - Object-fit: cover/contain
+*/
+
+/* ============================================
+   KEY RESPONSIVE FEATURES:
+   ============================================ */
+
+/*
+  ✅ Fluid Typography
+     - Uses vw units for scalable text
+     - Maintains readability across devices
+  
+  ✅ Flexible Grids
+     - Product grid: 5 → 4 → 3 → 2 columns
+     - Category grid: wraps on mobile
+     - Media grid: stacks vertically
+  
+  ✅ Adaptive Navigation
+     - Desktop: Full horizontal menu
+     - Tablet: Wrapped menu
+     - Mobile: Scrollable menu
+  
+  ✅ Responsive Images
+     - Max-width: 100%
+     - Height: auto
+     - Object-fit for cropping
+  
+  ✅ Touch-Friendly
+     - Larger tap targets on mobile
+     - Adequate spacing between elements
+     - Easy-to-reach buttons
+  
+  ✅ Performance
+     - Mobile-first approach
+     - Progressive enhancement
+     - Optimized media queries
+*/
+
+/* ============================================
+   TESTING CHECKLIST:
+   ============================================ */
+
+/*
+  Common Device Sizes to Test:
+  
+  Mobile:
+  □ iPhone SE (375 x 667)
+  □ iPhone 12/13/14 (390 x 844)
+  □ iPhone 14 Pro Max (430 x 932)
+  □ Samsung Galaxy S21 (360 x 800)
+  □ Pixel 5 (393 x 851)
+  
+  Tablet:
+  □ iPad Mini (768 x 1024)
+  □ iPad Air (820 x 1180)
+  □ iPad Pro 11" (834 x 1194)
+  □ iPad Pro 12.9" (1024 x 1366)
+  
+  Desktop:
+  □ 1366 x 768 (Common laptop)
+  □ 1920 x 1080 (Full HD)
+  □ 2560 x 1440 (2K)
+  □ 3840 x 2160 (4K)
+  
+  Orientation:
+  □ Portrait mode
+  □ Landscape mode
+*/
+
+/* ============================================
+   BROWSER DEV TOOLS:
+   ============================================ */
+
+/*
+  Chrome DevTools:
+  1. Press F12 or Cmd+Option+I (Mac)
+  2. Click device toolbar icon (Cmd+Shift+M)
+  3. Select device from dropdown
+  4. Test different sizes
+  
+  Firefox DevTools:
+  1. Press F12 or Cmd+Option+I (Mac)
+  2. Click responsive design mode (Cmd+Option+M)
+  3. Choose device or custom size
+  
+  Safari DevTools:
+  1. Enable Developer menu in Preferences
+  2. Develop → Enter Responsive Design Mode
+  3. Select device preset
+*/
