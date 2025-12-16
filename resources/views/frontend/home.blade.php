@@ -60,7 +60,11 @@
             <h2>Category</h2>
             <div class="cat-list">
                 @foreach($categories as $category)
-                <a href="{{ route('home', ['category_id' => $category->id]) }}" class="cat-item {{ isset($selectedCategory) && $selectedCategory->id == $category->id ? 'active' : '' }}" style="text-decoration: none; color: inherit;">
+                <a href="#" 
+                   class="cat-item {{ $loop->first ? 'active' : '' }}" 
+                   data-id="{{ $category->id }}"
+                   data-slug="{{ $category->slug }}"
+                   onclick="loadCategory(event, this)">
                     <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" />
                     <h3>{{ $category->name }}</h3>
                 </a>
@@ -69,22 +73,64 @@
         </div>
         <div class="product">
             <div class="wrapper">
-                <div class="product-list">
-                    @forelse($products as $product)
-                    <div class="product-item">
-                        <img src="{{ asset($product->main_image) }}" alt="{{ $product->product_name }}" />
-                        <p><span>₹</span>{{ $product->price ?? '--' }}</p>
-                    </div>
-                    @empty
-                    <p style="width: 100%; text-align: center;">No products found.</p>
-                    @endforelse
+                <div class="product-list" id="product-container">
+                    @include('frontend.partials.product_loop', ['products' => $products])
                 </div>
+                <!-- Loader -->
+                <div id="product-loader" style="display: none; text-align: center; width: 100%; padding: 20px;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
                 <div class="explore-btn">
-                    <a href="#">Explore More</a>
+                    <a href="{{ route('category.show', ['slug' => $selectedCategory->slug ?? '#']) }}" id="explore-more-btn">Explore More</a>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function loadCategory(event, element) {
+            event.preventDefault();
+            
+            // Remove active class from all
+            document.querySelectorAll('.cat-item').forEach(el => el.classList.remove('active'));
+            // Add to clicked
+            element.classList.add('active');
+
+            const categoryId = element.getAttribute('data-id');
+            const container = document.getElementById('product-container');
+            const loader = document.getElementById('product-loader');
+            const exploreBtn = document.getElementById('explore-more-btn');
+            
+            container.style.opacity = '0.5';
+            loader.style.display = 'block';
+
+            fetch(`{{ route('ajax.products') }}?category_id=${categoryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    container.innerHTML = data.html;
+                    container.style.opacity = '1';
+                    loader.style.display = 'none';
+                    
+                    // Update Explore More Link
+                    if(data.category_slug && data.category_slug !== '#') {
+                        // We need the base URL structure.
+                        // Simplest way: construct it or pass full url from backend.
+                        // Let's use a JS variable for route pattern if this was complex, 
+                        // but here we can just append if we know the root.
+                        // Better: Use the category_slug from response.
+                        exploreBtn.href = "{{ url('/category') }}/" + data.category_slug;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    container.style.opacity = '1';
+                    loader.style.display = 'none';
+                });
+        }
+    </script>
 
     <div class="beginning-section">
         <h2>For Every Beginning</h2>

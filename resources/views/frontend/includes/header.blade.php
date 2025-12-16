@@ -7,7 +7,7 @@
         <div class="main">
             <div class="wrapper">
                 <div class="logo">
-                    <img src="assets/images/logo.png" alt="Logo" />
+                    <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" />
                 </div>
                 <div class="actions">
                     <a href="#" class="icon-btn"><i class="fi fi-rr-search"></i></a>
