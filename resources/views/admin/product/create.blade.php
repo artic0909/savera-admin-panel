@@ -30,7 +30,7 @@
                                 <select name="category_id" class="form-select" required>
                                     <option value="">Select Category</option>
                                     @foreach($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -44,7 +44,7 @@
                                 <label class="form-label">Available Pincodes</label>
                                 <select name="available_pincodes[]" class="form-select" multiple>
                                     @foreach($pincodes as $pincode)
-                                        <option value="{{ $pincode->id }}">{{ $pincode->code }}</option>
+                                    <option value="{{ $pincode->id }}">{{ $pincode->code }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -53,7 +53,7 @@
                                 <label class="form-label">Colors</label>
                                 <select name="colors[]" class="form-select" multiple>
                                     @foreach($colors as $color)
-                                        <option value="{{ $color->id }}">{{ $color->color_name }}</option>
+                                    <option value="{{ $color->id }}">{{ $color->color_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -98,6 +98,7 @@
 <template id="metal-config-template">
     <div class="card mb-3 metal-config-row">
         <div class="card-body border">
+            <input type="hidden" name="metal_configurations[INDEX][id]" value="NEW_ID">
 
             <div class="row mb-2">
                 <div class="col-md-3">
@@ -105,7 +106,7 @@
                     <select name="metal_configurations[INDEX][material_id]" class="form-select" required>
                         <option value="">Select</option>
                         @foreach($materials as $material)
-                            <option value="{{ $material->id }}">{{ $material->name }}</option>
+                        <option value="{{ $material->id }}">{{ $material->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -114,7 +115,7 @@
                     <label class="form-label">Size</label>
                     <select name="metal_configurations[INDEX][size_id]" class="form-select" required>
                         @foreach($sizes as $size)
-                            <option value="{{ $size->id }}">{{ $size->size_name }}</option>
+                        <option value="{{ $size->id }}">{{ $size->size_name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -197,49 +198,50 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
 
-    const metalContainer = document.getElementById('metal-configs');
-    const metalTemplate = document.getElementById('metal-config-template').innerHTML;
-    const diamondTemplate = document.getElementById('diamond-template').innerHTML;
+        const metalContainer = document.getElementById('metal-configs');
+        const metalTemplate = document.getElementById('metal-config-template').innerHTML;
+        const diamondTemplate = document.getElementById('diamond-template').innerHTML;
 
-    document.getElementById('add-metal-config').addEventListener('click', function () {
+        document.getElementById('add-metal-config').addEventListener('click', function() {
 
-        const index = metalContainer.children.length;
-        let html = metalTemplate.replace(/INDEX/g, index);
+            const index = metalContainer.children.length;
+            const newId = 'mc_' + Date.now();
+            let html = metalTemplate.replace(/INDEX/g, index).replace(/NEW_ID/g, newId);
 
-        const temp = document.createElement('div');
-        temp.innerHTML = html;
-        const metalRow = temp.firstElementChild;
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            const metalRow = temp.firstElementChild;
 
-        metalRow.querySelector('.remove-metal').onclick = () => metalRow.remove();
+            metalRow.querySelector('.remove-metal').onclick = () => metalRow.remove();
 
-        const checkbox = metalRow.querySelector('.use-diamond');
-        const diamondSection = metalRow.querySelector('.diamond-section');
-        const diamondContainer = metalRow.querySelector('.diamond-rows');
+            const checkbox = metalRow.querySelector('.use-diamond');
+            const diamondSection = metalRow.querySelector('.diamond-section');
+            const diamondContainer = metalRow.querySelector('.diamond-rows');
 
-        checkbox.onchange = () => {
-            diamondSection.style.display = checkbox.checked ? 'block' : 'none';
-        };
+            checkbox.onchange = () => {
+                diamondSection.style.display = checkbox.checked ? 'block' : 'none';
+            };
 
-        metalRow.querySelector('.add-diamond').onclick = () => {
-            const dIndex = diamondContainer.children.length;
-            let dHtml = diamondTemplate
-                .replace(/METAL/g, index)
-                .replace(/DIAMOND/g, dIndex);
+            metalRow.querySelector('.add-diamond').onclick = () => {
+                const dIndex = diamondContainer.children.length;
+                let dHtml = diamondTemplate
+                    .replace(/METAL/g, index)
+                    .replace(/DIAMOND/g, dIndex);
 
-            const dTemp = document.createElement('div');
-            dTemp.innerHTML = dHtml;
+                const dTemp = document.createElement('div');
+                dTemp.innerHTML = dHtml;
 
-            const dRow = dTemp.firstElementChild;
-            dRow.querySelector('.remove-diamond').onclick = () => dRow.remove();
+                const dRow = dTemp.firstElementChild;
+                dRow.querySelector('.remove-diamond').onclick = () => dRow.remove();
 
-            diamondContainer.appendChild(dRow);
-        };
+                diamondContainer.appendChild(dRow);
+            };
 
-        metalContainer.appendChild(metalRow);
+            metalContainer.appendChild(metalRow);
+        });
+
     });
-
-});
 </script>
 @endpush
