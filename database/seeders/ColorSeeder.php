@@ -13,11 +13,9 @@ class ColorSeeder extends Seeder
     public function run(): void
     {
         $colors = [
-            'Yellow Gold',
-            'White Gold',
             'Rose Gold',
             'Silver',
-            'Platinum',
+            'Gold',
         ];
 
         foreach ($colors as $color) {
