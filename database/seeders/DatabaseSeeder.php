@@ -37,5 +37,16 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ColorSeeder::class,
         ]);
+
+        $this->call([
+            SizeSeeder::class,
+        ]);
+
+        $this->call([
+            PincodeSeeder::class,
+            
+        ]);
+
+
     }
 }
