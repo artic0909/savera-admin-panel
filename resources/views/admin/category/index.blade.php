@@ -58,7 +58,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($categories as $category)
+                                    @forelse ($categories as $category)
                                     <tr>
                                         <th scope="row">{{ $loop->iteration }}</th>
                                         <td><img src="{{ asset($category->image) }}" width="50" height="50"></td>
@@ -68,7 +68,13 @@
                                             <a href="{{ route('admin.categories.delete', $category->id) }}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{$category->id}}">Delete</a>
                                         </td>
                                     </tr>
-                                    @endforeach
+                                    @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center text-danger fw-bold">
+                                            No record found
+                                        </td>
+                                    </tr>
+                                    @endforelse
                                 </tbody>
 
                                 <!-- Pagination Section -->

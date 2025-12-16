@@ -58,17 +58,28 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($materials as $material)
+                                    @forelse ($materials as $material)
                                     <tr>
                                         <th scope="row">{{ $loop->iteration }}</th>
                                         <td>{{ $material->name }}</td>
                                         <td>{{ $material->price }}</td>
                                         <td>
-                                            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{$material->id}}">Edit</a>
-                                            <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{$material->id}}">Delete</a>
+                                            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{$material->id}}">
+                                                Edit
+                                            </a>
+                                            <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{$material->id}}">
+                                                Delete
+                                            </a>
                                         </td>
                                     </tr>
-                                    @endforeach
+                                    @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center text-danger fw-bold">
+                                            No record found
+                                        </td>
+                                    </tr>
+                                    @endforelse
+
                                 </tbody>
 
                                 <!-- Pagination Section -->
@@ -172,7 +183,7 @@
     <div class="modal-dialog">
         <form method="POST" action="{{ route('admin.materials.update', $material->id) }}" class="modal-content">
             @csrf
-            
+
             <div class="modal-header">
                 <h5 class="modal-title">Edit Material</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -186,7 +197,7 @@
                 </div>
                 <!-- Price -->
                 <div class="mb-3">
-                    <label class="form-label">Price  (1 gm)</label>
+                    <label class="form-label">Price (1 gm)</label>
                     <input type="number" step="0.01" name="price" class="form-control" value="{{$material->price}}" required>
                 </div>
             </div>

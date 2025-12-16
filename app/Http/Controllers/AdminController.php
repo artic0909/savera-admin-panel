@@ -61,9 +61,6 @@ class AdminController extends Controller
 
 
 
-
-
-
     // Admin Category ==================================================================================================================================>
     public function adminCategoriesView()
     {
@@ -190,6 +187,68 @@ class AdminController extends Controller
     }
 
 
+    // Material ==================================================================================================================================>
+    public function adminMaterialsView()
+    {
+        $materials = Material::orderBy('id', 'desc')->paginate(10);
+        return view('admin.material.index', compact('materials'));
+    }
+
+    public function materialStore(Request $request)
+    {
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'price' => 'required|numeric',
+            ]);
+
+            Material::create([
+                'name' => $request->name,
+                'price' => $request->price,
+            ]);
+
+            return redirect()->back()->with('success', 'Material added successfully');
+        } catch (\Exception $e) {
+            Log::error('Material Store Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong!');
+        }
+    }
+
+    public function materialUpdate(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'price' => 'required|numeric',
+            ]);
+
+            $material = Material::findOrFail($id);
+            $material->update([
+                'name' => $request->name,
+                'price' => $request->price,
+            ]);
+
+            return redirect()->back()->with('success', 'Material updated successfully');
+        } catch (\Exception $e) {
+            Log::error('Material Update Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong!');
+        }
+    }
+
+    public function materialDelete($id)
+    {
+        try {
+            $material = Material::findOrFail($id);
+            $material->delete();
+
+            return redirect()->back()->with('success', 'Material deleted successfully');
+        } catch (\Exception $e) {
+            Log::error('Material Delete Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong!');
+        }
+    }
+
+
     // Admin Products ==================================================================================================================================>
     public function addProductView()
     {
@@ -254,66 +313,4 @@ class AdminController extends Controller
             return redirect()->back()->with('error', 'Something went wrong. Please try again.');
         }
     }
-
-    // Material ==================================================================================================================================>
-    public function adminMaterialsView()
-    {
-        $materials = Material::orderBy('id', 'desc')->paginate(10);
-        return view('admin.material.index', compact('materials'));
-    }
-
-    public function materialStore(Request $request)
-    {
-        try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'price' => 'required|numeric',
-            ]);
-
-            Material::create([
-                'name' => $request->name,
-                'price' => $request->price,
-            ]);
-
-            return redirect()->back()->with('success', 'Material added successfully');
-        } catch (\Exception $e) {
-            Log::error('Material Store Error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Something went wrong!');
-        }
-    }
-
-    public function materialUpdate(Request $request, $id)
-    {
-        try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'price' => 'required|numeric',
-            ]);
-
-            $material = Material::findOrFail($id);
-            $material->update([
-                'name' => $request->name,
-                'price' => $request->price,
-            ]);
-
-            return redirect()->back()->with('success', 'Material updated successfully');
-        } catch (\Exception $e) {
-            Log::error('Material Update Error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Something went wrong!');
-        }
-    }
-
-    public function materialDelete($id)
-    {
-        try {
-            $material = Material::findOrFail($id);
-            $material->delete();
-
-            return redirect()->back()->with('success', 'Material deleted successfully');
-        } catch (\Exception $e) {
-            Log::error('Material Delete Error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Something went wrong!');
-        }
-    }
 }
-
