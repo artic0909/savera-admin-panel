@@ -135,11 +135,11 @@
         <div class="row align-items-end mb-2">
              <div class="col-md-2">
                 <label class="form-label">Making Charge</label>
-                <input type="number" step="0.01" name="metal_configurations[METAL_ID][INDEX][making_charge]" class="form-control" required>
+                <input type="text" name="metal_configurations[METAL_ID][INDEX][making_charge]" class="form-control" required>
             </div>
             <div class="col-md-2">
                 <label class="form-label">GST %</label>
-                <input type="number" step="0.01" name="metal_configurations[METAL_ID][INDEX][gst_percentage]" class="form-control" required>
+                <input type="text" name="metal_configurations[METAL_ID][INDEX][gst_percentage]" class="form-control" required>
             </div>
              <div class="col-md-3">
                 <div class="form-check mt-4">
@@ -181,7 +181,7 @@
             <input type="text" name="metal_configurations[METAL_ID][METAL_INDEX][diamond_info][DIAMOND_INDEX][clarity]" class="form-control form-control-sm" required>
         </div>
         <div class="col-md-2">
-            <label class="form-label text-xs">Shape</label>
+            <label class="form-label text-xs">Cut</label>
             <input type="text" name="metal_configurations[METAL_ID][METAL_INDEX][diamond_info][DIAMOND_INDEX][shape]" class="form-control form-control-sm" required>
         </div>
         <div class="col-md-1">
@@ -190,7 +190,7 @@
         </div>
         <div class="col-md-2">
             <label class="form-label text-xs">Total Wt(gm)</label>
-            <input type="number" step="0.001" name="metal_configurations[METAL_ID][METAL_INDEX][diamond_info][DIAMOND_INDEX][total_weight]" class="form-control form-control-sm" required>
+            <input type="text" name="metal_configurations[METAL_ID][METAL_INDEX][diamond_info][DIAMOND_INDEX][total_weight]" class="form-control form-control-sm" required>
         </div>
         <div class="col-md-1">
             <button type="button" class="btn btn-danger btn-xs remove-diamond-row">x</button>
@@ -214,7 +214,7 @@
             <input type="text" name="diamond_gemstone_info[INDEX][clarity]" class="form-control" required>
         </div>
         <div class="col-md-2">
-            <label class="form-label">Shape/Cut</label>
+            <label class="form-label">Cut</label>
             <input type="text" name="diamond_gemstone_info[INDEX][shape]" class="form-control" required>
         </div>
         <div class="col-md-2">
@@ -223,7 +223,7 @@
         </div>
         <div class="col-md-1">
             <label class="form-label">Total Wt (gm)</label>
-            <input type="number" step="0.001" name="diamond_gemstone_info[INDEX][total_weight]" class="form-control" required>
+            <input type="text" name="diamond_gemstone_info[INDEX][total_weight]" class="form-control" required>
         </div>
         <div class="col-md-1">
             <button type="button" class="btn btn-danger btn-sm remove-row">X</button>

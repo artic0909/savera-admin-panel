@@ -44,7 +44,7 @@
         <div class="d-flex justify-content-between align-items-start">
             <div>
                 <h4 class="fw-bold text-dark mb-1">{{ $product->product_name }}</h4>
-                <div class="text-muted small">SKU: #{{ $product->id }} | Product ID: {{ $product->id }}</div>
+                <div class="text-muted small">Product ID: {{ $product->id }}</div>
             </div>
             <span class="badge bg-label-primary fs-6">{{ $product->category->name ?? 'Uncategorized' }}</span>
         </div>
@@ -194,7 +194,7 @@
                                                         <table class="table table-sm table-bordered table-striped mb-0 text-xs">
                                                             <thead class="table-light">
                                                                 <tr>
-                                                                    <th class="px-2 py-1">Shape</th>
+                                                                    <th class="px-2 py-1">Cut</th>
                                                                     <th class="px-2 py-1">Size</th>
                                                                     <th class="px-2 py-1">Col/Clar</th>
                                                                     <th class="px-2 py-1 text-center">Qty</th>
