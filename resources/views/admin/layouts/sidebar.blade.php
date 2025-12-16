@@ -4,7 +4,7 @@
             <span class="app-brand-logo demo">
                 <img src="{{ asset('./img/rupee.png') }}" width="50px" alt="" />
             </span>
-            <span class="app-brand-text demo menu-text fw-bolder ms-2" style="text-transform: capitalize">RCPL</span>
+            <span class="app-brand-text demo menu-text fw-bolder ms-2" style="text-transform: capitalize">SAVERA</span>
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -32,6 +32,17 @@
             <a href="{{ route('admin.categories.index') }}" class="menu-link">
                 <i class='menu-icon tf-icons bx bx-list-check'></i>
                 <div data-i18n="manageCategory">Manage Categories</div>
+            </a>
+        </li>
+
+        <!-- Material -->
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Material</span>
+        </li>
+        <li class="menu-item {{ Request::routeIs('admin.materials.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.materials.index') }}" class="menu-link">
+                <i class='menu-icon tf-icons bx bx-cube'></i>
+                <div data-i18n="manageMaterial">Manage Materials</div>
             </a>
         </li>
 

@@ -23,6 +23,13 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('/admin/categories/delete/{id}', [AdminController::class, 'categoryDelete'])->name('admin.categories.delete');
 
 
+    // Materials
+    Route::get('/admin/materials', [AdminController::class, 'adminMaterialsView'])->name('admin.materials.index');
+    Route::post('/admin/materials/store', [AdminController::class, 'materialStore'])->name('admin.materials.store');
+    Route::post('/admin/materials/update/{id}', [AdminController::class, 'materialUpdate'])->name('admin.materials.update');
+    Route::post('/admin/materials/delete/{id}', [AdminController::class, 'materialDelete'])->name('admin.materials.delete');
+
+
     // Products
     Route::get('/admin/products/add', [AdminController::class, 'addProductView'])->name('admin.products.add');
 
