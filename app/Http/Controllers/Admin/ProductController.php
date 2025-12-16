@@ -70,7 +70,16 @@ class ProductController extends Controller
     public function show(string $id)
     {
         $product = Product::with(['category'])->findOrFail($id);
-        return view('admin.product.show', compact('product'))->render();
+        
+        $metals = Metal::all();
+        $sizes = Size::all();
+        $materials = Material::all();
+        
+        // Fetch related models based on JSON arrays
+        $productColors = $product->colors ? Color::whereIn('id', $product->colors)->get() : collect();
+        $productPincodes = $product->available_pincodes ? Pincode::whereIn('id', $product->available_pincodes)->get() : collect();
+
+        return view('admin.product.show', compact('product', 'metals', 'sizes', 'materials', 'productColors', 'productPincodes'))->render();
     }
 
     public function edit(string $id)
