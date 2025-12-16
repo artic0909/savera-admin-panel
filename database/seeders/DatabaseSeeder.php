@@ -44,9 +44,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             PincodeSeeder::class,
-            
         ]);
-
-
     }
 }

@@ -41,7 +41,7 @@
                                     <option value="{{ $pincode->id }}" {{ in_array($pincode->id, $selectedPincodes) ? 'selected' : '' }}>{{ $pincode->code }}</option>
                                     @endforeach
                                 </select>
-                                 <small>Hold Ctrl (Windows) or Command (Mac) to select multiple.</small>
+                                <small>Hold Ctrl (Windows) or Command (Mac) to select multiple.</small>
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="colors" class="form-label">Colors</label>
@@ -56,7 +56,7 @@
                                 <label for="main_image" class="form-label">Main Image</label>
                                 <input class="form-control" type="file" id="main_image" name="main_image" />
                                 <div class="mt-2">
-                                     <img src="{{ asset('storage/' . $product->main_image) }}" alt="Current Image" width="100">
+                                    <img src="{{ asset('storage/' . $product->main_image) }}" alt="Current Image" width="100">
                                 </div>
                             </div>
                             <div class="mb-3 col-md-6">
@@ -74,127 +74,150 @@
 
                         <hr>
 
-                        <!-- Metal Configuration -->
+                        {{-- ================= METAL CONFIGURATION ================= --}}
                         <h5 class="mb-3">Metal Configuration</h5>
-                        @php $metalConfigs = $product->metal_configurations ?? []; @endphp
-                        <div id="metal-container">
-                            @foreach($metals as $metal)
-                            <div class="card mb-3 border border-secondary metal-section" data-metal-id="{{ $metal->id }}">
-                                <div class="card-header bg-light">
-                                    <h6 class="mb-0">{{ $metal->metal_name }} ({{ $metal->metal_purity }})</h6>
-                                </div>
-                                <div class="card-body pt-3">
-                                    <div class="metal-configs-wrapper" id="metal-configs-{{ $metal->id }}">
-                                        @if(isset($metalConfigs[$metal->id]))
-                                            @foreach($metalConfigs[$metal->id] as $index => $config)
-                                            <div class="mb-3 metal-config-row border-bottom pb-3">
-                                                <div class="row align-items-end mb-2">
-                                                    <!-- Material Selection -->
-                                                    <div class="col-md-3">
-                                                        <label class="form-label">Material Type</label>
-                                                        <select name="metal_configurations[{{ $metal->id }}][{{ $index }}][material_id]" class="form-select material-select" required>
-                                                            <option value="">Select Material</option>
-                                                            @foreach($materials as $material)
-                                                            <option value="{{ $material->id }}" {{ isset($config['material_id']) && $config['material_id'] == $material->id ? 'selected' : '' }}>{{ $material->name }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
 
-                                                    <div class="col-md-2">
-                                                        <label class="form-label">Size</label>
-                                                        <select name="metal_configurations[{{ $metal->id }}][{{ $index }}][size_id]" class="form-select" required>
-                                                            <option value="">Select</option>
-                                                            @foreach($sizes as $size)
-                                                            <option value="{{ $size->id }}" {{ $config['size_id'] == $size->id ? 'selected' : '' }}>{{ $size->size_name }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label class="form-label">Net Wt (gm)</label>
-                                                        <input type="text" name="metal_configurations[{{ $metal->id }}][{{ $index }}][net_weight_gold]" class="form-control" value="{{ $config['net_weight_gold'] }}" required>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label class="form-label">Gross Wt (gm)</label>
-                                                        <input type="text" name="metal_configurations[{{ $metal->id }}][{{ $index }}][gross_weight_product]" class="form-control" value="{{ $config['gross_weight_product'] }}" required>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label class="form-label">Purity</label>
-                                                        <input type="text" name="metal_configurations[{{ $metal->id }}][{{ $index }}][purity]" class="form-control" value="{{ $config['purity'] }}" required>
-                                                    </div>
-                                                </div>
-                                                <div class="row align-items-end mb-2">
-                                                    <div class="col-md-2">
-                                                        <label class="form-label">Making Charge</label>
-                                                        <input type="text" name="metal_configurations[{{ $metal->id }}][{{ $index }}][making_charge]" class="form-control" value="{{ $config['making_charge'] }}" required>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label class="form-label">GST %</label>
-                                                        <input type="text" name="metal_configurations[{{ $metal->id }}][{{ $index }}][gst_percentage]" class="form-control" value="{{ $config['gst_percentage'] }}" required>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-check mt-4">
-                                                            <input class="form-check-input use-diamond-check" type="checkbox" id="use_diamond_{{ $metal->id }}_{{ $index }}" name="metal_configurations[{{ $metal->id }}][{{ $index }}][is_diamond_used]" value="1" {{ isset($config['is_diamond_used']) && $config['is_diamond_used'] ? 'checked' : '' }}>
-                                                            <label class="form-check-label" for="use_diamond_{{ $metal->id }}_{{ $index }}">Used Diamond?</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
-                                                    </div>
-                                                </div>
+                        <div id="metal-configs">
+                            @php
+                            $flatConfigs = [];
+                            if(isset($product->metal_configurations) && is_array($product->metal_configurations)) {
+                            $configs = $product->metal_configurations;
+                            // Helper function logic to flatten or detect config
+                            // If the first element has 'material_id', assume it's a flat list of configs
+                            $firstKey = array_key_first($configs);
+                            if (!is_null($firstKey) && isset($configs[$firstKey]['material_id'])) {
+                            $flatConfigs = $configs;
+                            } else {
+                            // Otherwise assume it's grouped by metal ID or some other key
+                            foreach($configs as $group) {
+                            if(is_array($group)) {
+                            // Check if this group is actually a config itself (edge case where key is not numeric but content is config)
+                            if(isset($group['material_id'])) {
+                            $flatConfigs[] = $group;
+                            } else {
+                            // Iterate deeper
+                            foreach($group as $c) {
+                            if(is_array($c) && isset($c['material_id'])) {
+                            $flatConfigs[] = $c;
+                            }
+                            }
+                            }
+                            }
+                            }
+                            }
+                            }
+                            @endphp
 
-                                                <!-- Nested Diamond Section -->
-                                                <div class="nested-diamond-section mt-3 p-3 bg-lighter rounded" style="display: {{ isset($config['is_diamond_used']) && $config['is_diamond_used'] ? 'block' : 'none' }};">
-                                                    <h6 class="text-info fw-bold mb-2">Diamond Details</h6>
-                                                    <div class="diamond-rows-container">
-                                                        @if(isset($config['diamond_info']))
-                                                            @foreach($config['diamond_info'] as $dIndex => $dInfo)
-                                                            <div class="row align-items-end mb-2 diamond-row border-bottom pb-2">
-                                                                <div class="col-md-2">
-                                                                    <label class="form-label text-xs">Size</label>
-                                                                    <input type="text" name="metal_configurations[{{ $metal->id }}][{{ $index }}][diamond_info][{{ $dIndex }}][size]" class="form-control form-control-sm" value="{{ $dInfo['size'] }}" required>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label class="form-label text-xs">Color</label>
-                                                                    <input type="text" name="metal_configurations[{{ $metal->id }}][{{ $index }}][diamond_info][{{ $dIndex }}][color]" class="form-control form-control-sm" value="{{ $dInfo['color'] }}" required>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label class="form-label text-xs">Clarity</label>
-                                                                    <input type="text" name="metal_configurations[{{ $metal->id }}][{{ $index }}][diamond_info][{{ $dIndex }}][clarity]" class="form-control form-control-sm" value="{{ $dInfo['clarity'] }}" required>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label class="form-label text-xs">Cut</label>
-                                                                    <input type="text" name="metal_configurations[{{ $metal->id }}][{{ $index }}][diamond_info][{{ $dIndex }}][shape]" class="form-control form-control-sm" value="{{ $dInfo['shape'] }}" required>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <label class="form-label text-xs">No.</label>
-                                                                    <input type="number" name="metal_configurations[{{ $metal->id }}][{{ $index }}][diamond_info][{{ $dIndex }}][number_of_diamonds]" class="form-control form-control-sm" value="{{ $dInfo['number_of_diamonds'] }}" required>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label class="form-label text-xs">Total Wt(gm)</label>
-                                                                    <input type="text" name="metal_configurations[{{ $metal->id }}][{{ $index }}][diamond_info][{{ $dIndex }}][total_weight]" class="form-control form-control-sm" value="{{ $dInfo['total_weight'] }}" required>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <button type="button" class="btn btn-danger btn-xs remove-diamond-row">x</button>
-                                                                </div>
-                                                            </div>
-                                                            @endforeach
-                                                        @endif
-                                                    </div>
-                                                    <button type="button" class="btn btn-xs btn-outline-info add-diamond-nested mt-2" data-metal-id="{{ $metal->id }}" data-metal-index="{{ $index }}">
-                                                        + Add Diamond Info
-                                                    </button>
+                            @foreach($flatConfigs as $index => $config)
+                            <div class="card mb-3 metal-config-row">
+                                <div class="card-body border">
+                                    <!-- Add ID field, generate one if missing (though backend usually handles generation, preserving it here is key) -->
+                                    <input type="hidden" name="metal_configurations[{{ $index }}][id]" value="{{ $config['id'] ?? uniqid('mc_') }}">
+
+                                    <div class="row mb-2">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Material</label>
+                                            <select name="metal_configurations[{{ $index }}][material_id]" class="form-select" required>
+                                                <option value="">Select</option>
+                                                @foreach($materials as $material)
+                                                <option value="{{ $material->id }}" {{ isset($config['material_id']) && $config['material_id'] == $material->id ? 'selected' : '' }}>{{ $material->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <label class="form-label">Size</label>
+                                            <select name="metal_configurations[{{ $index }}][size_id]" class="form-select" required>
+                                                @foreach($sizes as $size)
+                                                <option value="{{ $size->id }}" {{ isset($config['size_id']) && $config['size_id'] == $size->id ? 'selected' : '' }}>{{ $size->size_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <label class="form-label">Net Wt (gm)</label>
+                                            <input type="text" name="metal_configurations[{{ $index }}][net_weight_gold]" class="form-control" value="{{ $config['net_weight_gold'] ?? '' }}">
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <label class="form-label">Gross Wt (gm)</label>
+                                            <input type="text" name="metal_configurations[{{ $index }}][gross_weight_product]" class="form-control" value="{{ $config['gross_weight_product'] ?? '' }}">
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <label class="form-label">Purity</label>
+                                            <input type="text" name="metal_configurations[{{ $index }}][purity]" class="form-control" value="{{ $config['purity'] ?? '' }}">
+                                        </div>
+
+                                        <div class="col-md-1">
+                                            <button type="button" class="btn btn-danger mt-4 remove-metal">X</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-2">
+                                        <div class="col-md-2">
+                                            <label class="form-label">Making Charge</label>
+                                            <input type="text" name="metal_configurations[{{ $index }}][making_charge]" class="form-control" value="{{ $config['making_charge'] ?? '' }}">
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <label class="form-label">GST %</label>
+                                            <input type="text" name="metal_configurations[{{ $index }}][gst_percentage]" class="form-control" value="{{ $config['gst_percentage'] ?? '' }}">
+                                        </div>
+
+                                        <div class="col-md-3 mt-4">
+                                            <!-- Check if diamond_info exists and is not empty to set checked state -->
+                                            @php
+                                            $hasDiamond = !empty($config['diamond_info']);
+                                            @endphp
+                                            <input type="checkbox" class="use-diamond" {{ $hasDiamond ? 'checked' : '' }}>
+                                            <label class="ms-1">Used Diamond?</label>
+                                        </div>
+                                    </div>
+
+                                    {{-- DIAMOND SECTION --}}
+                                    <div class="diamond-section mt-3 p-3 bg-light rounded" style="display: {{ $hasDiamond ? 'block' : 'none' }};">
+                                        <h6 class="text-info fw-bold">Diamond Details</h6>
+                                        <div class="diamond-rows">
+                                            @if(isset($config['diamond_info']) && is_array($config['diamond_info']))
+                                            @foreach($config['diamond_info'] as $dIndex => $dInfo)
+                                            <div class="row mb-2 diamond-row align-items-end">
+                                                <div class="col-md-2">
+                                                    <input type="text" name="metal_configurations[{{ $index }}][diamond_info][{{ $dIndex }}][size]" value="{{ $dInfo['size'] ?? '' }}" placeholder="Size" class="form-control form-control-sm">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="metal_configurations[{{ $index }}][diamond_info][{{ $dIndex }}][color]" value="{{ $dInfo['color'] ?? '' }}" placeholder="Color" class="form-control form-control-sm">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="metal_configurations[{{ $index }}][diamond_info][{{ $dIndex }}][clarity]" value="{{ $dInfo['clarity'] ?? '' }}" placeholder="Clarity" class="form-control form-control-sm">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="metal_configurations[{{ $index }}][diamond_info][{{ $dIndex }}][shape]" value="{{ $dInfo['shape'] ?? '' }}" placeholder="Cut" class="form-control form-control-sm">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="metal_configurations[{{ $index }}][diamond_info][{{ $dIndex }}][number_of_diamonds]" value="{{ $dInfo['number_of_diamonds'] ?? '' }}" placeholder="No." class="form-control form-control-sm">
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button type="button" class="btn btn-danger btn-sm remove-diamond">x</button>
                                                 </div>
                                             </div>
                                             @endforeach
-                                        @endif
+                                            @endif
+                                        </div>
+
+                                        <button type="button" class="btn btn-sm btn-outline-info add-diamond">
+                                            + Add Diamond
+                                        </button>
                                     </div>
-                                    <button type="button" class="btn btn-sm btn-outline-primary mt-2 add-metal-config" data-metal-id="{{ $metal->id }}">
-                                        + Add Configuration for {{ $metal->metal_name }}
-                                    </button>
+
                                 </div>
                             </div>
                             @endforeach
                         </div>
+
+                        <button type="button" class="btn btn-outline-primary mb-3" id="add-metal-config">
+                            + Add Metal Configuration
+                        </button>
 
                         <hr>
 
@@ -210,106 +233,103 @@
     </div>
 </div>
 
-<!-- Template for Metal Config -->
+{{-- METAL TEMPLATE --}}
 <template id="metal-config-template">
-    <div class="mb-3 metal-config-row border-bottom pb-3">
-        <div class="row align-items-end mb-2">
-            <!-- Material Selection -->
-            <div class="col-md-3">
-                <label class="form-label">Material Type</label>
-                <select name="metal_configurations[METAL_ID][INDEX][material_id]" class="form-select material-select" required>
-                    <option value="">Select Material</option>
-                    @foreach($materials as $material)
-                    <option value="{{ $material->id }}">{{ $material->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+    <div class="card mb-3 metal-config-row">
+        <div class="card-body border">
+            <input type="hidden" name="metal_configurations[INDEX][id]" value="NEW_ID">
 
-            <!-- Existing Fields -->
-            <div class="col-md-2">
-                <label class="form-label">Size</label>
-                <select name="metal_configurations[METAL_ID][INDEX][size_id]" class="form-select" required>
-                    <option value="">Select</option>
-                    @foreach($sizes as $size)
-                    <option value="{{ $size->id }}">{{ $size->size_name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Net Wt (gm)</label>
-                <input type="text" name="metal_configurations[METAL_ID][INDEX][net_weight_gold]" class="form-control" required>
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Gross Wt (gm)</label>
-                <input type="text" name="metal_configurations[METAL_ID][INDEX][gross_weight_product]" class="form-control" required>
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Purity</label>
-                <input type="text" name="metal_configurations[METAL_ID][INDEX][purity]" class="form-control" required>
-            </div>
-        </div>
-        <div class="row align-items-end mb-2">
-             <div class="col-md-2">
-                <label class="form-label">Making Charge</label>
-                <input type="text" name="metal_configurations[METAL_ID][INDEX][making_charge]" class="form-control" required>
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">GST %</label>
-                <input type="text" name="metal_configurations[METAL_ID][INDEX][gst_percentage]" class="form-control" required>
-            </div>
-             <div class="col-md-3">
-                <div class="form-check mt-4">
-                    <input class="form-check-input use-diamond-check" type="checkbox" id="use_diamond_METAL_ID_INDEX" name="metal_configurations[METAL_ID][INDEX][is_diamond_used]" value="1">
-                    <label class="form-check-label" for="use_diamond_METAL_ID_INDEX">Used Diamond?</label>
+            <div class="row mb-2">
+                <div class="col-md-3">
+                    <label class="form-label">Material</label>
+                    <select name="metal_configurations[INDEX][material_id]" class="form-select" required>
+                        <option value="">Select</option>
+                        @foreach($materials as $material)
+                        <option value="{{ $material->id }}">{{ $material->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Size</label>
+                    <select name="metal_configurations[INDEX][size_id]" class="form-select" required>
+                        @foreach($sizes as $size)
+                        <option value="{{ $size->id }}">{{ $size->size_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Net Wt (gm)</label>
+                    <input type="text" name="metal_configurations[INDEX][net_weight_gold]" class="form-control">
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Gross Wt (gm)</label>
+                    <input type="text" name="metal_configurations[INDEX][gross_weight_product]" class="form-control">
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Purity</label>
+                    <input type="text" name="metal_configurations[INDEX][purity]" class="form-control">
+                </div>
+
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-danger mt-4 remove-metal">X</button>
                 </div>
             </div>
-            <div class="col-md-1">
-                 <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
-            </div>
-        </div>
 
-        <!-- Nested Diamond Section -->
-        <div class="nested-diamond-section mt-3 p-3 bg-lighter rounded" style="display: none;">
-            <h6 class="text-info fw-bold mb-2">Diamond Details</h6>
-            <div class="diamond-rows-container">
-                <!-- Diamond rows go here -->
+            <div class="row mb-2">
+                <div class="col-md-2">
+                    <label class="form-label">Making Charge</label>
+                    <input type="text" name="metal_configurations[INDEX][making_charge]" class="form-control">
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">GST %</label>
+                    <input type="text" name="metal_configurations[INDEX][gst_percentage]" class="form-control">
+                </div>
+
+                <div class="col-md-3 mt-4">
+                    <input type="checkbox" class="use-diamond">
+                    <label class="ms-1">Used Diamond?</label>
+                </div>
             </div>
-            <button type="button" class="btn btn-xs btn-outline-info add-diamond-nested mt-2" data-metal-id="METAL_ID" data-metal-index="INDEX">
-                + Add Diamond Info
-            </button>
+
+            {{-- DIAMOND SECTION --}}
+            <div class="diamond-section mt-3 p-3 bg-light rounded" style="display:none;">
+                <h6 class="text-info fw-bold">Diamond Details</h6>
+                <div class="diamond-rows"></div>
+
+                <button type="button" class="btn btn-sm btn-outline-info add-diamond">
+                    + Add Diamond
+                </button>
+            </div>
+
         </div>
     </div>
 </template>
 
-<!-- Nested Diamond Row Template -->
-<template id="nested-diamond-row-template">
-    <div class="row align-items-end mb-2 diamond-row border-bottom pb-2">
+{{-- DIAMOND TEMPLATE --}}
+<template id="diamond-template">
+    <div class="row mb-2 diamond-row align-items-end">
         <div class="col-md-2">
-            <label class="form-label text-xs">Size</label>
-            <input type="text" name="metal_configurations[METAL_ID][METAL_INDEX][diamond_info][DIAMOND_INDEX][size]" class="form-control form-control-sm" required>
+            <input type="text" name="metal_configurations[METAL][diamond_info][DIAMOND][size]" placeholder="Size" class="form-control form-control-sm">
         </div>
         <div class="col-md-2">
-            <label class="form-label text-xs">Color</label>
-            <input type="text" name="metal_configurations[METAL_ID][METAL_INDEX][diamond_info][DIAMOND_INDEX][color]" class="form-control form-control-sm" required>
+            <input type="text" name="metal_configurations[METAL][diamond_info][DIAMOND][color]" placeholder="Color" class="form-control form-control-sm">
         </div>
         <div class="col-md-2">
-            <label class="form-label text-xs">Clarity</label>
-            <input type="text" name="metal_configurations[METAL_ID][METAL_INDEX][diamond_info][DIAMOND_INDEX][clarity]" class="form-control form-control-sm" required>
+            <input type="text" name="metal_configurations[METAL][diamond_info][DIAMOND][clarity]" placeholder="Clarity" class="form-control form-control-sm">
         </div>
         <div class="col-md-2">
-            <label class="form-label text-xs">Cut</label>
-            <input type="text" name="metal_configurations[METAL_ID][METAL_INDEX][diamond_info][DIAMOND_INDEX][shape]" class="form-control form-control-sm" required>
+            <input type="text" name="metal_configurations[METAL][diamond_info][DIAMOND][shape]" placeholder="Cut" class="form-control form-control-sm">
+        </div>
+        <div class="col-md-2">
+            <input type="number" name="metal_configurations[METAL][diamond_info][DIAMOND][number_of_diamonds]" placeholder="No." class="form-control form-control-sm">
         </div>
         <div class="col-md-1">
-            <label class="form-label text-xs">No.</label>
-            <input type="number" name="metal_configurations[METAL_ID][METAL_INDEX][diamond_info][DIAMOND_INDEX][number_of_diamonds]" class="form-control form-control-sm" required>
-        </div>
-        <div class="col-md-2">
-            <label class="form-label text-xs">Total Wt(gm)</label>
-            <input type="text" name="metal_configurations[METAL_ID][METAL_INDEX][diamond_info][DIAMOND_INDEX][total_weight]" class="form-control form-control-sm" required>
-        </div>
-        <div class="col-md-1">
-            <button type="button" class="btn btn-danger btn-xs remove-diamond-row">x</button>
+            <button type="button" class="btn btn-danger btn-sm remove-diamond">x</button>
         </div>
     </div>
 </template>
@@ -318,124 +338,83 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Metal Configuration
-    const metalTemplate = document.getElementById('metal-config-template').innerHTML;
-    const diamondRowTemplate = document.getElementById('nested-diamond-row-template').innerHTML;
+    document.addEventListener('DOMContentLoaded', function() {
 
-    // Initialize existing rows (Remove buttons and Diamond functionality)
-    document.querySelectorAll('.metal-config-row').forEach(row => {
-        // Remove button
-        const removeBtn = row.querySelector('.remove-row');
-        if(removeBtn) {
-            removeBtn.addEventListener('click', function() {
-                 if(confirm('Are you sure you want to remove this configuration?')) {
-                     row.remove();
-                 }
-            });
-        }
+        const metalContainer = document.getElementById('metal-configs');
+        const metalTemplate = document.getElementById('metal-config-template').innerHTML;
+        const diamondTemplate = document.getElementById('diamond-template').innerHTML;
 
-        // Diamond Toggle
-        const diamondCheck = row.querySelector('.use-diamond-check');
-        const diamondSection = row.querySelector('.nested-diamond-section');
-        if(diamondCheck && diamondSection) {
-            diamondCheck.addEventListener('change', function() {
-                diamondSection.style.display = this.checked ? 'block' : 'none';
-            });
-        }
-
-        // Add Diamond Nested Btn (for existing rows)
-        const addDiamondBtn = row.querySelector('.add-diamond-nested');
-        if(addDiamondBtn) {
-            addDiamondBtn.addEventListener('click', function() {
-                const metalId = this.getAttribute('data-metal-id');
-                const metalIndex = this.getAttribute('data-metal-index'); 
-                
-                const diamondContainer = row.querySelector('.diamond-rows-container');
-                // Use a chaotic safety buffer for index
-                const diamondIndex = diamondContainer.querySelectorAll('.diamond-row').length + Math.floor(Math.random() * 10000); 
-
-                let diamondHtml = diamondRowTemplate
-                    .replace(/METAL_ID/g, metalId)
-                    .replace(/METAL_INDEX/g, metalIndex)
-                    .replace(/DIAMOND_INDEX/g, diamondIndex);
-                
-                const dTempDiv = document.createElement('div');
-                dTempDiv.innerHTML = diamondHtml;
-                const newDiamondRow = dTempDiv.firstElementChild;
-
-                newDiamondRow.querySelector('.remove-diamond-row').addEventListener('click', function() {
-                    newDiamondRow.remove();
-                });
-
-                diamondContainer.appendChild(newDiamondRow);
-            });
-        }
-
-        // Remove existing diamond rows
-        row.querySelectorAll('.remove-diamond-row').forEach(dBtn => {
-            dBtn.addEventListener('click', function() {
-                this.closest('.diamond-row').remove();
-            });
+        // Initialize existing rows
+        const existingRows = metalContainer.querySelectorAll('.metal-config-row');
+        existingRows.forEach((row, index) => {
+            setupMetalRowResults(row, index);
         });
-    });
 
-    // Add NEW Metal Configuration
-    document.querySelectorAll('.add-metal-config').forEach(button => {
-        button.addEventListener('click', function() {
-            const metalId = this.getAttribute('data-metal-id');
-            const container = document.getElementById('metal-configs-' + metalId);
-            const index = container.querySelectorAll('.metal-config-row').length + Math.floor(Math.random() * 10000); 
+        document.getElementById('add-metal-config').addEventListener('click', function() {
+            const index = metalContainer.children.length + Math.floor(Math.random() * 1000); // Unique index
+            const newId = 'mc_' + Date.now() + '_' + Math.floor(Math.random() * 1000); // Robust client-side unique ID
+            let html = metalTemplate.replace(/INDEX/g, index).replace(/NEW_ID/g, newId);
 
-            let html = metalTemplate.replace(/METAL_ID/g, metalId).replace(/INDEX/g, index);
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-            
-            const newRow = tempDiv.firstElementChild;
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            const metalRow = temp.firstElementChild;
 
-            // Handle Remove Metal Row
-            newRow.querySelector('.remove-row').addEventListener('click', function() {
-                newRow.remove();
-            });
-
-            // Handle Diamond Checkbox
-            const diamondCheck = newRow.querySelector('.use-diamond-check');
-            const diamondSection = newRow.querySelector('.nested-diamond-section');
-            diamondCheck.addEventListener('change', function() {
-                diamondSection.style.display = this.checked ? 'block' : 'none';
-            });
-
-            // Handle Add Diamond Row (Nested)
-            const addDiamondBtn = newRow.querySelector('.add-diamond-nested');
-            
-            // We need to set data attributes on the newly added button for consistency
-            addDiamondBtn.setAttribute('data-metal-id', metalId);
-            addDiamondBtn.setAttribute('data-metal-index', index);
-
-            addDiamondBtn.addEventListener('click', function() {
-                const diamondContainer = newRow.querySelector('.diamond-rows-container');
-                const diamondIndex = diamondContainer.querySelectorAll('.diamond-row').length + Math.floor(Math.random() * 10000);
-
-                let diamondHtml = diamondRowTemplate
-                    .replace(/METAL_ID/g, metalId)
-                    .replace(/METAL_INDEX/g, index)
-                    .replace(/DIAMOND_INDEX/g, diamondIndex);
-                
-                const dTempDiv = document.createElement('div');
-                dTempDiv.innerHTML = diamondHtml;
-                const newDiamondRow = dTempDiv.firstElementChild;
-
-                // Handle Remove Diamond Row
-                newDiamondRow.querySelector('.remove-diamond-row').addEventListener('click', function() {
-                    newDiamondRow.remove();
-                });
-
-                diamondContainer.appendChild(newDiamondRow);
-            });
-
-            container.appendChild(newRow);
+            setupMetalRowResults(metalRow, index);
+            metalContainer.appendChild(metalRow);
         });
+
+        function setupMetalRowResults(metalRow, index) {
+            // Remove Metal
+            const removeMetalBtn = metalRow.querySelector('.remove-metal');
+            if (removeMetalBtn) {
+                removeMetalBtn.onclick = () => metalRow.remove();
+            }
+
+            // Diamond Checkbox
+            const checkbox = metalRow.querySelector('.use-diamond');
+            const diamondSection = metalRow.querySelector('.diamond-section');
+            const diamondContainer = metalRow.querySelector('.diamond-rows');
+
+            if (checkbox && diamondSection) {
+                checkbox.onchange = () => {
+                    diamondSection.style.display = checkbox.checked ? 'block' : 'none';
+                };
+            }
+
+            // Add Diamond
+            const addDiamondBtn = metalRow.querySelector('.add-diamond');
+            if (addDiamondBtn) {
+                addDiamondBtn.onclick = () => {
+                    const dIndex = diamondContainer.children.length + Math.floor(Math.random() * 1000);
+                    let dHtml = diamondTemplate
+                        .replace(/METAL/g, index) // Note: METAL placeholder in template is for metal index
+                        .replace(/DIAMOND/g, dIndex);
+
+                    const dTemp = document.createElement('div');
+                    dTemp.innerHTML = dHtml;
+
+                    const dRow = dTemp.firstElementChild;
+                    const removeDBtn = dRow.querySelector('.remove-diamond');
+                    if (removeDBtn) {
+                        removeDBtn.onclick = () => dRow.remove();
+                    }
+
+                    diamondContainer.appendChild(dRow);
+                };
+            }
+
+            // Initialize existing diamond rows removal
+            if (diamondContainer) {
+                const existingDiamonds = diamondContainer.querySelectorAll('.diamond-row');
+                existingDiamonds.forEach(dRow => {
+                    const removeDBtn = dRow.querySelector('.remove-diamond');
+                    if (removeDBtn) {
+                        removeDBtn.onclick = () => dRow.remove();
+                    }
+                });
+            }
+        }
+
     });
-});
 </script>
 @endpush
