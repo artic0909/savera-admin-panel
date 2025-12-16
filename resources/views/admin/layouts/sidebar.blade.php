@@ -50,9 +50,9 @@
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Product</span>
         </li>
-        <li class="menu-item {{ Request::routeIs('admin.products.add') ? 'active' : '' }}">
-            <a href="{{ route('admin.products.add') }}" class="menu-link">
-                <i class='menu-icon tf inner-icons<|fim_middle|>-icons bx bx-plus-circle'></i>
+        <li class="menu-item {{ Request::routeIs('admin.products.create') ? 'active' : '' }}">
+            <a href="{{ route('admin.products.create') }}" class="menu-link">
+                <i class='menu-icon tf-icons bx bx-plus-circle'></i>
                 <div data-i18n="addProduct">Add Product</div>
             </a>
         </li>

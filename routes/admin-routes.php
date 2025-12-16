@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,11 +32,11 @@ Route::middleware(['auth:admin'])->group(function () {
 
 
     // Products
-    Route::get('/admin/products/add', [AdminController::class, 'addProductView'])->name('admin.products.add');
-
-    Route::get('/admin/products/edit', [AdminController::class, 'editProductView'])->name('admin.products.edit');
-
-    Route::get('/admin/products/index', [AdminController::class, 'indexProductView'])->name('admin.products.index');
+    // Route::get('/admin/products/add', [AdminController::class, 'addProductView'])->name('admin.products.add');
+    // Route::get('/admin/products/edit', [AdminController::class, 'editProductView'])->name('admin.products.edit');
+    // Route::get('/admin/products/index', [AdminController::class, 'indexProductView'])->name('admin.products.index');
+    
+    Route::resource('admin/products', ProductController::class)->names('admin.products');
 
 
 
