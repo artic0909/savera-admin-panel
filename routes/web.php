@@ -14,8 +14,11 @@ Route::get('/ajax/products', [FrontendController::class, 'ajaxProducts'])->name(
 Route::get('/category/{slug}', [FrontendController::class, 'category'])->name('category.show');
 
 Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+->middleware(['auth', 'verified'])
+->name('dashboard');
+
+Route::get('/product/{id}', [FrontendController::class, 'product'])->name('product.show');
+
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
