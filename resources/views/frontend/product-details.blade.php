@@ -98,11 +98,21 @@
                                     COLOR
                                 </p>
                                 <div class="color-option">
-                                    @if (is_array($product->colors))
-                                        @foreach ($product->colors as $color)
-                                            <!-- Assuming color is a hex code or name. If it's a code, use style background. -->
-                                            <button style="background-color: {{ $color }};"
-                                                title="{{ $color }}"></button>
+                                    @if(is_array($product->colors) && count($product->colors) > 0)
+                                        @foreach($product->colors as $colorId)
+                                            @php
+                                                // Resolve color object from the passed $colors collection
+                                                $colorObj = $colors->find($colorId);
+                                                $colorVal = $colorObj ? $colorObj->color_name : $colorId;
+                                                // Check if it looks like a hex code
+                                                $isHex = preg_match('/^#[a-f0-9]{6}$/i', $colorVal) || preg_match('/^#[a-f0-9]{3}$/i', $colorVal) || in_array(strtolower($colorVal), ['red','blue','green','yellow','black','white','gold','silver','pink']);
+                                            @endphp
+                                            
+                                            @if($isHex)
+                                                <button style="background-color: {{ $colorVal }};" title="{{ $colorObj ? $colorObj->color_name : $colorVal }}"></button>
+                                            @else
+                                                <button class="text-btn" title="{{ $colorVal }}" style="width: auto; padding: 0 10px; font-size: 12px;">{{ $colorVal }}</button>
+                                            @endif
                                         @endforeach
                                     @else
                                         <span>No colors available</span>
