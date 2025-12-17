@@ -112,6 +112,7 @@ class FrontendController extends Controller
         $shapes = \App\Models\Shape::all();
         $styles = \App\Models\Style::all(); // Assuming you have this
         $sizes = \App\Models\Size::all();
+        $colors = Product::where('id', $id)->pluck('color')->toArray();
 
         // Similar Products Logic (same category, excluding current)
         $similarProducts = Product::where('category_id', $product->category_id)
@@ -119,7 +120,7 @@ class FrontendController extends Controller
             ->take(4)
             ->get();
 
-        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'styles', 'sizes', 'similarProducts'));
+        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'styles', 'sizes','colors', 'similarProducts'));
     }
 
     public function product($id)
