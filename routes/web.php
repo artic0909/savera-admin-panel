@@ -35,3 +35,18 @@ Route::middleware(['auth'])->group(function () {
         )
         ->name('two-factor.show');
 });
+
+use App\Http\Controllers\Frontend\CustomerAuthController;
+
+Route::middleware('guest:customer')->group(function () {
+    Route::get('register', [CustomerAuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('register', [CustomerAuthController::class, 'register']);
+    Route::get('login', [CustomerAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [CustomerAuthController::class, 'login']);
+});
+
+Route::middleware('auth:customer')->group(function () {
+    Route::post('logout', [CustomerAuthController::class, 'logout'])->name('logout');
+    Route::get('profile', [CustomerAuthController::class, 'profile'])->name('profile');
+    Route::put('profile', [CustomerAuthController::class, 'updateProfile'])->name('profile.update');
+});

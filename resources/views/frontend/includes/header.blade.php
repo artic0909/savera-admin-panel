@@ -12,7 +12,11 @@
                 <div class="actions">
                     <a href="#" class="icon-btn"><i class="fi fi-rr-search"></i></a>
                     <a href="#" class="icon-btn"><i class="fi fi-rr-heart"></i></a>
-                    <a href="#" class="icon-btn"><i class="fi fi-rr-user"></i></a>
+                    @if(Auth::guard('customer')->check())
+                    <a href="{{ route('profile') }}" class="icon-btn" title="My Profile"><i class="fi fi-rr-user"></i></a>
+                    @else
+                    <a href="{{ route('login') }}" class="icon-btn" title="Login / Register"><i class="fi fi-rr-user"></i></a>
+                    @endif
                     <a href="#" class="icon-btn cart-btn">
                         <i class="fi fi-rr-shopping-cart"></i>
                         <span class="count">0</span>
