@@ -63,7 +63,7 @@
                                         @endif
                                     </div>
                                     <!-- <div class="swiper-button-next"></div>
-                                                <div class="swiper-button-prev"></div> -->
+                                                        <div class="swiper-button-prev"></div> -->
                                 </div>
                             </div>
                         </div>
@@ -98,20 +98,35 @@
                                     COLOR
                                 </p>
                                 <div class="color-option">
-                                    @if(is_array($product->colors) && count($product->colors) > 0)
-                                        @foreach($product->colors as $colorId)
+                                    @if (is_array($product->colors) && count($product->colors) > 0)
+                                        @foreach ($product->colors as $colorId)
                                             @php
                                                 // Resolve color object from the passed $colors collection
                                                 $colorObj = $colors->find($colorId);
                                                 $colorVal = $colorObj ? $colorObj->color_name : $colorId;
                                                 // Check if it looks like a hex code
-                                                $isHex = preg_match('/^#[a-f0-9]{6}$/i', $colorVal) || preg_match('/^#[a-f0-9]{3}$/i', $colorVal) || in_array(strtolower($colorVal), ['red','blue','green','yellow','black','white','gold','silver','pink']);
+                                                $isHex =
+                                                    preg_match('/^#[a-f0-9]{6}$/i', $colorVal) ||
+                                                    preg_match('/^#[a-f0-9]{3}$/i', $colorVal) ||
+                                                    in_array(strtolower($colorVal), [
+                                                        'red',
+                                                        'blue',
+                                                        'green',
+                                                        'yellow',
+                                                        'black',
+                                                        'white',
+                                                        'gold',
+                                                        'silver',
+                                                        'pink',
+                                                    ]);
                                             @endphp
-                                            
-                                            @if($isHex)
-                                                <button style="background-color: {{ $colorVal }};" title="{{ $colorObj ? $colorObj->color_name : $colorVal }}"></button>
+
+                                            @if ($isHex)
+                                                <button style="background-color: {{ $colorVal }};"
+                                                    title="{{ $colorObj ? $colorObj->color_name : $colorVal }}"></button>
                                             @else
-                                                <button class="text-btn" title="{{ $colorVal }}" style="width: auto; padding: 0 10px; font-size: 12px;">{{ $colorVal }}</button>
+                                                <button class="text-btn" title="{{ $colorVal }}"
+                                                    style="width: auto; padding: 0 10px; font-size: 12px;">{{ $colorVal }}</button>
                                             @endif
                                         @endforeach
                                     @else
@@ -162,8 +177,18 @@
                                 </div>
                             </div>
                             <div class="btns">
-                                <button>ADD TO CART</button>
-                                <button>BUY NOW</button>
+                                @if (Auth::guard('customer')->check())
+                                    <button type="button" onclick="addToCart()" style="cursor: pointer;">ADD TO
+                                        CART</button>
+                                    <button type="button" onclick="addToWishlist()"
+                                        style="cursor: pointer; background: white; color: #000; border: 2px solid #000;">ADD
+                                        TO WISHLIST</button>
+                                @else
+                                    <a href="{{ route('login') }}"
+                                        style="display: block; text-align: center; text-decoration: none; color: inherit;">
+                                        <button type="button">LOGIN TO ADD TO CART</button>
+                                    </a>
+                                @endif
                             </div>
                             <p class="p2">
                                 <a href="#">Delivery & Cancellation</a>
@@ -690,6 +715,84 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
             // Main Price Display
             document.getElementById('dynamic-price').textContent = formatCurrency(finalPrice);
         }
+
+        // Add to Cart function
+        window.addToCart = function() {
+            let activeBtn = document.querySelector('.metal-btn.active');
+            if (!activeBtn) {
+                alert('Please select a metal type');
+                return;
+            }
+
+            let materialId = activeBtn.dataset.materialId;
+            let sizeSelector = document.getElementById('size-selector');
+            let sizeId = sizeSelector.value;
+
+            if (!sizeId) {
+                alert('Please select a size');
+                return;
+            }
+
+            let materialName = activeBtn.textContent;
+            let sizeName = sizeSelector.options[sizeSelector.selectedIndex].text;
+            let priceText = document.getElementById('dynamic-price').textContent;
+            let price = parseFloat(priceText.replace('Rs.', '').replace(/,/g, '').trim());
+
+            fetch('/cart/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        product_id: {{ $product->id }},
+                        quantity: 1,
+                        metal_configuration: {
+                            material_id: materialId,
+                            material_name: materialName,
+                            size_id: sizeId,
+                            size_name: sizeName
+                        },
+                        price: price
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Product added to cart!');
+                        if (document.getElementById('cart-count')) {
+                            document.getElementById('cart-count').textContent = data.cart_count;
+                        }
+                    } else {
+                        alert('Failed to add to cart.');
+                    }
+                });
+        };
+
+        // Add to Wishlist function
+        window.addToWishlist = function() {
+            fetch('/wishlist/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        product_id: {{ $product->id }}
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Product added to wishlist!');
+                        if (document.getElementById('wishlist-count')) {
+                            document.getElementById('wishlist-count').textContent = data.wishlist_count;
+                        }
+                    } else {
+                        alert(data.message || 'Failed to add to wishlist.');
+                    }
+                });
+        };
     </script>
     <style>
         .metal-btn.active {

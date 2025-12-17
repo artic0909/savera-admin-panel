@@ -11,18 +11,32 @@
                 </div>
                 <div class="actions">
                     <a href="#" class="icon-btn"><i class="fi fi-rr-search"></i></a>
-                    <a href="#" class="icon-btn"><i class="fi fi-rr-heart"></i></a>
+
                     @if (Auth::guard('customer')->check())
+                        <a href="{{ route('wishlist.index') }}" class="icon-btn" title="Wishlist">
+                            <i class="fi fi-rr-heart"></i>
+                            <span class="count" id="wishlist-count">0</span>
+                        </a>
                         <a href="{{ route('profile') }}" class="icon-btn" title="My Profile"><i
                                 class="fi fi-rr-user"></i></a>
                     @else
+                        <a href="{{ route('login') }}" class="icon-btn" title="Wishlist"><i
+                                class="fi fi-rr-heart"></i></a>
                         <a href="{{ route('login') }}" class="icon-btn" title="Login / Register"><i
                                 class="fi fi-rr-user"></i></a>
                     @endif
-                    <a href="#" class="icon-btn cart-btn">
-                        <i class="fi fi-rr-shopping-cart"></i>
-                        <span class="count">0</span>
-                    </a>
+
+                    @if (Auth::guard('customer')->check())
+                        <a href="{{ route('cart.index') }}" class="icon-btn cart-btn">
+                            <i class="fi fi-rr-shopping-cart"></i>
+                            <span class="count" id="cart-count">0</span>
+                        </a>
+                    @else
+                        <a href="{{ route('login') }}" class="icon-btn cart-btn">
+                            <i class="fi fi-rr-shopping-cart"></i>
+                            <span class="count">0</span>
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -37,4 +51,21 @@
                 </ul>
             </nav>
         </div>
+
+        @if (Auth::guard('customer')->check())
+            <script>
+                // Update cart and wishlist counts
+                fetch('/cart/count')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('cart-count').textContent = data.count;
+                    });
+
+                fetch('/wishlist/count')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('wishlist-count').textContent = data.count;
+                    });
+            </script>
+        @endif
     </header>
