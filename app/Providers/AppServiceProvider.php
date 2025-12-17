@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Support\Facades\View::composer('frontend.includes.header', function ($view) {
+            $view->with('menuCategories', \App\Models\Category::where('menu', true)->orderBy('id', 'desc')->take(8)->get());
+        });
     }
 }

@@ -11,10 +11,10 @@ class FrontendController extends Controller
 {
     public function home(Request $request)
     {
-        $categories = Category::all();
+        $categories = Category::where('home_category', true)->take(5)->get();
         // Default to first category if none or invalid
         $selectedCategory = $categories->first();
-        
+
         $products = collect();
         if ($selectedCategory) {
             $products = Product::where('category_id', $selectedCategory->id)->take(10)->get();
@@ -27,7 +27,7 @@ class FrontendController extends Controller
     {
         $categoryId = $request->input('category_id');
         $query = Product::where('category_id', $categoryId);
-        
+
         // 1. Get all candidates from DB (filtering by category)
         // We will filter by other attributes in memory because they are in complex JSON or computed.
         $products = $query->get();
@@ -62,7 +62,7 @@ class FrontendController extends Controller
                 return false;
             });
         }
-        
+
         // 4. Sort by Price
         // Calculate price for sorting
         if ($request->has('sort') && in_array($request->sort, ['price_asc', 'price_desc'])) {
@@ -83,7 +83,7 @@ class FrontendController extends Controller
 
         // Render the partial
         $html = view('frontend.partials.product_loop', compact('products'))->render();
-        
+
         $category = Category::find($categoryId);
 
         return response()->json([
@@ -100,7 +100,7 @@ class FrontendController extends Controller
         $materials = \App\Models\Material::all();
         $shapes = \App\Models\Shape::all();
         $styles = \App\Models\Style::all();
-        
+
         return view('frontend.category', compact('category', 'products', 'materials', 'shapes', 'styles'));
     }
 

@@ -10,5 +10,7 @@ class Category extends Model
         'image',
         'name',
         'slug',
+        'menu',
+        'home_category',
     ];
 }

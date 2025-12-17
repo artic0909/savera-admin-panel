@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('name');
             $table->string('slug')->unique();
+            $table->boolean('menu')->default(false)->nullable();
+            $table->boolean('home_category')->default(false)->nullable();
             $table->timestamps();
         });
     }
