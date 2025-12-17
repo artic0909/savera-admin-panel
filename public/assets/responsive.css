@@ -297,6 +297,10 @@
     }
 
     /* Header */
+    .header {
+        position: relative;
+    }
+
     .header .top {
         font-size: 14px;
         padding: 8px;
@@ -305,7 +309,7 @@
     .header .main .wrapper {
         width: 92%;
         padding: 20px 4%;
-        flex-direction: column;
+        /* flex-direction: column; */
         gap: 15px;
     }
 
@@ -915,8 +919,8 @@
 
     /* Banner */
     .banner {
-        min-height: 400px;
-        padding: 0 2% 20px 2%;
+        min-height: max-content;
+        padding: 8% 2% 8% 2%;
     }
 
     .banner .carousel-container {
