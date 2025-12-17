@@ -104,10 +104,28 @@ class FrontendController extends Controller
         return view('frontend.category', compact('category', 'products', 'materials', 'shapes', 'styles'));
     }
 
+    public function productDetails($id)
+    {
+        $product = Product::with('category')->findOrFail($id);
+
+        $materials = \App\Models\Material::all();
+        $shapes = \App\Models\Shape::all();
+        $styles = \App\Models\Style::all(); // Assuming you have this
+        $sizes = \App\Models\Size::all();
+
+        // Similar Products Logic (same category, excluding current)
+        $similarProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $id)
+            ->take(4)
+            ->get();
+
+        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'styles', 'sizes', 'similarProducts'));
+    }
+
     public function product($id)
     {
         $product = Product::with('category')->findOrFail($id);
-        
+
         // Fetch auxiliaries for potential use (though specific product config drive the details)
         $materials = \App\Models\Material::all();
         $shapes = \App\Models\Shape::all();
@@ -117,7 +135,7 @@ class FrontendController extends Controller
             ->where('id', '!=', $product->id)
             ->take(4)
             ->get();
-        
+
         return view('frontend.product-details', compact('product', 'materials', 'shapes', 'sizes', 'similarProducts'));
     }
 }
