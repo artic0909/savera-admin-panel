@@ -93,10 +93,27 @@ class AdminController extends Controller
                 $slug = $slug . '-' . ($count + 1);
             }
 
+            $isMenu = $request->has('menu') ? true : false;
+            $isHomeCategory = $request->has('home_category') ? true : false;
+
+            if ($isMenu) {
+                if (Category::where('menu', true)->count() >= 8) {
+                    return redirect()->back()->with('error', 'You can only have 8 categories in the menu.');
+                }
+            }
+
+            if ($isHomeCategory) {
+                if (Category::where('home_category', true)->count() >= 5) {
+                    return redirect()->back()->with('error', 'You can only have 5 categories in the home page.');
+                }
+            }
+
             Category::create([
                 'name'  => $validated['name'],
                 'slug'  => $slug,
                 'image' => $imagePath,
+                'menu'  => $isMenu,
+                'home_category' => $isHomeCategory,
             ]);
 
             return redirect()->back()->with('success', 'Category created successfully');
@@ -155,10 +172,27 @@ class AdminController extends Controller
                 }
             }
 
+            $isMenu = $request->has('menu') ? true : false;
+            $isHomeCategory = $request->has('home_category') ? true : false;
+
+            if ($isMenu) {
+                if (Category::where('menu', true)->where('id', '!=', $id)->count() >= 8) {
+                    return redirect()->back()->with('error', 'You can only have 8 categories in the menu.');
+                }
+            }
+
+            if ($isHomeCategory) {
+                if (Category::where('home_category', true)->where('id', '!=', $id)->count() >= 5) {
+                    return redirect()->back()->with('error', 'You can only have 5 categories in the home page.');
+                }
+            }
+
             $category->update([
                 'name'  => $validated['name'],
                 'slug'  => $slug,
                 'image' => $imagePath,
+                'menu'  => $isMenu,
+                'home_category' => $isHomeCategory,
             ]);
 
             return redirect()->back()->with('success', 'Category updated successfully');
