@@ -189,6 +189,9 @@
         <div class="col-md-2">
             <input type="number" name="metal_configurations[METAL][diamond_info][DIAMOND][number_of_diamonds]" placeholder="No." class="form-control form-control-sm">
         </div>
+        <div class="col-md-2">
+             <input type="text" name="metal_configurations[METAL][diamond_info][DIAMOND][total_weight]" placeholder="Total Wt(g)" class="form-control form-control-sm">
+        </div>
         <div class="col-md-1">
             <button type="button" class="btn btn-danger btn-sm remove-diamond">x</button>
         </div>

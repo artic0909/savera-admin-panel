@@ -103,4 +103,21 @@ class FrontendController extends Controller
 
         return view('frontend.category', compact('category', 'products', 'materials', 'shapes', 'styles'));
     }
+
+    public function product($id)
+    {
+        $product = Product::with('category')->findOrFail($id);
+        
+        // Fetch auxiliaries for potential use (though specific product config drive the details)
+        $materials = \App\Models\Material::all();
+        $shapes = \App\Models\Shape::all();
+        $sizes = \App\Models\Size::all(); // Needed for size name lookup if used
+
+        $similarProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->take(4)
+            ->get();
+        
+        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'sizes', 'similarProducts'));
+    }
 }

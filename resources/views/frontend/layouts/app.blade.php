@@ -7,6 +7,7 @@
     <title>@yield('title') </title>
     <link rel="stylesheet" href="{{asset('assets/style.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/responsive.css')}}" />
+    <link rel="stylesheet" href="{{asset('assets/bootstrap.min.css')}}" /> 
     <link rel="stylesheet"
         href="https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css" />
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css" />

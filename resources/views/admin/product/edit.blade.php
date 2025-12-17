@@ -197,6 +197,9 @@
                                                 <div class="col-md-2">
                                                     <input type="number" name="metal_configurations[{{ $index }}][diamond_info][{{ $dIndex }}][number_of_diamonds]" value="{{ $dInfo['number_of_diamonds'] ?? '' }}" placeholder="No." class="form-control form-control-sm">
                                                 </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="metal_configurations[{{ $index }}][diamond_info][{{ $dIndex }}][total_weight]" value="{{ $dInfo['total_weight'] ?? '' }}" placeholder="Total Wt(g)" class="form-control form-control-sm">
+                                                </div>
                                                 <div class="col-md-1">
                                                     <button type="button" class="btn btn-danger btn-sm remove-diamond">x</button>
                                                 </div>
@@ -327,6 +330,9 @@
         </div>
         <div class="col-md-2">
             <input type="number" name="metal_configurations[METAL][diamond_info][DIAMOND][number_of_diamonds]" placeholder="No." class="form-control form-control-sm">
+        </div>
+        <div class="col-md-2">
+            <input type="text" name="metal_configurations[METAL][diamond_info][DIAMOND][total_weight]" placeholder="Total Wt" class="form-control form-control-sm">
         </div>
         <div class="col-md-1">
             <button type="button" class="btn btn-danger btn-sm remove-diamond">x</button>

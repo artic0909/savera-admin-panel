@@ -132,7 +132,9 @@
                     }
 
                     // 2. Fetch Diamond Price
-                    $diamondMaterial = $materials->firstWhere('name', 'Diamond');
+                    $diamondMaterial = $materials->first(function($item) {
+                        return strcasecmp($item->name, 'Diamond') === 0;
+                    });
                     $diamondPricePerCarat = $diamondMaterial ? $diamondMaterial->price : 0;
 
                     // Calculations
