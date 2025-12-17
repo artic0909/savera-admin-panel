@@ -63,7 +63,7 @@
                                         @endif
                                     </div>
                                     <!-- <div class="swiper-button-next"></div>
-                                        <div class="swiper-button-prev"></div> -->
+                                                <div class="swiper-button-prev"></div> -->
                                 </div>
                             </div>
                         </div>
@@ -198,6 +198,7 @@ $diamondInfo = $product->diamond_gemstone_info; // This might be top-level or in
 $shownDiamondInfo =
     $defaultConfig['diamond_info'] ?? ($product->diamond_gemstone_info ?? []);
 $netWeight = $defaultConfig['net_weight_gold'] ?? '--';
+$grossWeight = $defaultConfig['gross_weight_product'] ?? '--';
 
 $matId = $defaultConfig['material_id'] ?? null;
 $matName = $materials->where('id', $matId)->first()->name ?? 'Unknown';
@@ -220,8 +221,8 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                             Weight
                                         </h6>
                                         <p>
-                                            Gross Weight(Product): <span
-                                                id="gross-weight">{{ $product->gross_weight }}</span> g <br>
+                                            Gross Weight(Product): <span id="gross-weight">{{ $grossWeight }}</span> g
+                                            <br>
                                             Net Weight(gold): <span id="net-weight">{{ $netWeight }}</span> g
                                         </p>
                                     </div>
