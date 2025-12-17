@@ -110,9 +110,9 @@ class FrontendController extends Controller
 
         $materials = \App\Models\Material::all();
         $shapes = \App\Models\Shape::all();
-        $styles = \App\Models\Style::all(); // Assuming you have this
+        $styles = \App\Models\Style::all();
         $sizes = \App\Models\Size::all();
-        $colors = Product::where('id', $id)->pluck('color')->toArray();
+        $colors = \App\Models\Color::all(); // Fetch all colors from Color model as a collection
 
         // Similar Products Logic (same category, excluding current)
         $similarProducts = Product::where('category_id', $product->category_id)
@@ -120,23 +120,6 @@ class FrontendController extends Controller
             ->take(4)
             ->get();
 
-        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'styles', 'sizes','colors', 'similarProducts'));
-    }
-
-    public function product($id)
-    {
-        $product = Product::with('category')->findOrFail($id);
-
-        // Fetch auxiliaries for potential use (though specific product config drive the details)
-        $materials = \App\Models\Material::all();
-        $shapes = \App\Models\Shape::all();
-        $sizes = \App\Models\Size::all(); // Needed for size name lookup if used
-
-        $similarProducts = Product::where('category_id', $product->category_id)
-            ->where('id', '!=', $product->id)
-            ->take(4)
-            ->get();
-
-        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'sizes', 'similarProducts'));
+        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'styles', 'sizes', 'colors', 'similarProducts'));
     }
 }
