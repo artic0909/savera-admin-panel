@@ -3,7 +3,7 @@
 @section('title', 'Shopping Cart')
 
 @section('content')
-    <section style="padding: 60px 0; background: #f8f8f8;">
+    <section style="padding: 60px 0; ">
         <div class="wrapper">
             <h2 style="margin-bottom: 30px; text-align: center;">Shopping Cart</h2>
 
@@ -39,6 +39,9 @@
                                             @if ($item->metal_configuration)
                                                 Material: {{ $item->metal_configuration['material_name'] ?? 'N/A' }} |
                                                 Size: {{ $item->metal_configuration['size_name'] ?? 'N/A' }}
+                                                @if (isset($item->metal_configuration['color_name']))
+                                                    | Color: {{ $item->metal_configuration['color_name'] }}
+                                                @endif
                                             @endif
                                         </p>
                                         <p style="font-weight: bold; font-size: 18px; color: #000;">Rs.

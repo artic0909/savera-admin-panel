@@ -3,7 +3,7 @@
 @section('title', 'Order Details - ' . $order->order_number)
 
 @section('content')
-    <section style="padding: 60px 0; background: #f8f8f8;">
+    <section style="padding: 60px 0;">
         <div class="wrapper">
             <div style="max-width: 900px; margin: 0 auto;">
                 <div style="background: white; padding: 30px; border-radius: 10px; margin-bottom: 20px;">
@@ -37,6 +37,9 @@
                                     @if ($item->metal_configuration)
                                         Material: {{ $item->metal_configuration['material_name'] ?? 'N/A' }} |
                                         Size: {{ $item->metal_configuration['size_name'] ?? 'N/A' }}
+                                        @if (isset($item->metal_configuration['color_name']))
+                                            | Color: {{ $item->metal_configuration['color_name'] }}
+                                        @endif
                                     @endif
                                 </p>
                                 <p style="color: #666; font-size: 14px;">Quantity: {{ $item->quantity }}</p>

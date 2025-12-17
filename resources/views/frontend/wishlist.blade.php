@@ -3,7 +3,7 @@
 @section('title', 'My Wishlist')
 
 @section('content')
-    <section style="padding: 60px 0; background: #f8f8f8;">
+    <section style="padding: 60px 0; ">
         <div class="wrapper">
             <h2 style="margin-bottom: 30px; text-align: center;">My Wishlist</h2>
 

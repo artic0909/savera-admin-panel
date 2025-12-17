@@ -5,7 +5,7 @@
 @section('content')
     <style>
         .account-container {
-            max-width: 800px;
+            max-width: 1000px;
             width: 100%;
             padding: 2rem;
             margin: 0 auto;
@@ -93,7 +93,7 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Form styles - only for Profile tab */
+        /* Form styles */
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -143,31 +143,6 @@
             transform: translateY(-2px);
         }
 
-        /* Empty / Placeholder state for other tabs */
-        .placeholder-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: #888;
-        }
-
-        .placeholder-state .icon {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.2;
-        }
-
-        .placeholder-state h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #555;
-        }
-
-        .placeholder-state p {
-            font-size: 1.1rem;
-            max-width: 400px;
-            margin: 0 auto 2rem;
-        }
-
         .alert-success,
         .alert-danger {
             border-radius: 8px;
@@ -188,6 +163,104 @@
         .alert-danger ul {
             margin: 0.5rem 0 0;
             padding-left: 1.2rem;
+        }
+
+        /* Orders styles */
+        .order-item {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .order-number {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .order-status {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #FFC107;
+            color: #000;
+        }
+
+        .status-processing {
+            background: #2196F3;
+            color: white;
+        }
+
+        .status-shipped {
+            background: #9C27B0;
+            color: white;
+        }
+
+        .status-delivered {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .status-cancelled {
+            background: #F44336;
+            color: white;
+        }
+
+        .order-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .order-info span {
+            color: #666;
+        }
+
+        .order-total {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .btn-view-order {
+            background: var(--primary-color, #312111);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view-order:hover {
+            background: #1f140c;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #888;
+        }
+
+        .empty-state .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
         }
 
         @media (max-width: 768px) {
@@ -213,6 +286,11 @@
                 padding: 0.8rem;
                 font-size: 0.95rem;
             }
+
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 
@@ -231,12 +309,10 @@
             <!-- Tabs Navigation -->
             <div class="tabs-nav">
                 <div class="tab-link active" data-tab="profile">Profile</div>
-                <div class="tab-link" data-tab="orders">Orders</div>
-                <div class="tab-link" data-tab="cart">Cart</div>
-                <div class="tab-link" data-tab="wishlist">Wishlist</div>
+                <div class="tab-link" data-tab="orders">My Orders</div>
             </div>
 
-            <!-- Profile Tab - Only functional part -->
+            <!-- Profile Tab -->
             <div id="profile" class="tab-content active">
                 <div class="section-title">Personal Information</div>
 
@@ -300,34 +376,47 @@
                 </form>
             </div>
 
-            <!-- Orders Tab - Design Only -->
+            <!-- Orders Tab -->
             <div id="orders" class="tab-content">
                 <div class="section-title">My Orders</div>
-                <div class="placeholder-state">
-                    <div class="icon">📦</div>
-                    <h3>Your Order History</h3>
-                    <p>All your past and current orders will appear here with tracking details and status updates.</p>
-                </div>
-            </div>
 
-            <!-- Cart Tab - Design Only -->
-            <div id="cart" class="tab-content">
-                <div class="section-title">Shopping Cart</div>
-                <div class="placeholder-state">
-                    <div class="icon">🛒</div>
-                    <h3>Your Cart Items</h3>
-                    <p>Items you add to cart will show here with quantity, price, and checkout options.</p>
-                </div>
-            </div>
+                @if ($orders->isEmpty())
+                    <div class="empty-state">
+                        <div class="icon">📦</div>
+                        <h3>No Orders Yet</h3>
+                        <p>You haven't placed any orders yet. Start shopping to see your orders here!</p>
+                        <a href="{{ route('home') }}" class="btn-primary"
+                            style="display: inline-block; margin-top: 1rem; text-decoration: none;">Browse Products</a>
+                    </div>
+                @else
+                    @foreach ($orders as $order)
+                        <div class="order-item">
+                            <div class="order-header">
+                                <div>
+                                    <div class="order-number">Order #{{ $order->order_number }}</div>
+                                    <small style="color: #666;">{{ $order->created_at->format('d M, Y h:i A') }}</small>
+                                </div>
+                                <span class="order-status status-{{ $order->status }}">{{ $order->status }}</span>
+                            </div>
 
-            <!-- Wishlist Tab - Design Only -->
-            <div id="wishlist" class="tab-content">
-                <div class="section-title">Wishlist</div>
-                <div class="placeholder-state">
-                    <div class="icon">❤️</div>
-                    <h3>Your Favorite Products</h3>
-                    <p>Products you love and save for later will be listed here for easy access.</p>
-                </div>
+                            <div class="order-info">
+                                <span>Items: {{ $order->items->count() }}</span>
+                                <span>Payment: {{ strtoupper($order->payment_method) }}</span>
+                            </div>
+
+                            <div class="order-info">
+                                <span class="order-total">Total: Rs. {{ number_format($order->total, 2) }}</span>
+                            </div>
+
+                            <a href="{{ route('order.details', $order->order_number) }}" class="btn-view-order">View
+                                Details</a>
+                        </div>
+                    @endforeach
+
+                    <div style="margin-top: 2rem;">
+                        {{ $orders->links() }}
+                    </div>
+                @endif
             </div>
         </div>
     </div>

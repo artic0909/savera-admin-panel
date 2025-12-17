@@ -64,6 +64,17 @@
             </a>
         </li>
 
+        <!-- Orders -->
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Orders</span>
+        </li>
+        <li class="menu-item {{ Request::routeIs('admin.orders.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.orders.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-shopping-bag"></i>
+                <div data-i18n="manageOrders">Manage Orders</div>
+            </a>
+        </li>
+
         <!-- Setting -->
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Profile</span>

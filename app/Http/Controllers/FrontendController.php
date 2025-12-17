@@ -101,7 +101,7 @@ class FrontendController extends Controller
         $shapes = \App\Models\Shape::all();
         $styles = \App\Models\Style::all();
 
-        return view('frontend.category', compact('category', 'products', 'materials', 'shapes', 'styles'));
+        return view('frontend.category', compact('category', 'products', 'materials', 'shapes', 'styles'))->with(['pageclass' => 'hedersolution bg-1']);
     }
 
     public function productDetails($id)

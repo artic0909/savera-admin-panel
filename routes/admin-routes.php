@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,14 +36,19 @@ Route::middleware(['auth:admin'])->group(function () {
     // Route::get('/admin/products/add', [AdminController::class, 'addProductView'])->name('admin.products.add');
     // Route::get('/admin/products/edit', [AdminController::class, 'editProductView'])->name('admin.products.edit');
     // Route::get('/admin/products/index', [AdminController::class, 'indexProductView'])->name('admin.products.index');
-    
+
     Route::resource('admin/products', ProductController::class)->names('admin.products');
 
 
+    // Orders
+    Route::get('/admin/orders', [OrderController::class, 'index'])->name('admin.orders.index');
+    Route::get('/admin/orders/{id}', [OrderController::class, 'show'])->name('admin.orders.show');
+    Route::put('/admin/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+    Route::put('/admin/orders/{id}/payment-status', [OrderController::class, 'updatePaymentStatus'])->name('admin.orders.updatePaymentStatus');
+    Route::delete('/admin/orders/{id}', [OrderController::class, 'destroy'])->name('admin.orders.destroy');
 
 
     // Profile ==================================================================================================================================>
     Route::get('/admin/profile', [AdminController::class, 'adminProfileView'])->name('admin.profile');
     Route::post('/admin/profile/update', [AdminController::class, 'adminUpdateProfile'])->name('admin.profile.update');
-
 });

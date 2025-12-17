@@ -3,7 +3,6 @@
 @section('title', 'Category')
 
 @section('content')
-    <div class="header-bg"></div>
 
     <!-- inner banner -->
     <section>
@@ -19,7 +18,7 @@
                         </p>
                     </div>
                     <div class="inner-banner-right">
-                        <img src="{{ asset('assets/images/banner-3.webp') }}" alt="...">     
+                        <img src="{{ asset('assets/images/banner-3.webp') }}" alt="...">
                     </div>
                 </div>
             </div>
@@ -46,13 +45,15 @@
                                     <ul class="dropbtn-ul-2">
                                         <li class="dropbtn-li-2">
                                             <label class="d-flex align-items-center gap-2" style="cursor: pointer;">
-                                                <input type="checkbox" class="filter-checkbox sort-checkbox" data-type="sort" value="price_asc">
+                                                <input type="checkbox" class="filter-checkbox sort-checkbox"
+                                                    data-type="sort" value="price_asc">
                                                 Low to High
                                             </label>
                                         </li>
                                         <li class="dropbtn-li-2">
                                             <label class="d-flex align-items-center gap-2" style="cursor: pointer;">
-                                                <input type="checkbox" class="filter-checkbox sort-checkbox" data-type="sort" value="price_desc">
+                                                <input type="checkbox" class="filter-checkbox sort-checkbox"
+                                                    data-type="sort" value="price_desc">
                                                 High to Low
                                             </label>
                                         </li>
@@ -66,13 +67,14 @@
                                 </button>
                                 <div class="dropdown-content1">
                                     <ul class="dropbtn-ul-2">
-                                        @foreach($materials as $material)
-                                        <li class="dropbtn-li-2">
-                                            <label class="d-flex align-items-center gap-2" style="cursor: pointer;">
-                                                <input type="checkbox" class="filter-checkbox" data-type="metal" value="{{ $material->id }}">
-                                                {{ $material->name }}
-                                            </label>
-                                        </li>
+                                        @foreach ($materials as $material)
+                                            <li class="dropbtn-li-2">
+                                                <label class="d-flex align-items-center gap-2" style="cursor: pointer;">
+                                                    <input type="checkbox" class="filter-checkbox" data-type="metal"
+                                                        value="{{ $material->id }}">
+                                                    {{ $material->name }}
+                                                </label>
+                                            </li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -84,13 +86,14 @@
                                 </button>
                                 <div class="dropdown-content1">
                                     <ul class="dropbtn-ul-2">
-                                        @foreach($shapes as $shape)
-                                        <li class="dropbtn-li-2">
-                                            <label class="d-flex align-items-center gap-2" style="cursor: pointer;">
-                                                <input type="checkbox" class="filter-checkbox" data-type="shape" value="{{ $shape->shape_name }}">
-                                                {{ $shape->shape_name }}
-                                            </label>
-                                        </li>
+                                        @foreach ($shapes as $shape)
+                                            <li class="dropbtn-li-2">
+                                                <label class="d-flex align-items-center gap-2" style="cursor: pointer;">
+                                                    <input type="checkbox" class="filter-checkbox" data-type="shape"
+                                                        value="{{ $shape->shape_name }}">
+                                                    {{ $shape->shape_name }}
+                                                </label>
+                                            </li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -102,13 +105,14 @@
                                 </button>
                                 <div class="dropdown-content1">
                                     <ul class="dropbtn-ul-2">
-                                        @foreach($styles as $style)
-                                        <li class="dropbtn-li-2">
-                                            <label class="d-flex align-items-center gap-2" style="cursor: pointer;">
-                                                <input type="checkbox" class="filter-checkbox" data-type="style" value="{{ $style->style_name }}">
-                                                {{ $style->style_name }}
-                                            </label>
-                                        </li>
+                                        @foreach ($styles as $style)
+                                            <li class="dropbtn-li-2">
+                                                <label class="d-flex align-items-center gap-2" style="cursor: pointer;">
+                                                    <input type="checkbox" class="filter-checkbox" data-type="style"
+                                                        value="{{ $style->style_name }}">
+                                                    {{ $style->style_name }}
+                                                </label>
+                                            </li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -117,47 +121,48 @@
                     </div>
                 </div>
             </div>
-            
+
             {{-- Hidden Inputs for Filters (Optional now since we read checkboxes directly, but keeping for logic structure) --}}
             <input type="hidden" id="category_id" value="{{ $category->id }}">
 
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
                     const checkboxes = document.querySelectorAll('.filter-checkbox');
-                    
+
                     checkboxes.forEach(chk => {
                         chk.addEventListener('change', function() {
                             // Sort Logic: Mutually exclusive
-                            if(this.classList.contains('sort-checkbox') && this.checked) {
+                            if (this.classList.contains('sort-checkbox') && this.checked) {
                                 document.querySelectorAll('.sort-checkbox').forEach(c => {
-                                    if(c !== this) c.checked = false;
+                                    if (c !== this) c.checked = false;
                                 });
                             }
-                            
+
                             applyFilters();
                         });
                     });
-                    
+
                     function applyFilters() {
                         const categoryId = document.getElementById('category_id').value;
-                        
+
                         // Collect values
                         const getValues = (type) => {
-                            return Array.from(document.querySelectorAll(`.filter-checkbox[data-type="${type}"]:checked`))
+                            return Array.from(document.querySelectorAll(
+                                    `.filter-checkbox[data-type="${type}"]:checked`))
                                 .map(cb => cb.value)
                                 .join(',');
                         };
-                        
+
                         const sort = getValues('sort');
                         const metal = getValues('metal');
                         const shape = getValues('shape');
                         const style = getValues('style');
-                        
+
                         const container = document.getElementById('product-list-container');
-                        
-                        if(container) {
+
+                        if (container) {
                             container.style.opacity = '0.5';
-                            
+
                             const params = new URLSearchParams({
                                 category_id: categoryId,
                                 sort: sort,
@@ -165,7 +170,7 @@
                                 shape: shape,
                                 style: style
                             });
-                            
+
                             fetch(`{{ route('ajax.products') }}?${params.toString()}`)
                                 .then(response => response.json())
                                 .then(data => {
@@ -176,11 +181,13 @@
                     }
                 });
             </script>
-            <div class="wrapper">
-                <div class="cetagory-div">
-                    <div class="row product-list" id="product-list-container">
-                        @include('frontend.partials.product_loop', ['products' => $products, 'itemClass' => 'col-lg-3 col-md-3 col-sm-4 col-6 cetagory-item product-item', 'showName' => true])
-                    </div>
+            <div class="wrapper" style="margin-top: 50px;">
+                <div class="product-list" id="product-list-container">
+                    @include('frontend.partials.product_loop', [
+                        'products' => $products,
+                        'itemClass' => 'col-lg-3 col-md-3 col-sm-4 col-6 cetagory-item product-item',
+                        'showName' => true,
+                    ])
                 </div>
             </div>
         </div>

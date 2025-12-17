@@ -18,7 +18,7 @@ class WishlistController extends Controller
             ->where('customer_id', Auth::guard('customer')->id())
             ->get();
 
-        return view('frontend.wishlist', compact('wishlistItems'));
+        return view('frontend.wishlist', compact('wishlistItems'))->with('pageclass', 'hedersolution bg-1');
     }
 
     // Add product to wishlist

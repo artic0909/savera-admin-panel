@@ -34,7 +34,7 @@ class CheckoutController extends Controller
         $addresses = CustomerAddress::where('customer_id', $customerId)->get();
         $customer = Auth::guard('customer')->user();
 
-        return view('frontend.checkout', compact('cartItems', 'subtotal', 'tax', 'shipping', 'total', 'addresses', 'customer'));
+        return view('frontend.checkout', compact('cartItems', 'subtotal', 'tax', 'shipping', 'total', 'addresses', 'customer'))->with('pageclass', 'hedersolution bg-1');
     }
 
     // Place order
@@ -156,7 +156,7 @@ class CheckoutController extends Controller
             ->where('customer_id', Auth::guard('customer')->id())
             ->firstOrFail();
 
-        return view('frontend.order-success', compact('order'));
+        return view('frontend.order-success', compact('order'))->with('pageclass', 'hedersolution bg-1');
     }
 
     // My orders page
@@ -166,7 +166,7 @@ class CheckoutController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('frontend.my-orders', compact('orders'));
+        return view('frontend.my-orders', compact('orders'))->with('pageclass', 'hedersolution bg-1');
     }
 
     // Order details page
@@ -177,6 +177,7 @@ class CheckoutController extends Controller
             ->where('customer_id', Auth::guard('customer')->id())
             ->firstOrFail();
 
-        return view('frontend.order-details', compact('order'));
+        return view('frontend.order-details', compact('order'))
+            ->with('pageclass', 'hedersolution bg-1');
     }
 }

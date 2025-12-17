@@ -22,7 +22,7 @@ class CartController extends Controller
         $shipping = 0; // Free shipping
         $total = $subtotal + $tax + $shipping;
 
-        return view('frontend.cart', compact('cartItems', 'subtotal', 'tax', 'shipping', 'total'));
+        return view('frontend.cart', compact('cartItems', 'subtotal', 'tax', 'shipping', 'total'))->with('pageclass', 'hedersolution bg-1');
     }
 
     // Add item to cart

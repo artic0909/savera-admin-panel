@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -72,8 +73,14 @@ class CustomerAuthController extends Controller
 
     public function profile()
     {
+        $orders = Order::where('customer_id', Auth::guard('customer')->id())
+            ->with('items')
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
+
         return view('frontend.auth.profile', [
             'user' => Auth::guard('customer')->user(),
+            'orders' => $orders,
             'pageclass' => 'hedersolution bg-1'
         ]);
     }

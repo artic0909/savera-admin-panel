@@ -63,7 +63,7 @@
                                         @endif
                                     </div>
                                     <!-- <div class="swiper-button-next"></div>
-                                                        <div class="swiper-button-prev"></div> -->
+                                                                                                <div class="swiper-button-prev"></div> -->
                                 </div>
                             </div>
                         </div>
@@ -97,9 +97,9 @@
                                 <p>
                                     COLOR
                                 </p>
-                                <div class="color-option">
+                                <div class="color-option" id="color-options-container">
                                     @if (is_array($product->colors) && count($product->colors) > 0)
-                                        @foreach ($product->colors as $colorId)
+                                        @foreach ($product->colors as $index => $colorId)
                                             @php
                                                 // Resolve color object from the passed $colors collection
                                                 $colorObj = $colors->find($colorId);
@@ -122,11 +122,24 @@
                                             @endphp
 
                                             @if ($isHex)
-                                                <button style="background-color: {{ $colorVal }};"
-                                                    title="{{ $colorObj ? $colorObj->color_name : $colorVal }}"></button>
+                                                <button class="color-btn {{ $index === 0 ? 'active' : '' }}"
+                                                    style="background-color: {{ $colorVal }}; position: relative;"
+                                                    data-color-id="{{ $colorId }}"
+                                                    data-color-name="{{ $colorObj ? $colorObj->color_name : $colorVal }}"
+                                                    onclick="selectColor(this)"
+                                                    title="{{ $colorObj ? $colorObj->color_name : $colorVal }}">
+                                                    <span class="checkmark"
+                                                        style="display: {{ $index === 0 ? 'block' : 'none' }};">✓</span>
+                                                </button>
                                             @else
-                                                <button class="text-btn" title="{{ $colorVal }}"
-                                                    style="width: auto; padding: 0 10px; font-size: 12px;">{{ $colorVal }}</button>
+                                                <button class="text-btn color-btn {{ $index === 0 ? 'active' : '' }}"
+                                                    title="{{ $colorVal }}" data-color-id="{{ $colorId }}"
+                                                    data-color-name="{{ $colorVal }}" onclick="selectColor(this)"
+                                                    style="width: auto; padding: 0 10px; font-size: 12px; position: relative;">
+                                                    {{ $colorVal }}
+                                                    <span class="checkmark"
+                                                        style="display: {{ $index === 0 ? 'inline' : 'none' }}; margin-left: 5px;">✓</span>
+                                                </button>
                                             @endif
                                         @endforeach
                                     @else
@@ -191,10 +204,10 @@
                                 @endif
                             </div>
                             <p class="p2">
-                                <a href="#">Delivery & Cancellation</a>
+                                <a href="#" class="dc">Delivery & Cancellation</a>
                             </p>
                             <p class="p2">
-                                <a href="#">Estimated delivery by </a>
+                                <a href="#" class="dc">Estimated delivery by </a>
                             </p>
                             <form>
                                 <div class="pincode">
@@ -202,6 +215,8 @@
                                     <button type="submit">Check</button>
                                 </div>
                             </form>
+
+                            <p class="cat">Category: <span>{{ $product->category->name }}</span></p>
                         </div>
                     </div>
                 </div>
@@ -364,7 +379,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                                         {{ $materialPrice }})</span>
                                                 </td>
                                                 <td id="gold-cost-display">
-                                                    Rs. {{ number_format($materialCost, 2) }}
+                                                    ₹ {{ number_format($materialCost, 2) }}
                                                 </td>
                                             </tr>
                                             <tr id="diamond-row"
@@ -375,7 +390,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                                         x {{ $diamondPricePerCarat }})</span>
                                                 </td>
                                                 <td id="diamond-cost-display">
-                                                    Rs. {{ number_format($diamondCost, 2) }}
+                                                    ₹ {{ number_format($diamondCost, 2) }}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -383,7 +398,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                                     Making Charge
                                                 </td>
                                                 <td id="making-charge-display">
-                                                    Rs. {{ number_format($makingCharge, 2) }}
+                                                    ₹ {{ number_format($makingCharge, 2) }}
                                                 </td>
                                             </tr>
 
@@ -392,7 +407,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                                     GST (<span id="gst-percent-display">{{ $gstPercentage }}</span>%)
                                                 </td>
                                                 <td id="gst-amount-display">
-                                                    Rs. {{ number_format($gstAmount, 2) }}
+                                                    ₹ {{ number_format($gstAmount, 2) }}
                                                 </td>
                                             </tr>
 
@@ -401,7 +416,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                                     <b>Total</b>
                                                 </td>
                                                 <td>
-                                                    <b id="final-total-display">Rs.
+                                                    <b id="final-total-display">₹
                                                         {{ number_format($finalPrice, 2) }}</b>
                                                 </td>
                                             </tr>
@@ -538,7 +553,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
 
         // Helper to format currency
         function formatCurrency(amount) {
-            return 'Rs. ' + parseFloat(amount).toLocaleString('en-IN', {
+            return '₹ ' + parseFloat(amount).toLocaleString('en-IN', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
@@ -736,7 +751,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
             let materialName = activeBtn.textContent;
             let sizeName = sizeSelector.options[sizeSelector.selectedIndex].text;
             let priceText = document.getElementById('dynamic-price').textContent;
-            let price = parseFloat(priceText.replace('Rs.', '').replace(/,/g, '').trim());
+            let price = parseFloat(priceText.replace('₹', '').replace(/,/g, '').trim());
 
             fetch('/cart/add', {
                     method: 'POST',
@@ -751,7 +766,9 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                             material_id: materialId,
                             material_name: materialName,
                             size_id: sizeId,
-                            size_name: sizeName
+                            size_name: sizeName,
+                            color_id: window.selectedColorId || null,
+                            color_name: window.selectedColorName || null
                         },
                         price: price
                     })
@@ -793,12 +810,70 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                     }
                 });
         };
+
+        // Color selection function
+        window.selectColor = function(button) {
+            // Remove active class from all color buttons
+            document.querySelectorAll('.color-btn').forEach(btn => {
+                btn.classList.remove('active');
+                const checkmark = btn.querySelector('.checkmark');
+                if (checkmark) checkmark.style.display = 'none';
+            });
+
+            // Add active to clicked button
+            button.classList.add('active');
+            const checkmark = button.querySelector('.checkmark');
+            if (checkmark) {
+                checkmark.style.display = button.classList.contains('text-btn') ? 'inline' : 'block';
+            }
+
+            // Store selected color
+            window.selectedColorId = button.dataset.colorId;
+            window.selectedColorName = button.dataset.colorName;
+        };
+
+        // Initialize first color as selected
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstColorBtn = document.querySelector('.color-btn');
+            if (firstColorBtn) {
+                window.selectedColorId = firstColorBtn.dataset.colorId;
+                window.selectedColorName = firstColorBtn.dataset.colorName;
+            }
+        });
     </script>
     <style>
         .metal-btn.active {
-            border: 2px solid #000;
-            /* Example active style */
+            background-color: #3C3550 !important;
+            color: white;
+        }
+
+        .color-btn {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .color-btn .checkmark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
             font-weight: bold;
+            font-size: 16px;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .color-btn.text-btn .checkmark {
+            position: relative;
+            top: auto;
+            left: auto;
+            transform: none;
+            color: #4CAF50;
+            text-shadow: none;
+        }
+
+        .color-btn:hover {
+            transform: scale(1.1);
         }
     </style>
 @endpush

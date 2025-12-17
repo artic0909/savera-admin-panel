@@ -3,7 +3,7 @@
 @section('title', 'Order Success')
 
 @section('content')
-    <section style="padding: 80px 0; background: #f8f8f8;">
+    <section style="padding: 80px 0; ">
         <div class="wrapper">
             <div
                 style="max-width: 800px; margin: 0 auto; background: white; padding: 60px; border-radius: 10px; text-align: center;">
@@ -18,7 +18,7 @@
                 <p style="font-size: 16px; color: #666; margin-bottom: 30px;">Thank you for your order. We'll send you a
                     confirmation email shortly.</p>
 
-                <div style="background: #f8f8f8; padding: 30px; border-radius: 10px; margin-bottom: 30px;">
+                <div style=" padding: 30px; border-radius: 10px; margin-bottom: 30px;">
                     <h4 style="margin-bottom: 20px;">Order Details</h4>
 
                     <div style="display: flex; justify-content: space-between; margin-bottom: 10px; text-align: left;">
