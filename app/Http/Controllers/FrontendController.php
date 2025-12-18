@@ -101,7 +101,9 @@ class FrontendController extends Controller
         $shapes = \App\Models\Shape::all();
         $styles = \App\Models\Style::all();
 
-        return view('frontend.category', compact('category', 'products', 'materials', 'shapes', 'styles'))->with(['pageclass' => 'hedersolution bg-1']);
+        $categories = Category::where('home_category', true)->take(5)->get();
+
+        return view('frontend.category', compact('category', 'products', 'materials', 'shapes', 'styles', 'categories'))->with(['pageclass' => 'hedersolution bg-1']);
     }
 
     public function productDetails($slug)
@@ -113,6 +115,7 @@ class FrontendController extends Controller
         $styles = \App\Models\Style::all();
         $sizes = \App\Models\Size::all();
         $colors = \App\Models\Color::all(); // Fetch all colors from Color model as a collection
+        $categories = Category::where('home_category', true)->take(5)->get();
 
         // Similar Products Logic (same category, excluding current)
         $similarProducts = Product::where('category_id', $product->category_id)
@@ -128,6 +131,6 @@ class FrontendController extends Controller
                 ->first();
         }
 
-        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'styles', 'sizes', 'colors', 'similarProducts', 'wishlistItem'))->with(['pageclass' => 'hedersolution bg-1']);
+        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'styles', 'sizes', 'colors', 'similarProducts', 'wishlistItem', 'categories'))->with(['pageclass' => 'hedersolution bg-1']);
     }
 }

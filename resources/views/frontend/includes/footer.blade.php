@@ -5,43 +5,38 @@
             </div>
             <div class="footer-grid">
                 <div class="footer-col">
-                    <h3><i class="fi fi-rr-apps"></i> Solutions</h3>
+                    <h3><i class="fi fi-rr-apps"></i> Categories</h3>
                     <ul>
-                        <li><a href="#">MySigns</a></li>
-                        <li><a href="#">Internet of Things</a></li>
-                        <li><a href="#">Business Intelligence</a></li>
-                        <li><a href="#">Artificial Intelligence</a></li>
-                        <li><a href="#">apps</a></li>
+                        @foreach($categories as $category)
+                        <li><a href="{{ route('category.show', $category->slug) }}">{{ $category->name }}</a></li>
+                        @endforeach
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h3><i class="fi fi-rr-cloud"></i> Services</h3>
+                    <h3><i class="fi fi-rr-cloud"></i> Policies</h3>
                     <ul>
-                        <li><a href="#">cloud</a></li>
-                        <li><a href="#">Consultancy</a></li>
-                        <li><a href="#">Modern Workplace</a></li>
-                        <li><a href="#">Managed Services</a></li>
-                        <li><a href="#">Security</a></li>
+                        <li><a href="#">Return Policy</a></li>
+                        <li><a href="#">Exchange</a></li>
+                        <li><a href="#">Buy back Policy</a></li>
+                        <li><a href="#">Shipping Policy</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h3><i class="fi fi-rr-briefcase"></i> Sectors</h3>
+                    <h3><i class="fi fi-rr-briefcase"></i> About us</h3>
                     <ul>
-                        <li><a href="#">Occupational health and safety services</a></li>
-                        <li><a href="#">Logistics</a></li>
-                        <li><a href="#">Industry</a></li>
-                        <li><a href="#">Business services</a></li>
+                        <li><a href="#">Who we are</a></li>
+                        <li><a href="#">What we do</a></li>
+                        <li><a href="#">Contacts</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h3><i class="fi fi-rr-info"></i> About us</h3>
+                    <h3><i class="fi fi-rr-info"></i> Socials</h3>
                     <ul>
-                        <li><a href="#">About us</a></li>
-                        <li><a href="#">Approach</a></li>
-                        <li><a href="#">Success Stories</a></li>
-                        <li><a href="#">Insights</a></li>
-                        <li><a href="#">Work at</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="#" style=" display: flex;align-items: center; gap: 5px; text-decoration: none;"><i class="fi fi-brands-instagram"></i> <span style="margin-bottom: 2px;">Instagram</span></a></li>
+                        <li><a href="#" style=" display: flex;align-items: center; gap: 5px; text-decoration: none;"><i class="fi fi-brands-facebook"></i> <span style="margin-bottom: 2px;">Facebook</span></a></li>
+                        <li><a href="#" style=" display: flex;align-items: center; gap: 5px; text-decoration: none;"><i class="fi fi-brands-linkedin"></i> <span style="margin-bottom: 2px;">LinkedIn</span></a></li>
+                        <li><a href="#" style=" display: flex;align-items: center; gap: 5px; text-decoration: none;"><i class="fi fi-brands-pinterest"></i> <span style="margin-bottom: 2px;">Pinterest</span></a></li>
                     </ul>
                 </div>
                 <div class="footer-col newsletter">
@@ -59,17 +54,16 @@
             </div>
             <div class="footer-bottom">
                 <div class="social-icons">
-                    <a href="#"><i class="fi fi-brands-instagram"></i></a>
-                    <a href="#"><i class="fi fi-brands-linkedin"></i></a>
-                    <a href="#"><i class="fi fi-brands-facebook"></i></a>
-                    <a href="#"><i class="fi fi-brands-whatsapp"></i></a>
-                    <a href="#"><i class="fi fi-rr-envelope"></i></a>
+                    <a href="#" style="display:flex; justify-content:center; align-items:center;"><i class="fi fi-brands-instagram" style="width: 18px; height: 18px;"></i></a>
+                    <a href="#" style="display:flex; justify-content:center; align-items:center;"><i class="fi fi-brands-facebook" style="width: 18px; height: 18px;"></i></a>
+                    <a href="#" style="display:flex; justify-content:center; align-items:center;"><i class="fi fi-brands-linkedin" style="width: 18px; height: 18px;"></i></a>
+                    <a href="#" style="display:flex; justify-content:center; align-items:center;"><i class="fi fi-brands-pinterest" style="width: 18px; height: 18px;"></i></a>
                 </div>
                 <div class="partners">
                     <!-- Placeholders for partner logos -->
-                    <span>Microsoft Partner</span>
-                    <span>Google Partner</span>
-                    <span>ISO 27001:2017</span>
+                    <span><img src="{{asset('img/1.png')}}" alt="" class="footer-brands" style="height: 35px; width: auto; object-fit: contain; opacity: 0.9;"></span>
+                    <span><img src="{{asset('img/2.png')}}" alt="" class="footer-brands" style="height: 35px; width: auto; object-fit: contain; opacity: 0.9;"></span>
+                    <span><img src="{{asset('img/3.png')}}" alt="" class="footer-brands" style="height: 35px; width: auto; object-fit: contain; opacity: 0.9;"></span>
                 </div>
                 <div class="legal-links">
                     <a href="#">Privacy statement</a>
