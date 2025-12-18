@@ -59,15 +59,12 @@
         <div class="wrapper">
             <h2>Category</h2>
             <div class="cat-list">
-                @foreach($categories as $category)
-                <a href="#" 
-                   class="cat-item {{ $loop->first ? 'active' : '' }}" 
-                   data-id="{{ $category->id }}"
-                   data-slug="{{ $category->slug }}"
-                   onclick="loadCategory(event, this)">
-                    <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" />
-                    <h3>{{ $category->name }}</h3>
-                </a>
+                @foreach ($categories as $category)
+                    <a href="#" class="cat-item {{ $loop->first ? 'active' : '' }}" data-id="{{ $category->id }}"
+                        data-slug="{{ $category->slug }}" onclick="loadCategory(event, this)">
+                        <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" />
+                        <h3>{{ $category->name }}</h3>
+                    </a>
                 @endforeach
             </div>
         </div>
@@ -84,7 +81,8 @@
                 </div>
 
                 <div class="explore-btn">
-                    <a href="{{ route('category.show', ['slug' => $selectedCategory->slug ?? '#']) }}" id="explore-more-btn">Explore More</a>
+                    <a href="{{ route('category.show', ['slug' => $selectedCategory->slug ?? '#']) }}"
+                        id="explore-more-btn">Explore More</a>
                 </div>
             </div>
         </div>
@@ -93,7 +91,7 @@
     <script>
         function loadCategory(event, element) {
             event.preventDefault();
-            
+
             // Remove active class from all
             document.querySelectorAll('.cat-item').forEach(el => el.classList.remove('active'));
             // Add to clicked
@@ -103,7 +101,7 @@
             const container = document.getElementById('product-container');
             const loader = document.getElementById('product-loader');
             const exploreBtn = document.getElementById('explore-more-btn');
-            
+
             container.style.opacity = '0.5';
             loader.style.display = 'block';
 
@@ -113,9 +111,9 @@
                     container.innerHTML = data.html;
                     container.style.opacity = '1';
                     loader.style.display = 'none';
-                    
+
                     // Update Explore More Link
-                    if(data.category_slug && data.category_slug !== '#') {
+                    if (data.category_slug && data.category_slug !== '#') {
                         // We need the base URL structure.
                         // Simplest way: construct it or pass full url from backend.
                         // Let's use a JS variable for route pattern if this was complex, 
@@ -206,10 +204,10 @@
                         <img src="assets/images/choose-img.png" alt="Why Choose 1" />
                     </div>
                     <div class="choose-item item-tr">
-                        <img src="assets/images/choose-img.png" alt="Why Choose 2" />
+                        <img src="assets/images/choose-img-1.png" alt="Why Choose 2" />
                     </div>
                     <div class="choose-item item-bl">
-                        <img src="assets/images/choose-img.png" alt="Why Choose 3" />
+                        <img src="assets/images/choose-img-1.png" alt="Why Choose 3" />
                     </div>
                     <div class="choose-item item-br">
                         <img src="assets/images/choose-img.png" alt="Why Choose 4" />
