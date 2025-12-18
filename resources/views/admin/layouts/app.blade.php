@@ -200,8 +200,7 @@
                                     document.write(new Date().getFullYear());
                                 </script>
                                 , made with ❤️ by
-                                <a href="https://github.com/artic0909" target="_blank"
-                                    class="footer-link fw-bolder">Saklinmustak</a>
+                                <a href="#" target="_blank" class="footer-link fw-bolder">developers</a>
                             </div>
                         </div>
                     </footer>
