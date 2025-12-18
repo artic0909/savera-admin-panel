@@ -7,39 +7,17 @@
         <div class="carousel-container">
             <!-- Slide 1 -->
             <div class="carousel-slide active">
-                <div class="content">
-                    <span>Welcome Offer</span>
-                    <h2>Flat <span>₹</span>200 OFF</h2>
-                    <div class="coupon-btn">Use Code: WLCM200</div>
-                </div>
-                <div class="image">
-                    <img src="assets/images/banner-2.png" alt="Model" />
-                </div>
+                <img src="assets/images/bg-banner-x.webp" alt="Model" />
+            </div>
+            <div class="carousel-slide ">
+                <img src="assets/images/bg-banner-x.webp" alt="Model" />
+            </div>
+            <div class="carousel-slide ">
+                <img src="assets/images/bg-banner-x.webp" alt="Model" />
             </div>
 
-            <!-- Slide 2 (Duplicate for demo) -->
-            <div class="carousel-slide">
-                <div class="content">
-                    <span>Exclusive Deal</span>
-                    <h2>Gold Plated Rings</h2>
-                    <div class="coupon-btn">Shop Now</div>
-                </div>
-                <div class="image">
-                    <img src="assets/images/banner-2.png" alt="Model" />
-                </div>
-            </div>
 
-            <!-- Slide 3 (Duplicate for demo) -->
-            <div class="carousel-slide">
-                <div class="content">
-                    <span>New Arrivals</span>
-                    <h2>Elegant Necklaces</h2>
-                    <div class="coupon-btn">View Collection</div>
-                </div>
-                <div class="image">
-                    <img src="assets/images/banner-2.png" alt="Model" />
-                </div>
-            </div>
+
 
             <div class="carousel-dots">
                 <span class="dot active"></span>

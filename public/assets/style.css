@@ -305,7 +305,7 @@ img {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 80px;
+            padding: 0 0px;
             box-sizing: border-box;
             opacity: 0;
             transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
@@ -318,6 +318,10 @@ img {
                 transform: translateX(0);
                 pointer-events: auto;
                 z-index: 2;
+            }
+
+            img {
+                object-fit: cover;
             }
 
             .content {
