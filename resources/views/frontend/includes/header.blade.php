@@ -13,14 +13,14 @@
                     <a href="#" class="icon-btn"><i class="fi fi-rr-search"></i></a>
 
                     @if (Auth::guard('customer')->check())
-                        <a href="{{ route('wishlist.index') }}" class="icon-btn" title="Wishlist">
+                        <a href="{{ route('wishlist.index') }}" class="icon-btn cart-btn" title="Wishlist">
                             <i class="fi fi-rr-heart"></i>
                             <span class="count" id="wishlist-count">0</span>
                         </a>
                         <a href="{{ route('profile') }}" class="icon-btn" title="My Profile"><i
                                 class="fi fi-rr-user"></i></a>
                     @else
-                        <a href="{{ route('login') }}" class="icon-btn" title="Wishlist"><i
+                        <a href="{{ route('login') }}" class="icon-btn " title="Wishlist"><i
                                 class="fi fi-rr-heart"></i></a>
                         <a href="{{ route('login') }}" class="icon-btn" title="Login / Register"><i
                                 class="fi fi-rr-user"></i></a>

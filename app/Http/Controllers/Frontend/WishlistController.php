@@ -42,7 +42,7 @@ class WishlistController extends Controller
             ], 409);
         }
 
-        Wishlist::create([
+        $wishlist = Wishlist::create([
             'customer_id' => $customerId,
             'product_id' => $request->product_id,
         ]);
@@ -51,6 +51,7 @@ class WishlistController extends Controller
             'success' => true,
             'message' => 'Product added to wishlist!',
             'wishlist_count' => Wishlist::where('customer_id', $customerId)->count(),
+            'wishlist_id' => $wishlist->id,
         ]);
     }
 
@@ -66,6 +67,7 @@ class WishlistController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Item removed from wishlist!',
+            'wishlist_count' => Wishlist::where('customer_id', Auth::guard('customer')->id())->count(),
         ]);
     }
 

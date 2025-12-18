@@ -72,6 +72,7 @@ Route::middleware('auth:customer')->group(function () {
     Route::get('wishlist/count', [WishlistController::class, 'count'])->name('wishlist.count');
 
     // Checkout & Orders Routes
+    Route::post('checkout/direct', [CheckoutController::class, 'directCheckout'])->name('checkout.direct');
     Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.placeOrder');
     Route::get('order-success/{orderNumber}', [CheckoutController::class, 'success'])->name('order.success');

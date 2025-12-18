@@ -9,6 +9,7 @@
         window.productConfigs = @json($product->metal_configurations);
         window.materials = @json($materials->keyBy('id'));
         window.sizes = @json($sizes->keyBy('id'));
+        window.wishlistId = {{ $wishlistItem ? $wishlistItem->id : 'null' }};
         // Find diamond material price rate
         @php
             $dMat = $materials->first(fn($m) => strcasecmp($m->name, 'Diamond') === 0);
@@ -63,15 +64,21 @@
                                         @endif
                                     </div>
                                     <!-- <div class="swiper-button-next"></div>
-                                                                                                <div class="swiper-button-prev"></div> -->
+                                                                                                                                                                                    <div class="swiper-button-prev"></div> -->
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-12">
+                    <div class="col-lg-6 col-md-6 col-12 mt-4 mt-lg-0">
                         <div class="product-single-right">
-                            <h2>
+                            <h2 class="d-flex justify-content-between align-items-center position-relative">
                                 {{ $product->product_name }}
+                                <div style="position: relative;">
+
+                                    <i class="fi {{ $wishlistItem ? 'fi-sr-heart' : 'fi-rr-heart' }}" id="wishlist-icon"
+                                        style="font-size: 25px; cursor: pointer; transition: color 0.3s; color: {{ $wishlistItem ? 'red' : 'inherit' }};"
+                                        onclick="toggleWishlist(this)"></i>
+                                </div>
                             </h2>
                             <h5 id="dynamic-price">
                                 {{ $product->display_price }}
@@ -193,9 +200,10 @@
                                 @if (Auth::guard('customer')->check())
                                     <button type="button" onclick="addToCart()" style="cursor: pointer;">ADD TO
                                         CART</button>
-                                    <button type="button" onclick="addToWishlist()"
-                                        style="cursor: pointer; background: white; color: #000; border: 2px solid #000;">ADD
-                                        TO WISHLIST</button>
+
+                                    <button type="button" onclick="buyNow()"
+                                        style="cursor: pointer; background: white; color: #000; border: 2px solid #000;">BUY
+                                        NOW</button>
                                 @else
                                     <a href="{{ route('login') }}"
                                         style="display: block; text-align: center; text-decoration: none; color: inherit;">
@@ -807,6 +815,166 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                         }
                     } else {
                         alert(data.message || 'Failed to add to wishlist.');
+                    }
+                });
+        };
+
+        // Toggle Wishlist (Silent + Icon Change)
+        // Toggle Wishlist (Add / Remove)
+        window.toggleWishlist = function(icon) {
+            let csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+            if (window.wishlistId) {
+                // REMOVE from Wishlist
+                fetch(`/wishlist/remove/${window.wishlistId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Reset Icon to Empty
+                            icon.classList.remove('fi-sr-heart');
+                            icon.classList.add('fi-rr-heart');
+                            icon.style.color = 'inherit';
+                            window.wishlistId = null;
+
+                            // Update count if exists
+                            // Note: Delete response might not return count, but we can assume -1 or fetch fresh count.
+                            // Ideally the backend should return the new count or we fetch it.
+                            // For now let's try to update if possible.
+                            // Update count if exists
+                            if (document.getElementById('wishlist-count') && data.wishlist_count !== undefined) {
+                                document.getElementById('wishlist-count').textContent = data.wishlist_count;
+                            }
+                        } else {
+                            alert(data.message || 'Failed to remove from wishlist.');
+                        }
+                    })
+                    .catch(err => console.error('Wishlist Remove Error:', err));
+
+            } else {
+                // ADD to Wishlist
+                fetch('/wishlist/add', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify({
+                            product_id: {{ $product->id }}
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Change Icon to Filled
+                            icon.classList.remove('fi-rr-heart');
+                            icon.classList.add('fi-sr-heart');
+                            icon.style.color = 'red';
+                            window.wishlistId = data.wishlist_id;
+
+                            if (document.getElementById('wishlist-count')) {
+                                document.getElementById('wishlist-count').textContent = data.wishlist_count;
+                            }
+                        } else if (data.message && data.message.toLowerCase().includes('already')) {
+                            // Just update visuals if backend says it's there
+                            icon.classList.remove('fi-rr-heart');
+                            icon.classList.add('fi-sr-heart');
+                            icon.style.color = 'red';
+                            alert('Product is already in your wishlist.');
+                        } else {
+                            // If user not logged in or other error
+                            if (data.message === 'Unauthenticated.') {
+                                window.location.href = "{{ route('login') }}";
+                            } else {
+                                alert(data.message || 'Failed to add to wishlist.');
+                            }
+                        }
+                    })
+                    .catch(err => {
+                        // Handle 401 standard from Laravel
+                        if (err.status === 401) {
+                            window.location.href = "{{ route('login') }}";
+                        }
+                        console.error('Wishlist Add Error:', err);
+                    });
+            }
+        };
+
+        // Buy Now Function (Direct Checkout)
+        window.buyNow = function() {
+            let activeBtn = document.querySelector('.metal-btn.active');
+            if (!activeBtn) {
+                alert('Please select a metal type');
+                return;
+            }
+
+            let materialId = activeBtn.dataset.materialId;
+            let sizeSelector = document.getElementById('size-selector');
+            let sizeId = sizeSelector.value;
+
+            if (!sizeId) {
+                alert('Please select a size');
+                return;
+            }
+
+            let materialName = activeBtn.textContent;
+            let sizeName = sizeSelector.options[sizeSelector.selectedIndex].text;
+            let priceText = document.getElementById('dynamic-price').textContent;
+            let price = parseFloat(priceText.replace('₹', '').replace(/,/g, '').trim());
+
+            fetch('/checkout/direct', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        product_id: {{ $product->id }},
+                        quantity: 1,
+                        price: price, // Re-validate on backend!
+                        metal_configuration: {
+                            material_id: materialId,
+                            material_name: materialName,
+                            size_id: sizeId,
+                            size_name: sizeName,
+                            color_id: window.selectedColorId || null,
+                            color_name: window.selectedColorName || null
+                        }
+                    })
+                })
+                .then(async response => {
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            window.location.href = "{{ route('login') }}";
+                            return;
+                        }
+                        if (response.status === 422) {
+                            const data = await response.json();
+                            alert(data.message || 'Validation failed.');
+                            return;
+                        }
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.success) {
+                        window.location.href = data.redirect_url;
+                    } else if (data) {
+                        alert(data.message || 'Failed to initiate buy now.');
+                    }
+                })
+                .catch(err => {
+                    console.error('Buy Now Error:', err);
+                    // Prevent alert if redirected
+                    if (!err.status || err.status !== 401) {
+                        alert('Something went wrong. Please try again.');
                     }
                 });
         };

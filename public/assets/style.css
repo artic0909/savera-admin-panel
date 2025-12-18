@@ -515,7 +515,7 @@ img {
         p {
             font-size: 30px;
             font-family: 'Microsoft Yi Baiti', sans-serif;
-            margin: 10px 0 25px;
+            margin: 0 15px;
 
         }
     }
@@ -1128,7 +1128,7 @@ img {
 }
 
 .product-single-sec {
-    padding: 265px 0 50px 0;
+    padding: 50px 0 50px 0;
     background-image: url('images/bg-1.webp');
     background-size: cover;
     background-position: center;

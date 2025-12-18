@@ -120,6 +120,14 @@ class FrontendController extends Controller
             ->take(4)
             ->get();
 
-        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'styles', 'sizes', 'colors', 'similarProducts'));
+        // Check if product is in wishlist
+        $wishlistItem = null;
+        if (\Illuminate\Support\Facades\Auth::guard('customer')->check()) {
+            $wishlistItem = \App\Models\Wishlist::where('customer_id', \Illuminate\Support\Facades\Auth::guard('customer')->id())
+                ->where('product_id', $id)
+                ->first();
+        }
+
+        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'styles', 'sizes', 'colors', 'similarProducts', 'wishlistItem'))->with(['pageclass' => 'hedersolution bg-1']);
     }
 }

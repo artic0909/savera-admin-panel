@@ -127,6 +127,7 @@
                             </div>
 
                             <input type="hidden" name="billing_same_as_shipping" value="1">
+                            <input type="hidden" name="checkout_mode" value="{{ $checkoutMode ?? 'regular' }}">
                         </div>
                     </div>
 

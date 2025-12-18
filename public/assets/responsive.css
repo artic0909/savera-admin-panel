@@ -1324,3 +1324,73 @@
         background: white !important;
     }
 }
+
+@media screen and (max-width: 767px) {
+    .product-single-sec {
+        & .product-single-left {
+            & .big-img {
+                img.tabcontent {
+                    width: 100%;
+                    height: 250px;
+                    object-fit: cover;
+                    margin-bottom: 10px;
+                    display: none;
+                    border-radius: 20px;
+                }
+            }
+
+            img.tablinks {
+                height: 50px;
+                width: 100%;
+                border-radius: 10px;
+                object-fit: cover;
+            }
+
+        }
+    }
+
+    .product-single-sec {
+        & .product-single-right {
+            h2 {
+                font-size: 30px;
+            }
+
+            h5 {
+                font-size: 28px;
+            }
+
+            p.p1 {
+                font-size: 13px;
+
+                a {
+                    font-size: 12px;
+                }
+            }
+
+            p.p2 {
+                a {
+                    font-size: 12px;
+                }
+            }
+
+            div.apply-coupon-div {
+                flex-direction: column;
+                gap: 13px;
+                border-radius: 10px;
+            }
+
+            .btns {
+                justify-content: space-between;
+
+                button {
+                    padding: 8px 16px;
+                }
+            }
+
+            .ring-size {
+                justify-content: space-between;
+            }
+        }
+
+    }
+}

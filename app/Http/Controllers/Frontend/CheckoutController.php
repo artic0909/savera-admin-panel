@@ -18,9 +18,33 @@ class CheckoutController extends Controller
     {
         $customerId = Auth::guard('customer')->id();
 
-        $cartItems = Cart::with('product')
-            ->where('customer_id', $customerId)
-            ->get();
+        $customerId = Auth::guard('customer')->id();
+        $checkoutMode = request('mode', 'regular');
+        $cartItems = collect();
+
+        if ($checkoutMode === 'direct') {
+            $directItem = session('direct_checkout_item');
+            if ($directItem) {
+                // Create a temporary Cart object (mapped correctly for the view)
+                // We need to fetch the product to ensure we have the relationship
+                $product = \App\Models\Product::find($directItem['product_id']);
+
+                if ($product) {
+                    $cartItem = new Cart([
+                        'product_id' => $directItem['product_id'],
+                        'quantity' => $directItem['quantity'],
+                        'metal_configuration' => $directItem['metal_configuration'],
+                        'price_at_addition' => $directItem['price'],
+                    ]);
+                    $cartItem->setRelation('product', $product);
+                    $cartItems->push($cartItem);
+                }
+            }
+        } else {
+            $cartItems = Cart::with('product')
+                ->where('customer_id', $customerId)
+                ->get();
+        }
 
         if ($cartItems->isEmpty()) {
             return redirect()->route('cart.index')->with('error', 'Your cart is empty!');
@@ -34,7 +58,7 @@ class CheckoutController extends Controller
         $addresses = CustomerAddress::where('customer_id', $customerId)->get();
         $customer = Auth::guard('customer')->user();
 
-        return view('frontend.checkout', compact('cartItems', 'subtotal', 'tax', 'shipping', 'total', 'addresses', 'customer'))->with('pageclass', 'hedersolution bg-1');
+        return view('frontend.checkout', compact('cartItems', 'subtotal', 'tax', 'shipping', 'total', 'addresses', 'customer', 'checkoutMode'))->with('pageclass', 'hedersolution bg-1');
     }
 
     // Place order
@@ -51,13 +75,35 @@ class CheckoutController extends Controller
             'shipping_country' => 'required|string|max:100',
             'payment_method' => 'required|in:cod,online',
             'save_address' => 'nullable|boolean',
+            'payment_method' => 'required|in:cod,online',
+            'save_address' => 'nullable|boolean',
+            'checkout_mode' => 'nullable|string|in:regular,direct',
         ]);
 
         $customerId = Auth::guard('customer')->id();
+        $checkoutMode = $request->input('checkout_mode', 'regular');
+        $cartItems = collect();
 
-        $cartItems = Cart::with('product')
-            ->where('customer_id', $customerId)
-            ->get();
+        if ($checkoutMode === 'direct') {
+            $directItem = session('direct_checkout_item');
+            if ($directItem) {
+                $product = \App\Models\Product::find($directItem['product_id']);
+                if ($product) {
+                    $cartItem = new Cart([
+                        'product_id' => $directItem['product_id'],
+                        'quantity' => $directItem['quantity'],
+                        'metal_configuration' => $directItem['metal_configuration'],
+                        'price_at_addition' => $directItem['price'],
+                    ]);
+                    $cartItem->setRelation('product', $product);
+                    $cartItems->push($cartItem);
+                }
+            }
+        } else {
+            $cartItems = Cart::with('product')
+                ->where('customer_id', $customerId)
+                ->get();
+        }
 
         if ($cartItems->isEmpty()) {
             return redirect()->route('cart.index')->with('error', 'Your cart is empty!');
@@ -133,8 +179,12 @@ class CheckoutController extends Controller
                 ]);
             }
 
-            // Clear cart
-            Cart::where('customer_id', $customerId)->delete();
+            // Clear cart or session
+            if ($checkoutMode === 'direct') {
+                session()->forget('direct_checkout_item');
+            } else {
+                Cart::where('customer_id', $customerId)->delete();
+            }
 
             DB::commit();
 
@@ -179,5 +229,30 @@ class CheckoutController extends Controller
 
         return view('frontend.order-details', compact('order'))
             ->with('pageclass', 'hedersolution bg-1');
+    }
+    // Direct Checkout (Buy Now)
+    public function directCheckout(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|integer',
+            'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric',
+            'metal_configuration' => 'required|array',
+        ]);
+
+        // Store item in session
+        $item = [
+            'product_id' => $request->product_id,
+            'quantity' => $request->quantity,
+            'price' => $request->price,
+            'metal_configuration' => $request->metal_configuration,
+        ];
+
+        session(['direct_checkout_item' => $item]);
+
+        return response()->json([
+            'success' => true,
+            'redirect_url' => route('checkout.index', ['mode' => 'direct']),
+        ]);
     }
 }
