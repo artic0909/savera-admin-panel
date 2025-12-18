@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -14,8 +15,12 @@ class CustomerAuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('frontend.auth.login', ['pageclass' => 'hedersolution bg-1']);
+        $categories = Category::where('home_category', true)->take(5)->get();
+
+        return view('frontend.auth.login', compact('categories'))
+            ->with('pageclass', 'hedersolution bg-1');
     }
+
 
     public function login(Request $request)
     {
@@ -37,8 +42,12 @@ class CustomerAuthController extends Controller
 
     public function showRegisterForm()
     {
-        return view('frontend.auth.register', ['pageclass' => 'hedersolution bg-1']);
+        $categories = Category::where('home_category', true)->take(5)->get();
+
+        return view('frontend.auth.register', compact('categories'))
+            ->with('pageclass', 'hedersolution bg-1');
     }
+
 
     public function register(Request $request)
     {
@@ -73,6 +82,8 @@ class CustomerAuthController extends Controller
 
     public function profile()
     {
+        $categories = Category::where('home_category', true)->take(5)->get();
+
         $orders = Order::where('customer_id', Auth::guard('customer')->id())
             ->with('items')
             ->orderBy('created_at', 'desc')
@@ -81,7 +92,8 @@ class CustomerAuthController extends Controller
         return view('frontend.auth.profile', [
             'user' => Auth::guard('customer')->user(),
             'orders' => $orders,
-            'pageclass' => 'hedersolution bg-1'
+            'pageclass' => 'hedersolution bg-1',
+            'categories' => $categories
         ]);
     }
 

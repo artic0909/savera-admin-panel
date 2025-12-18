@@ -5,36 +5,33 @@
             </div>
             <div class="footer-grid">
                 <div class="footer-col">
-                    <h3><i class="fi fi-rr-apps"></i> Solutions</h3>
+                    <h3><i class="fi fi-rr-apps"></i> Categories</h3>
                     <ul>
-                        <li><a href="#">MySigns</a></li>
-                        <li><a href="#">Internet of Things</a></li>
-                        <li><a href="#">Business Intelligence</a></li>
-                        <li><a href="#">Artificial Intelligence</a></li>
-                        <li><a href="#">apps</a></li>
+                        @foreach($categories as $category)
+                            <li><a href="{{ route('category.show', $category->slug) }}">{{ $category->name }}</a></li>
+                        @endforeach
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h3><i class="fi fi-rr-cloud"></i> Services</h3>
+                    <h3><i class="fi fi-rr-cloud"></i> Policies</h3>
                     <ul>
-                        <li><a href="#">cloud</a></li>
-                        <li><a href="#">Consultancy</a></li>
-                        <li><a href="#">Modern Workplace</a></li>
-                        <li><a href="#">Managed Services</a></li>
-                        <li><a href="#">Security</a></li>
+                        <li><a href="#">Return Policy</a></li>
+                        <li><a href="#">Exchange</a></li>
+                        <li><a href="#">Buy back Policy</a></li>
+                        <li><a href="#">Shipping Policy</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h3><i class="fi fi-rr-briefcase"></i> Sectors</h3>
+                    <h3><i class="fi fi-rr-briefcase"></i> About us</h3>
                     <ul>
-                        <li><a href="#">Occupational health and safety services</a></li>
-                        <li><a href="#">Logistics</a></li>
-                        <li><a href="#">Industry</a></li>
-                        <li><a href="#">Business services</a></li>
+                        <li><a href="#">Who we are</a></li>
+                        <li><a href="#">What we do</a></li>
+                        <li><a href="#">Contacts</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h3><i class="fi fi-rr-info"></i> About us</h3>
+                    <h3><i class="fi fi-rr-info"></i> Socials</h3>
                     <ul>
                         <li><a href="#">About us</a></li>
                         <li><a href="#">Approach</a></li>

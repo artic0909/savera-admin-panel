@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\CustomerAddress;
@@ -16,6 +17,8 @@ class CheckoutController extends Controller
     // Display checkout page
     public function index()
     {
+        $categories = Category::where('home_category', true)->take(5)->get();
+
         $customerId = Auth::guard('customer')->id();
 
         $customerId = Auth::guard('customer')->id();
@@ -58,7 +61,7 @@ class CheckoutController extends Controller
         $addresses = CustomerAddress::where('customer_id', $customerId)->get();
         $customer = Auth::guard('customer')->user();
 
-        return view('frontend.checkout', compact('cartItems', 'subtotal', 'tax', 'shipping', 'total', 'addresses', 'customer', 'checkoutMode'))->with('pageclass', 'hedersolution bg-1');
+        return view('frontend.checkout', compact('cartItems', 'subtotal', 'tax', 'shipping', 'total', 'addresses', 'customer', 'checkoutMode', 'categories'))->with('pageclass', 'hedersolution bg-1');
     }
 
     // Place order
@@ -201,33 +204,38 @@ class CheckoutController extends Controller
     // Order success page
     public function success($orderNumber)
     {
+        $categories = Category::where('home_category', true)->take(5)->get();
+
         $order = Order::with('items.product')
             ->where('order_number', $orderNumber)
             ->where('customer_id', Auth::guard('customer')->id())
             ->firstOrFail();
 
-        return view('frontend.order-success', compact('order'))->with('pageclass', 'hedersolution bg-1');
+        return view('frontend.order-success', compact('order', 'categories'))->with('pageclass', 'hedersolution bg-1');
     }
 
     // My orders page
     public function myOrders()
     {
+        $categories = Category::where('home_category', true)->take(5)->get();
         $orders = Order::where('customer_id', Auth::guard('customer')->id())
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('frontend.my-orders', compact('orders'))->with('pageclass', 'hedersolution bg-1');
+        return view('frontend.my-orders', compact('orders', 'categories'))->with('pageclass', 'hedersolution bg-1');
     }
 
     // Order details page
     public function orderDetails($orderNumber)
     {
+        $categories = Category::where('home_category', true)->take(5)->get();
+
         $order = Order::with('items.product')
             ->where('order_number', $orderNumber)
             ->where('customer_id', Auth::guard('customer')->id())
             ->firstOrFail();
 
-        return view('frontend.order-details', compact('order'))
+        return view('frontend.order-details', compact('order' , 'categories'))
             ->with('pageclass', 'hedersolution bg-1');
     }
     // Direct Checkout (Buy Now)
