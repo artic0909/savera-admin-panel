@@ -7,7 +7,7 @@
         <div class="main">
             <div class="wrapper">
                 <div class="logo">
-                    <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" />
+                    <a href="{{ route('home') }}"> <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" /></a>
                 </div>
                 <div class="actions">
                     <a href="#" class="icon-btn"><i class="fi fi-rr-search"></i></a>

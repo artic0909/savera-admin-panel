@@ -3,7 +3,7 @@
 @section('title', 'Home')
 
 @section('content')
-    <link rel="stylesheet" href="{{ asset('assets/bootstrap.min.css') }}" />
+    {{-- <link rel="stylesheet" href="{{ asset('assets/bootstrap.min.css') }}" /> --}}
 
     <script>
         window.productConfigs = @json($product->metal_configurations);
@@ -64,14 +64,14 @@
                                         @endif
                                     </div>
                                     <!-- <div class="swiper-button-next"></div>
-                                                                                                                                                                                    <div class="swiper-button-prev"></div> -->
+                                                                                                                                                                                                                                                    <div class="swiper-button-prev"></div> -->
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-12 mt-4 mt-lg-0">
                         <div class="product-single-right">
-                            <h2 class="d-flex justify-content-between align-items-center position-relative">
+                            <h2 class="d-flex">
                                 {{ $product->product_name }}
                                 <div style="position: relative;">
 
@@ -490,28 +490,19 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                     Similar Product
                 </h2>
                 <div class="similar-product-grid">
-                    <div class="row">
-                        @if ($similarProducts->count() > 0)
-                            @foreach ($similarProducts as $sProduct)
-                                <div class="col-lg-3 col-md-3 col-sm-4 col-6">
-                                    <div class="similar-product-item text-center">
-                                        <a href="{{ route('product.show', $sProduct->id) }}"
-                                            style="text-decoration: none; color: inherit;">
-                                            <img src="{{ asset('storage/' . $sProduct->main_image) }}"
-                                                alt="{{ $sProduct->product_name }}">
-                                            <p>
-                                                {{ $sProduct->product_name }}
-                                            </p>
-                                        </a>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @else
-                            <div class="col-12 text-center">
-                                <p>No similar products found.</p>
-                            </div>
-                        @endif
-                    </div>
+
+                    @if ($similarProducts->count() > 0)
+                        <div class="product-list" id="product-container">
+                            @include('frontend.partials.product_loop', [
+                                'products' => $similarProducts,
+                            ])
+                        </div>
+                        <!-- Loader (kept once, outside loop) -->
+                    @else
+                        <div class="col-12 text-center">
+                            <p>No similar products found.</p>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -1042,6 +1033,24 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
 
         .color-btn:hover {
             transform: scale(1.1);
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .d-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 @endpush
