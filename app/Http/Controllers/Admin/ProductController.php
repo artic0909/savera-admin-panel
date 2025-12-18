@@ -9,7 +9,6 @@ use App\Models\Category;
 use App\Models\Metal;
 use App\Models\Size;
 use App\Models\Color;
-use App\Models\Pincode;
 use App\Models\Material;
 use Illuminate\Support\Facades\Storage;
 
@@ -30,9 +29,8 @@ class ProductController extends Controller
         $metals = Metal::all();
         $sizes = Size::all();
         $colors = Color::all();
-        $pincodes = Pincode::all();
         $materials = Material::all();
-        return view('admin.product.create', compact('categories', 'metals', 'sizes', 'colors', 'pincodes', 'materials'));
+        return view('admin.product.create', compact('categories', 'metals', 'sizes', 'colors', 'materials'));
     }
 
     public function store(Request $request)
@@ -70,16 +68,15 @@ class ProductController extends Controller
     public function show(string $id)
     {
         $product = Product::with(['category'])->findOrFail($id);
-        
+
         $metals = Metal::all();
         $sizes = Size::all();
         $materials = Material::all();
-        
+
         // Fetch related models based on JSON arrays
         $productColors = $product->colors ? Color::whereIn('id', $product->colors)->get() : collect();
-        $productPincodes = $product->available_pincodes ? Pincode::whereIn('id', $product->available_pincodes)->get() : collect();
 
-        return view('admin.product.show', compact('product', 'metals', 'sizes', 'materials', 'productColors', 'productPincodes'))->render();
+        return view('admin.product.show', compact('product', 'metals', 'sizes', 'materials', 'productColors'))->render();
     }
 
     public function edit(string $id)
@@ -89,9 +86,8 @@ class ProductController extends Controller
         $metals = Metal::all();
         $sizes = Size::all();
         $colors = Color::all();
-        $pincodes = Pincode::all();
         $materials = Material::all();
-        return view('admin.product.edit', compact('product', 'categories', 'metals', 'sizes', 'colors', 'pincodes', 'materials'));
+        return view('admin.product.edit', compact('product', 'categories', 'metals', 'sizes', 'colors', 'materials'));
     }
 
     public function update(Request $request, string $id)
@@ -109,14 +105,14 @@ class ProductController extends Controller
         $data = $request->except(['main_image', 'additional_images']);
 
         if ($request->hasFile('main_image')) {
-             if ($product->main_image) {
+            if ($product->main_image) {
                 // Storage::disk('public')->delete($product->main_image); // Optional: delete old image
-             }
+            }
             $data['main_image'] = $request->file('main_image')->store('products', 'public');
         }
 
         if ($request->hasFile('additional_images')) {
-             // Optional: delete old additional images logic
+            // Optional: delete old additional images logic
             $images = [];
             foreach ($request->file('additional_images') as $image) {
                 $images[] = $image->store('products', 'public');

@@ -154,6 +154,18 @@
                                 @endforeach
                             </div>
 
+                            <div style="margin-bottom: 20px;">
+                                <div class="input-group" style="display: flex; gap: 10px;">
+                                    <input type="text" id="coupon-code-input" class="form-control"
+                                        placeholder="Coupon Code"
+                                        style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                    <button type="button" id="apply-coupon-btn"
+                                        style="padding: 10px 15px; background: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">Apply</button>
+                                </div>
+                                <div id="coupon-message" style="margin-top: 5px; font-size: 13px;"></div>
+                                <input type="hidden" name="coupon_code" id="coupon-code-hidden">
+                            </div>
+
                             <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
                                 <span>Subtotal:</span>
                                 <span>Rs. {{ number_format($subtotal, 2) }}</span>
@@ -164,15 +176,22 @@
                                 <span>Rs. {{ number_format($tax, 2) }}</span>
                             </div>
 
-                            <div style="margin-bottom: 20px; display: flex; justify-content: space-between;">
+                            <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
                                 <span>Shipping:</span>
                                 <span style="color: green;">FREE</span>
+                            </div>
+
+                            <div id="discount-row"
+                                style="margin-bottom: 15px; display: none; justify-content: space-between; color: green;">
+                                <span>Discount:</span>
+                                <span id="discount-amount">- Rs. 0.00</span>
                             </div>
 
                             <div
                                 style="padding-top: 15px; border-top: 2px solid #eee; margin-bottom: 20px; display: flex; justify-content: space-between;">
                                 <strong style="font-size: 18px;">Total:</strong>
-                                <strong style="font-size: 18px;">Rs. {{ number_format($total, 2) }}</strong>
+                                <strong style="font-size: 18px;" id="grand-total"
+                                    data-original-total="{{ $total }}">Rs. {{ number_format($total, 2) }}</strong>
                             </div>
 
                             <button type="submit"
@@ -184,4 +203,150 @@
             </form>
         </div>
     </section>
+
+    @push('scripts')
+        <script>
+            // Coupon Code Logic
+            const applyCouponBtn = document.getElementById('apply-coupon-btn');
+            const couponInput = document.getElementById('coupon-code-input');
+            const couponMessage = document.getElementById('coupon-message');
+            const couponHidden = document.getElementById('coupon-code-hidden');
+            const discountRow = document.getElementById('discount-row');
+            const discountAmountSpan = document.getElementById('discount-amount');
+            const grandTotalSpan = document.getElementById('grand-total');
+
+            if (applyCouponBtn) {
+                applyCouponBtn.addEventListener('click', function() {
+                    const code = couponInput.value.trim();
+                    if (!code) {
+                        couponMessage.innerHTML = '<span style="color: orange;">Please enter a code</span>';
+                        return;
+                    }
+
+                    couponMessage.innerHTML = '<span style="color: #666;">Applyng...</span>';
+
+                    // Allow button click only once per request
+                    applyCouponBtn.disabled = true;
+
+                    fetch('{{ route('api.checkCoupon') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                            },
+                            body: JSON.stringify({
+                                code: code,
+                                amount: {{ $subtotal }} // Send subtotal for validation
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            applyCouponBtn.disabled = false;
+
+                            if (data.valid) {
+                                couponMessage.innerHTML = '<span style="color: green;">' + data.message + '</span>';
+
+                                // Show discount row
+                                discountRow.style.display = 'flex';
+                                discountAmountSpan.textContent = '- Rs. ' + parseFloat(data.discount).toFixed(2);
+
+                                // Update hidden input
+                                couponHidden.value = data.code;
+
+                                // Update Total
+                                let originalTotal = parseFloat(grandTotalSpan.getAttribute('data-original-total'));
+                                // Correct logic: Total is calculated as (subtotal + tax + shipping - discount)
+                                // But here $total passed from backend already includes tax. 
+                                // So we just subtract discount.
+                                let newTotal = originalTotal - parseFloat(data.discount);
+                                if (newTotal < 0) newTotal = 0;
+
+                                grandTotalSpan.textContent = 'Rs. ' + newTotal.toFixed(2);
+
+                            } else {
+                                couponMessage.innerHTML = '<span style="color: red;">' + data.message + '</span>';
+                                // Reset if invalid
+                                discountRow.style.display = 'none';
+                                couponHidden.value = '';
+                                grandTotalSpan.textContent = 'Rs. ' + parseFloat(grandTotalSpan.getAttribute(
+                                    'data-original-total')).toFixed(2);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            applyCouponBtn.disabled = false;
+                            couponMessage.innerHTML = '<span style="color: red;">Error applying coupon</span>';
+                        });
+                });
+            }
+
+            // Real-time pincode validation on checkout
+            const pincodeInput = document.querySelector('input[name="shipping_postal_code"]');
+            let pincodeValid = false;
+
+            if (pincodeInput) {
+                // Create message container
+                const messageDiv = document.createElement('div');
+                messageDiv.id = 'pincode-validation-message';
+                messageDiv.style.marginTop = '5px';
+                messageDiv.style.fontSize = '13px';
+                messageDiv.style.fontWeight = 'bold';
+                pincodeInput.parentNode.appendChild(messageDiv);
+
+                pincodeInput.addEventListener('blur', function() {
+                    const pincode = this.value.trim();
+                    const messageDiv = document.getElementById('pincode-validation-message');
+
+                    if (pincode.length === 0) {
+                        messageDiv.innerHTML = '';
+                        pincodeValid = false;
+                        return;
+                    }
+
+                    messageDiv.innerHTML = '<span style="color: #666;">⏳ Checking...</span>';
+
+                    fetch('{{ route('api.checkPincode') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                            },
+                            body: JSON.stringify({
+                                pincode: pincode
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.available) {
+                                messageDiv.innerHTML = '<span style="color: green;">✅ Delivery available</span>';
+                                pincodeValid = true;
+                            } else {
+                                messageDiv.innerHTML =
+                                    '<span style="color: red;">❌ Delivery not available in this area</span>';
+                                pincodeValid = false;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            messageDiv.innerHTML = '<span style="color: red;">❌ Error checking pincode</span>';
+                            pincodeValid = false;
+                        });
+                });
+            }
+
+            // Prevent form submission if pincode is invalid
+            const checkoutForm = document.querySelector('form[action="{{ route('checkout.placeOrder') }}"]');
+            if (checkoutForm) {
+                checkoutForm.addEventListener('submit', function(e) {
+                    const pincode = pincodeInput ? pincodeInput.value.trim() : '';
+                    if (pincode && !pincodeValid) {
+                        e.preventDefault();
+                        alert('Please enter a valid pincode where delivery is available.');
+                        pincodeInput.focus();
+                        return false;
+                    }
+                });
+            }
+        </script>
+    @endpush
 @endsection

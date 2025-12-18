@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pincodes', function (Blueprint $table) {
-            $table->id();
-            $table->string('code')->unique();
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->timestamps();
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn('available_pincodes');
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pincodes');
+        Schema::table('products', function (Blueprint $table) {
+            $table->json('available_pincodes')->nullable();
+        });
     }
 };

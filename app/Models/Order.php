@@ -20,6 +20,9 @@ class Order extends Model
         'billing_address',
         'payment_method',
         'payment_status',
+        'payment_status',
+        'coupon_code',
+        'discount_amount',
         'notes',
     ];
 
@@ -29,7 +32,9 @@ class Order extends Model
         'subtotal' => 'decimal:2',
         'tax' => 'decimal:2',
         'shipping' => 'decimal:2',
+        'shipping' => 'decimal:2',
         'total' => 'decimal:2',
+        'discount_amount' => 'decimal:2',
     ];
 
     public function customer(): BelongsTo

@@ -131,6 +131,71 @@ class FrontendController extends Controller
                 ->first();
         }
 
-        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'styles', 'sizes', 'colors', 'similarProducts', 'wishlistItem', 'categories'))->with(['pageclass' => 'hedersolution bg-1']);
+        // Fetch active coupons
+        $coupons = \App\Models\Coupon::active()->get();
+
+        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'styles', 'sizes', 'colors', 'similarProducts', 'wishlistItem', 'categories', 'coupons'))->with(['pageclass' => 'hedersolution bg-1']);
+    }
+
+    /**
+     * Check if pincode is available for delivery
+     */
+    public function checkPincode(Request $request)
+    {
+        $request->validate([
+            'pincode' => 'required|string',
+        ]);
+
+        $pincode = \App\Models\Pincode::where('code', $request->pincode)
+            ->where('status', 'active')
+            ->first();
+
+        if ($pincode) {
+            return response()->json([
+                'available' => true,
+                'message' => '✅ Delivery available in this area'
+            ]);
+        }
+
+        return response()->json([
+            'available' => false,
+            'message' => '❌ Delivery not available in this area'
+        ]);
+    }
+
+    /**
+     * Check Coupon Code
+     */
+    public function checkCoupon(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string',
+            'amount' => 'required|numeric',
+        ]);
+
+        $coupon = \App\Models\Coupon::where('code', $request->code)->first();
+
+        if (!$coupon) {
+            return response()->json([
+                'valid' => false,
+                'message' => 'Invalid coupon code.'
+            ]);
+        }
+
+        if (!$coupon->isValid($request->amount)) {
+            return response()->json([
+                'valid' => false,
+                'message' => 'Coupon requirements not met.'
+            ]);
+        }
+
+        $discount = $coupon->calculateDiscount($request->amount);
+
+        return response()->json([
+            'valid' => true,
+            'message' => 'Coupon applied successfully!',
+            'discount' => $discount,
+            'code' => $coupon->code,
+        ]);
     }
 }

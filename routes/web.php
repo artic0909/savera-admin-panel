@@ -14,6 +14,10 @@ Route::get('/ajax/products', [FrontendController::class, 'ajaxProducts'])->name(
 Route::get('/category/{slug}', [FrontendController::class, 'category'])->name('category.show');
 Route::get('/product/{slug}', [FrontendController::class, 'productDetails'])->name('product.show');
 
+// API endpoints
+Route::post('/api/check-pincode', [FrontendController::class, 'checkPincode'])->name('api.checkPincode');
+Route::post('/api/check-coupon', [FrontendController::class, 'checkCoupon'])->name('api.checkCoupon');
+
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');

@@ -15,14 +15,12 @@ class Product extends Model
         'delivery_time',
         'colors',
         'metal_configurations',
-        'available_pincodes',
     ];
 
     protected $casts = [
         'additional_images' => 'array',
         'colors' => 'array',
         'metal_configurations' => 'array',
-        'available_pincodes' => 'array',
     ];
 
     public function category()

@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\PincodeController;
+use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +40,12 @@ Route::middleware(['auth:admin'])->group(function () {
     // Route::get('/admin/products/index', [AdminController::class, 'indexProductView'])->name('admin.products.index');
 
     Route::resource('admin/products', ProductController::class)->names('admin.products');
+
+    // Pincodes
+    Route::resource('admin/pincodes', PincodeController::class)->names('admin.pincodes');
+
+    // Coupons
+    Route::resource('admin/coupons', CouponController::class)->names('admin.coupons');
 
 
     // Orders

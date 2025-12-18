@@ -78,10 +78,20 @@ class CheckoutController extends Controller
             'shipping_country' => 'required|string|max:100',
             'payment_method' => 'required|in:cod,online',
             'save_address' => 'nullable|boolean',
-            'payment_method' => 'required|in:cod,online',
-            'save_address' => 'nullable|boolean',
             'checkout_mode' => 'nullable|string|in:regular,direct',
+            'coupon_code' => 'nullable|string|exists:coupons,code',
         ]);
+
+        // Validate pincode availability
+        $pincode = \App\Models\Pincode::where('code', $request->shipping_postal_code)
+            ->where('status', 'active')
+            ->first();
+
+        if (!$pincode) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['shipping_postal_code' => 'Delivery not available for this pincode. Please check available service areas.']);
+        }
 
         $customerId = Auth::guard('customer')->id();
         $checkoutMode = $request->input('checkout_mode', 'regular');
@@ -121,6 +131,26 @@ class CheckoutController extends Controller
             $shipping = 0; // Free shipping
             $total = $subtotal + $tax + $shipping;
 
+            // Coupon Logic
+            $discountAmount = 0;
+            $couponCode = null;
+
+            if ($request->filled('coupon_code')) {
+                $coupon = \App\Models\Coupon::where('code', $request->coupon_code)->first();
+
+                if ($coupon && $coupon->isValid($subtotal)) {
+                    $discountAmount = $coupon->calculateDiscount($subtotal);
+                    $couponCode = $coupon->code;
+                    $total -= $discountAmount;
+
+                    // Increment usage
+                    $coupon->increment('used_count');
+                }
+            }
+
+            // Ensure total doesn't go negative
+            $total = max(0, $total);
+
             // Prepare shipping address
             $shippingAddress = [
                 'full_name' => $request->shipping_full_name,
@@ -144,6 +174,8 @@ class CheckoutController extends Controller
                 'subtotal' => $subtotal,
                 'tax' => $tax,
                 'shipping' => $shipping,
+                'discount_amount' => $discountAmount,
+                'coupon_code' => $couponCode,
                 'total' => $total,
                 'shipping_address' => $shippingAddress,
                 'billing_address' => $billingAddress,
@@ -235,7 +267,7 @@ class CheckoutController extends Controller
             ->where('customer_id', Auth::guard('customer')->id())
             ->firstOrFail();
 
-        return view('frontend.order-details', compact('order' , 'categories'))
+        return view('frontend.order-details', compact('order', 'categories'))
             ->with('pageclass', 'hedersolution bg-1');
     }
     // Direct Checkout (Buy Now)

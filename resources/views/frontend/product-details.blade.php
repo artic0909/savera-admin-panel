@@ -64,7 +64,7 @@
                                         @endif
                                     </div>
                                     <!-- <div class="swiper-button-next"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                    <div     class="swiper-button-prev"></div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                <div     class="swiper-button-prev"></div> -->
                                 </div>
                             </div>
                         </div>
@@ -89,17 +89,125 @@
                             <p class="p2">
                                 <a href="#">Special Offer for you</a>
                             </p>
-                            <div class="apply-coupon-div">
-                                <h6>
-                                    GET IT FOR 29047
-                                </h6>
-                                <p>
-                                    Use BLACKFRIDAY
-                                </p>
-                                <button>
-                                    Apply
-                                </button>
+                            <div class="apply-coupon-div" id="coupon-rotator"
+                                style="display: none; background: #fff5f5; border: 1px dashed #ff9999; padding: 15px; border-radius: 8px; margin-top: 15px; position: relative; transition: all 0.3s ease;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <h6 id="coupon-offer-text"
+                                            style="color: #d32f2f; font-weight: 700; margin: 0; font-size: 16px;">
+                                            Loading Offers...
+                                        </h6>
+                                        <p id="coupon-code-text" style="margin: 5px 0 0; font-size: 14px; color: #555;">
+                                            Finding best coupons...
+                                        </p>
+                                    </div>
+                                    <button onclick="copyCouponCode()" id="copy-btn"
+                                        style="background: white; border: 1px solid #d32f2f; color: #d32f2f; padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: bold; transition: all 0.2s;">
+                                        COPY
+                                    </button>
+                                </div>
+                                <input type="hidden" id="current-coupon-code">
                             </div>
+
+                            @push('scripts')
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        const coupons = @json($coupons);
+                                        const rotatorDiv = document.getElementById('coupon-rotator');
+                                        const offerText = document.getElementById('coupon-offer-text');
+                                        const codeText = document.getElementById('coupon-code-text');
+                                        const hiddenInput = document.getElementById('current-coupon-code');
+                                        const priceElement = document.getElementById('dynamic-price');
+
+                                        if (coupons.length > 0) {
+                                            rotatorDiv.style.display = 'block';
+                                            let currentIndex = 0;
+
+                                            function getProductPrice() {
+                                                if (!priceElement) return 0;
+                                                // Robust price parsing: remove currency symbols, keep numbers and dots
+                                                let priceText = priceElement.innerText || priceElement.textContent;
+                                                let cleaned = priceText.replace(/[^0-9.]/g, '');
+                                                let price = parseFloat(cleaned);
+                                                return isNaN(price) ? 0 : price;
+                                            }
+
+                                            function updateCoupon() {
+                                                const coupon = coupons[currentIndex];
+                                                let currentPrice = getProductPrice();
+
+                                                if (currentPrice === 0) {
+                                                    currentPrice = getProductPrice();
+                                                }
+
+                                                if (currentPrice === 0) {
+                                                    offerText.textContent = `Save with ${coupon.code}`;
+                                                } else {
+                                                    let discount = 0;
+                                                    if (coupon.type === 'fixed') {
+                                                        discount = parseFloat(coupon.value);
+                                                    } else {
+                                                        discount = (currentPrice * parseFloat(coupon.value)) / 100;
+                                                        if (coupon.max_discount_amount) {
+                                                            discount = Math.min(discount, parseFloat(coupon.max_discount_amount));
+                                                        }
+                                                    }
+
+                                                    let finalPrice = Math.max(0, currentPrice - discount);
+                                                    offerText.textContent = `GET IT FOR ₹${Math.round(finalPrice).toLocaleString('en-IN')}`;
+                                                }
+
+                                                codeText.innerHTML = `Use <strong style="color: #333;">${coupon.code}</strong>`;
+                                                hiddenInput.value = coupon.code;
+
+                                                currentIndex = (currentIndex + 1) % coupons.length;
+                                            }
+
+                                            setTimeout(updateCoupon, 100);
+                                            setInterval(updateCoupon, 5000);
+                                            window.updateCouponDisplay = updateCoupon;
+                                        }
+                                    });
+
+                                    function copyCouponCode() {
+                                        const code = document.getElementById('current-coupon-code').value;
+                                        // Need to find button relative to the rotator or by ID if we add ID later (next step)
+                                        // For now, let's look for the button inside the rotator div
+                                        const btn = document.querySelector('#coupon-rotator button');
+
+                                        if (!code) return;
+
+                                        if (navigator.clipboard && window.isSecureContext) {
+                                            navigator.clipboard.writeText(code).then(showCopied).catch(fallbackCopy);
+                                        } else {
+                                            fallbackCopy();
+                                        }
+
+                                        function fallbackCopy() {
+                                            const type = document.createElement("input");
+                                            type.value = code;
+                                            document.body.appendChild(type);
+                                            type.select();
+                                            try {
+                                                document.execCommand("copy");
+                                                showCopied();
+                                            } catch (err) {
+                                                console.error('Fallback copy failed', err);
+                                            }
+                                            document.body.removeChild(type);
+                                        }
+
+                                        function showCopied() {
+                                            const originalText = btn.textContent;
+                                            btn.textContent = 'COPIED!';
+
+                                            setTimeout(() => {
+                                                btn.textContent = originalText;
+                                            }, 2000);
+                                        }
+                                    }
+                                </script>
+                            @endpush
                             <div class="color">
                                 <p>
                                     COLOR
@@ -230,12 +338,13 @@
                             <p class="p2">
                                 <a href="#" class="dc">Estimated delivery by </a>
                             </p>
-                            <form>
-                                <div class="pincode">
-                                    <input type="number" placeholder="Enter Pincode">
-                                    <button type="submit">Check</button>
-                                </div>
-                            </form>
+                            <div class="pincode">
+                                <input type="text" id="pincode-input" placeholder="Enter Pincode" maxlength="10"
+                                    style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: calc(100% - 80px);">
+                                <button type="button" onclick="checkPincode()"
+                                    style="padding: 10px 15px; cursor: pointer; background: #000; color: white; border: none; border-radius: 5px;">Check</button>
+                            </div>
+                            <div id="pincode-message" style="margin-top: 10px; font-weight: bold;"></div>
 
                             <p class="cat">Category: <span>{{ $product->category->name }}</span></p>
                         </div>
@@ -1011,6 +1120,44 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                 window.selectedColorName = firstColorBtn.dataset.colorName;
             }
         });
+
+        // Pincode Check Function
+        window.checkPincode = function() {
+            const pincodeInput = document.getElementById('pincode-input');
+            const messageDiv = document.getElementById('pincode-message');
+            const pincode = pincodeInput.value.trim();
+
+            if (!pincode) {
+                messageDiv.innerHTML = '<span style="color: orange;">⚠️ Please enter a pincode</span>';
+                return;
+            }
+
+            // Show loading
+            messageDiv.innerHTML = '<span style="color: #666;">⏳ Checking...</span>';
+
+            fetch('{{ route('api.checkPincode') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        pincode: pincode
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.available) {
+                        messageDiv.innerHTML = '<span style="color: green;">' + data.message + '</span>';
+                    } else {
+                        messageDiv.innerHTML = '<span style="color: red;">' + data.message + '</span>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    messageDiv.innerHTML = '<span style="color: red;">❌ Error checking pincode</span>';
+                });
+        };
     </script>
     <style>
         .metal-btn.active {
@@ -1071,7 +1218,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
             }
 
             .col-lg-8 {
-                width: 60%;
+                width: 70%;
             }
 
             .col-lg-4 {

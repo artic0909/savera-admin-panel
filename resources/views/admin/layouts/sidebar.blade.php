@@ -64,6 +64,28 @@
             </a>
         </li>
 
+        <!-- Delivery Settings -->
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Delivery Settings</span>
+        </li>
+        <li class="menu-item {{ Request::routeIs('admin.pincodes.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.pincodes.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-map-pin"></i>
+                <div data-i18n="availableArea">Available Area (Pin)</div>
+            </a>
+        </li>
+
+        <!-- Marketing -->
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Marketing</span>
+        </li>
+        <li class="menu-item {{ Request::routeIs('admin.coupons.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.coupons.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-gift"></i>
+                <div data-i18n="Coupons">Coupons</div>
+            </a>
+        </li>
+
         <!-- Orders -->
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Orders</span>
