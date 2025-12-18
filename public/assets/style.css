@@ -1306,6 +1306,7 @@ img {
                 display: flex;
                 gap: 10px;
 
+
                 button {
                     border: NONE;
                     outline: 0;
@@ -1313,18 +1314,6 @@ img {
                     height: 25px;
                     background-color: white;
                     border-radius: 50%;
-
-                    &:nth-child(1) {
-                        background-color: red;
-                    }
-
-                    &:nth-child(2) {
-                        background-color: pink;
-                    }
-
-                    &:nth-child(3) {
-                        background-color: green;
-                    }
                 }
             }
         }
@@ -1459,7 +1448,6 @@ img {
         }
 
         h6.heading-1 {
-            width: 100%;
             background-color: #f9f9f9;
             font-size: 15px;
             font-weight: 600;

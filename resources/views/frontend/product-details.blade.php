@@ -64,7 +64,7 @@
                                         @endif
                                     </div>
                                     <!-- <div class="swiper-button-next"></div>
-                                                                                                                                                                                                                                                                                                                    <div class="swiper-button-prev"></div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                    <div     class="swiper-button-prev"></div> -->
                                 </div>
                             </div>
                         </div>
@@ -111,10 +111,22 @@
                                                 // Resolve color object from the passed $colors collection
                                                 $colorObj = $colors->find($colorId);
                                                 $colorVal = $colorObj ? $colorObj->color_name : $colorId;
-                                                // Check if it looks like a hex code
+
+                                                // Custom Color Map for names not standard in CSS or missing Hex
+                                                $colorMap = [
+                                                    'rose gold' => '#B76E79',
+                                                    'gold' => '#FFD700',
+                                                    'silver' => '#C0C0C0',
+                                                ];
+
+                                                $lowerVal = strtolower($colorVal);
+                                                $mappedHex = $colorMap[$lowerVal] ?? null;
+
+                                                // Check if it looks like a hex code OR is in our custom map OR is a standard color
                                                 $isHex =
                                                     preg_match('/^#[a-f0-9]{6}$/i', $colorVal) ||
                                                     preg_match('/^#[a-f0-9]{3}$/i', $colorVal) ||
+                                                    $mappedHex ||
                                                     in_array(strtolower($colorVal), [
                                                         'red',
                                                         'blue',
@@ -122,15 +134,16 @@
                                                         'yellow',
                                                         'black',
                                                         'white',
-                                                        'gold',
-                                                        'silver',
                                                         'pink',
                                                     ]);
+
+                                                // Determine the background style value
+                                                $bgStyle = $mappedHex ? $mappedHex : $colorVal;
                                             @endphp
 
                                             @if ($isHex)
                                                 <button class="color-btn {{ $index === 0 ? 'active' : '' }}"
-                                                    style="background-color: {{ $colorVal }}; position: relative;"
+                                                    style="background-color: {{ $bgStyle }}; position: relative;"
                                                     data-color-id="{{ $colorId }}"
                                                     data-color-name="{{ $colorObj ? $colorObj->color_name : $colorVal }}"
                                                     onclick="selectColor(this)"
@@ -390,8 +403,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                                     ₹ {{ number_format($materialCost, 2) }}
                                                 </td>
                                             </tr>
-                                            <tr id="diamond-row"
-                                                style="display: {{ $hasDiamonds ? 'table-row' : 'none' }};">
+                                            <tr id="diamond-row" style="display: {{ $hasDiamonds ? '' : 'none' }};">
                                                 <td>
                                                     Diamond <span style="font-size: 10px;"
                                                         id="diamond-breakdown-text">({{ number_format($diamondTotalWt, 3) }}g
@@ -714,7 +726,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
             document.getElementById('gold-cost-display').textContent = formatCurrency(materialCost);
 
             let diamondRow = document.getElementById('diamond-row');
-            diamondRow.style.display = hasDiamonds ? 'table-row' : 'none';
+            diamondRow.style.display = hasDiamonds ? '' : 'none';
             if (hasDiamonds) {
                 document.getElementById('diamond-breakdown-text').textContent =
                     `(${formatNumber(diamondTotalWt, 3)}g x ${diamondRate})`;
@@ -1073,7 +1085,25 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
             .mt-3 {
                 margin-top: 1rem !important;
             }
+
+
+            #diamond-details-table thead,
+            #diamond-details-table tbody {
+                display: block;
+                width: 100%;
+            }
+
+            #diamond-details-table tr {
+                display: grid;
+                grid-template-columns: repeat(6, 1fr);
+            }
         }
+
+        #diamond-details-table {
+            display: block;
+            width: 100%;
+        }
+
 
 
 
@@ -1095,6 +1125,18 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                 .col-lg-4 {
                     width: 100%;
                 }
+
+                #diamond-details-table {
+                    display: block;
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                }
+
+                #diamond-details-table tr {
+                    min-width: 600px;
+                    /* Force minimum width to prevent squashing */
+                }
             }
+        }
     </style>
 @endpush
