@@ -24,14 +24,14 @@
                                 <button onclick="removeFromWishlist({{ $item->id }})"
                                     style="position: absolute; top: 10px; right: 10px; background: #ff4444; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 18px;">×</button>
 
-                                <a href="{{ route('product.show', $item->product_id) }}">
+                                <a href="{{ route('product.show', $item->product->slug) }}">
                                     <img src="{{ asset('storage/' . $item->product->main_image) }}"
                                         alt="{{ $item->product->product_name }}"
                                         style="width: 100%; height: 200px; object-fit: cover; border-radius: 5px; margin-bottom: 15px;">
                                 </a>
 
                                 <h5 style="margin-bottom: 10px; min-height: 40px;">
-                                    <a href="{{ route('product.show', $item->product_id) }}"
+                                    <a href="{{ route('product.show', $item->product->slug) }}"
                                         style="color: #000; text-decoration: none;">
                                         {{ $item->product->product_name }}
                                     </a>

@@ -104,9 +104,9 @@ class FrontendController extends Controller
         return view('frontend.category', compact('category', 'products', 'materials', 'shapes', 'styles'))->with(['pageclass' => 'hedersolution bg-1']);
     }
 
-    public function productDetails($id)
+    public function productDetails($slug)
     {
-        $product = Product::with('category')->findOrFail($id);
+        $product = Product::with('category')->where('slug', $slug)->firstOrFail();
 
         $materials = \App\Models\Material::all();
         $shapes = \App\Models\Shape::all();
@@ -116,7 +116,7 @@ class FrontendController extends Controller
 
         // Similar Products Logic (same category, excluding current)
         $similarProducts = Product::where('category_id', $product->category_id)
-            ->where('id', '!=', $id)
+            ->where('id', '!=', $product->id)
             ->take(4)
             ->get();
 
@@ -124,7 +124,7 @@ class FrontendController extends Controller
         $wishlistItem = null;
         if (\Illuminate\Support\Facades\Auth::guard('customer')->check()) {
             $wishlistItem = \App\Models\Wishlist::where('customer_id', \Illuminate\Support\Facades\Auth::guard('customer')->id())
-                ->where('product_id', $id)
+                ->where('product_id', $product->id)
                 ->first();
         }
 

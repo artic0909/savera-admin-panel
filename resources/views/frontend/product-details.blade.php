@@ -64,7 +64,7 @@
                                         @endif
                                     </div>
                                     <!-- <div class="swiper-button-next"></div>
-                                                                                                                                                                                                                                                    <div class="swiper-button-prev"></div> -->
+                                                                                                                                                                                                                                                                                                                    <div class="swiper-button-prev"></div> -->
                                 </div>
                             </div>
                         </div>
@@ -1047,10 +1047,54 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
             align-items: center;
         }
 
+        .mt-0 {
+            margin-top: 0px;
+        }
+
+        .additional-info {
+            .row {
+                display: flex;
+                gap: 30px;
+                justify-content: space-between;
+            }
+
+            .col-lg-8 {
+                width: 60%;
+            }
+
+            .col-lg-4 {
+                width: 30%;
+            }
+
+            .d-block {
+                display: block !important;
+            }
+
+            .mt-3 {
+                margin-top: 1rem !important;
+            }
+        }
+
+
+
         @media (max-width: 768px) {
             .row {
                 grid-template-columns: 1fr;
             }
-        }
+
+            .additional-info {
+                .row {
+                    flex-direction: column;
+                    gap: 0;
+                }
+
+                .col-lg-8 {
+                    width: 100%;
+                }
+
+                .col-lg-4 {
+                    width: 100%;
+                }
+            }
     </style>
 @endpush

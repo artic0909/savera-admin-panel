@@ -12,7 +12,7 @@ use App\Http\Controllers\FrontendController;
 Route::get('/', [FrontendController::class, 'home'])->name('home');
 Route::get('/ajax/products', [FrontendController::class, 'ajaxProducts'])->name('ajax.products');
 Route::get('/category/{slug}', [FrontendController::class, 'category'])->name('category.show');
-Route::get('/product/{id}', [FrontendController::class, 'productDetails'])->name('product.show');
+Route::get('/product/{slug}', [FrontendController::class, 'productDetails'])->name('product.show');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

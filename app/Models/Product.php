@@ -9,6 +9,7 @@ class Product extends Model
     protected $fillable = [
         'category_id',
         'product_name',
+        'slug',
         'main_image',
         'additional_images',
         'delivery_time',
@@ -100,5 +101,23 @@ class Product extends Model
         $finalPrice = $basePrice + $gstAmount;
 
         return number_format($finalPrice, 2);
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($product) {
+            $product->slug = \Illuminate\Support\Str::slug($product->product_name) . '-' . uniqid();
+        });
+
+        static::updating(function ($product) {
+            if ($product->isDirty('product_name') && !$product->slug) {
+                $product->slug = \Illuminate\Support\Str::slug($product->product_name) . '-' . uniqid();
+            }
+        });
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

@@ -30,7 +30,7 @@
 
                                     <div style="flex: 1;">
                                         <h5 style="margin-bottom: 10px;">
-                                            <a href="{{ route('product.show', $item->product_id) }}"
+                                            <a href="{{ route('product.show', $item->product->slug) }}"
                                                 style="color: #000; text-decoration: none;">
                                                 {{ $item->product->product_name }}
                                             </a>
