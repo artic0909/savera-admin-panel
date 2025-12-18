@@ -515,6 +515,7 @@ img {
             font-family: 'Microsoft Yi Baiti', sans-serif;
             margin-top: 20px;
             padding: 0 20px;
+            text-align: center;
         }
 
         p {
@@ -1575,7 +1576,7 @@ img {
         p {
             font-size: 22px;
             font-weight: 400;
-            padding: 10px 0 20px;
+            padding: 20px 0 25px;
         }
     }
 }
