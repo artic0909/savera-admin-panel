@@ -7,13 +7,16 @@
         <div class="carousel-container">
             <!-- Slide 1 -->
             <div class="carousel-slide active">
-                <img src="assets/images/bg-banner-x.webp" alt="Model" />
+                <img src="{{asset('assets/images/1.jpg')}}" alt="Model" />
             </div>
             <div class="carousel-slide ">
-                <img src="assets/images/bg-banner-x.webp" alt="Model" />
+                <img src="{{asset('assets/images/2.jpg')}}" alt="Model" />
             </div>
             <div class="carousel-slide ">
-                <img src="assets/images/bg-banner-x.webp" alt="Model" />
+                <img src="{{asset('assets/images/3.jpg')}}" alt="Model" />
+            </div>
+            <div class="carousel-slide ">
+                <img src="{{asset('assets/images/4.jpg')}}" alt="Model" />
             </div>
 
 
@@ -21,6 +24,7 @@
 
             <div class="carousel-dots">
                 <span class="dot active"></span>
+                <span class="dot"></span>
                 <span class="dot"></span>
                 <span class="dot"></span>
             </div>

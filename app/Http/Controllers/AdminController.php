@@ -310,7 +310,7 @@ class AdminController extends Controller
     // Why Choose ===================================================================================================================================>
     public function adminWhyChooseView()
     {
-        $whyChooses = WhyChoose::orderBy('id', 'desc')->get();
+        $whyChooses = WhyChoose::get();
         return view('admin.whychoose.index', compact('whyChooses'));
     }
 
