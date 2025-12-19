@@ -64,7 +64,7 @@
                                         @endif
                                     </div>
                                     <!-- <div class="swiper-button-next"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div     class="swiper-button-prev"></div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div     class="swiper-button-prev"></div> -->
                                 </div>
                             </div>
                         </div>
@@ -1260,6 +1260,14 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
         }
 
 
+        #pincode-input,
+        #pincode-input:focus,
+        #pincode-input:active,
+        #pincode-input:hover {
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
 
 
         @media (max-width: 768px) {
