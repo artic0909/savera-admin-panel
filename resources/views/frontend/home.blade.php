@@ -7,16 +7,16 @@
         <div class="carousel-container">
             <!-- Slide 1 -->
             <div class="carousel-slide active">
-                <img src="{{asset('assets/images/1.jpg')}}" alt="Model" />
+                <img src="{{ asset('assets/images/1.jpg') }}" alt="Model" />
             </div>
             <div class="carousel-slide ">
-                <img src="{{asset('assets/images/2.jpg')}}" alt="Model" />
+                <img src="{{ asset('assets/images/2.jpg') }}" alt="Model" />
             </div>
             <div class="carousel-slide ">
-                <img src="{{asset('assets/images/3.jpg')}}" alt="Model" />
+                <img src="{{ asset('assets/images/3.jpg') }}" alt="Model" />
             </div>
             <div class="carousel-slide ">
-                <img src="{{asset('assets/images/4.jpg')}}" alt="Model" />
+                <img src="{{ asset('assets/images/4.jpg') }}" alt="Model" />
             </div>
 
 
@@ -117,28 +117,28 @@
         <div class="swiper beginning-swiper">
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
-                    <img src="{{asset('assets/images/s1.jpg')}}" alt="Beginning Collection" />
+                    <img src="{{ asset('assets/images/s1.jpg') }}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="{{asset('assets/images/s2.jpg')}}" alt="Beginning Collection" />
+                    <img src="{{ asset('assets/images/s2.jpg') }}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="{{asset('assets/images/s3.jpg')}}" alt="Beginning Collection" />
+                    <img src="{{ asset('assets/images/s3.jpg') }}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="{{asset('assets/images/s4.jpg')}}" alt="Beginning Collection" />
+                    <img src="{{ asset('assets/images/s4.jpg') }}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="{{asset('assets/images/s5.jpg')}}" alt="Beginning Collection" />
+                    <img src="{{ asset('assets/images/s5.jpg') }}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="{{asset('assets/images/s6.jpg')}}" alt="Beginning Collection" />
+                    <img src="{{ asset('assets/images/s6.jpg') }}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="{{asset('assets/images/s7.jpg')}}" alt="Beginning Collection" />
+                    <img src="{{ asset('assets/images/s7.jpg') }}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="{{asset('assets/images/s8.jpg')}}" alt="Beginning Collection" />
+                    <img src="{{ asset('assets/images/s8.jpg') }}" alt="Beginning Collection" />
                 </div>
             </div>
             <div class="swiper-button-next"></div>
@@ -206,7 +206,7 @@
 
     <div class="store-section">
         <div class="store-image">
-            <img src="{{asset('assets/images/carti.jpg')}}" alt="Store Front" />
+            <img src="{{ asset('assets/images/carti.jpg') }}" alt="Store Front" />
         </div>
         <div class="store-content">
             {{-- <h2>Store Front</h2>

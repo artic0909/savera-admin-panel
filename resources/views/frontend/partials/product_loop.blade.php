@@ -5,6 +5,7 @@
             <img src="{{ asset('storage/' . $product->main_image) }}" alt="{{ $product->product_name }}">
             <span>{{ substr($product->product_name, 0, 14) }}...</span>
             <p>Rs. {{ $product->display_price }}</p>
+
         </a>
     </div>
 @empty

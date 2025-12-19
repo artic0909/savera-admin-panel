@@ -116,7 +116,7 @@
                                 </div>
                             </div>
                             <p class="p1">
-                                Price exclusive of taxes. See the full <a href="#">Price Breakup</a>
+                                Price exclusive of taxes. See the full <a href="#price-breakup">Price Breakup</a>
                             </p>
                             <p class="p2">
                                 <a href="#">Special Offer for you</a>
@@ -460,7 +460,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                             <p class="d-flex justify-content-between">
                                                 <span>
                                                     <b>Total Weight <span
-                                                            id="diamond-total-wt">{{ $diamondTotalWt }}</span> g</b>
+                                                            id="diamond-total-wt">{{ $diamondTotalWt }}</span> ct</b>
                                                 </span>
                                                 <span>
                                                     <b>Diamonds No. of <span
@@ -497,7 +497,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
 
 
                                 <!-- Price Breakup -->
-                                <h6 class="heading-1">
+                                <h6 class="heading-1" id="price-breakup">
                                     Price Breakup
                                 </h6>
                                 <div class="div-1 d-block">
@@ -539,7 +539,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                         <table id="price-breakup-table">
                                             <tr>
                                                 <td>
-                                                    Gold <span style="font-size: 10px;"
+                                                    {{ $matName }} <span style="font-size: 10px;"
                                                         id="gold-breakdown-text">({{ number_format($netWt, 3) }}g x
                                                         {{ $materialPrice }})</span>
                                                 </td>
@@ -549,9 +549,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                             </tr>
                                             <tr id="diamond-row" style="display: {{ $hasDiamonds ? '' : 'none' }};">
                                                 <td>
-                                                    Diamond <span style="font-size: 10px;"
-                                                        id="diamond-breakdown-text">({{ number_format($diamondTotalWt, 3) }}g
-                                                        x {{ $diamondPricePerCarat }})</span>
+                                                    Diamonds Price
                                                 </td>
                                                 <td id="diamond-cost-display">
                                                     ₹ {{ number_format($diamondCost, 2) }}

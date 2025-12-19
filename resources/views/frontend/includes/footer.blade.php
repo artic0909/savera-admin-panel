@@ -7,7 +7,7 @@
             <div class="footer-col">
                 <h3><i class="fi fi-rr-apps"></i> Categories</h3>
                 <ul>
-                    @foreach($categories as $category)
+                    @foreach ($categories as $category)
                         <li><a href="{{ route('category.show', $category->slug) }}">{{ $category->name }}</a></li>
                     @endforeach
                 </ul>
@@ -33,10 +33,22 @@
             <div class="footer-col">
                 <h3><i class="fi fi-rr-info"></i> Socials</h3>
                 <ul>
-                        <li><a href="#" style=" display: flex;align-items: center; gap: 5px; text-decoration: none;"><i class="fi fi-brands-instagram"></i> <span style="margin-bottom: 2px;">Instagram</span></a></li>
-                        <li><a href="#" style=" display: flex;align-items: center; gap: 5px; text-decoration: none;"><i class="fi fi-brands-facebook"></i> <span style="margin-bottom: 2px;">Facebook</span></a></li>
-                        <li><a href="#" style=" display: flex;align-items: center; gap: 5px; text-decoration: none;"><i class="fi fi-brands-linkedin"></i> <span style="margin-bottom: 2px;">LinkedIn</span></a></li>
-                        <li><a href="#" style=" display: flex;align-items: center; gap: 5px; text-decoration: none;"><i class="fi fi-brands-pinterest"></i> <span style="margin-bottom: 2px;">Pinterest</span></a></li>
+                    <li><a href="https://www.instagram.com/mysavera.in/"
+                            style=" display: flex;align-items: center; gap: 5px; text-decoration: none;"><i
+                                class="fi fi-brands-instagram"></i> <span
+                                style="margin-bottom: 2px;">Instagram</span></a></li>
+                    <li><a href="https://www.facebook.com/mysavera.in/"
+                            style=" display: flex;align-items: center; gap: 5px; text-decoration: none;"><i
+                                class="fi fi-brands-facebook"></i> <span style="margin-bottom: 2px;">Facebook</span></a>
+                    </li>
+                    <li><a href="https://www.linkedin.com/company/mysavera.in/"
+                            style=" display: flex;align-items: center; gap: 5px; text-decoration: none;"><i
+                                class="fi fi-brands-linkedin"></i> <span style="margin-bottom: 2px;">LinkedIn</span></a>
+                    </li>
+                    <li><a href="https://in.pinterest.com/mysavera.in/"
+                            style=" display: flex;align-items: center; gap: 5px; text-decoration: none;"><i
+                                class="fi fi-brands-pinterest"></i> <span
+                                style="margin-bottom: 2px;">Pinterest</span></a></li>
                 </ul>
             </div>
             <div class="footer-col newsletter">
@@ -54,16 +66,27 @@
         </div>
         <div class="footer-bottom">
             <div class="social-icons">
-                    <a href="#" style="display:flex; justify-content:center; align-items:center;"><i class="fi fi-brands-instagram" style="width: 18px; height: 18px;"></i></a>
-                    <a href="#" style="display:flex; justify-content:center; align-items:center;"><i class="fi fi-brands-facebook" style="width: 18px; height: 18px;"></i></a>
-                    <a href="#" style="display:flex; justify-content:center; align-items:center;"><i class="fi fi-brands-linkedin" style="width: 18px; height: 18px;"></i></a>
-                    <a href="#" style="display:flex; justify-content:center; align-items:center;"><i class="fi fi-brands-pinterest" style="width: 18px; height: 18px;"></i></a>
+                <a href="https://www.instagram.com/mysavera.in/"
+                    style="display:flex; justify-content:center; align-items:center;"><i class="fi fi-brands-instagram"
+                        style="width: 18px; height: 18px;"></i></a>
+                <a href="https://www.facebook.com/mysavera.in/"
+                    style="display:flex; justify-content:center; align-items:center;"><i class="fi fi-brands-facebook"
+                        style="width: 18px; height: 18px;"></i></a>
+                <a href="https://www.linkedin.com/company/mysavera.in/"
+                    style="display:flex; justify-content:center; align-items:center;"><i class="fi fi-brands-linkedin"
+                        style="width: 18px; height: 18px;"></i></a>
+                <a href="https://in.pinterest.com/mysavera.in/"
+                    style="display:flex; justify-content:center; align-items:center;"><i class="fi fi-brands-pinterest"
+                        style="width: 18px; height: 18px;"></i></a>
             </div>
             <div class="partners">
                 <!-- Placeholders for partner logos -->
-                    <span><img src="{{asset('img/1.png')}}" alt="" class="footer-brands" style="height: 35px; width: auto; object-fit: contain; opacity: 0.9;"></span>
-                    <span><img src="{{asset('img/2.png')}}" alt="" class="footer-brands" style="height: 35px; width: auto; object-fit: contain; opacity: 0.9;"></span>
-                    <span><img src="{{asset('img/3.png')}}" alt="" class="footer-brands" style="height: 35px; width: auto; object-fit: contain; opacity: 0.9;"></span>
+                <span><img src="{{ asset('img/1.png') }}" alt="" class="footer-brands"
+                        style="height: 35px; width: auto; object-fit: contain; opacity: 0.9;"></span>
+                <span><img src="{{ asset('img/2.png') }}" alt="" class="footer-brands"
+                        style="height: 35px; width: auto; object-fit: contain; opacity: 0.9;"></span>
+                <span><img src="{{ asset('img/3.png') }}" alt="" class="footer-brands"
+                        style="height: 35px; width: auto; object-fit: contain; opacity: 0.9;"></span>
             </div>
             <div class="legal-links">
                 <a href="{{ route('privacy-policy') }}#privacyPolicy">Privacy statement</a>

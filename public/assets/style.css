@@ -770,7 +770,7 @@ img {
     align-items: center;
 
     .store-image {
-        width: 70%;
+        width: 80%;
         height: 100%;
         position: relative;
 
@@ -785,7 +785,7 @@ img {
     }
 
     .store-content {
-        width: 30%;
+        width: 20%;
         padding-right: 8%;
         display: flex;
         flex-direction: column;
