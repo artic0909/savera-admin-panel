@@ -40,7 +40,7 @@
                 @foreach ($categories as $category)
                     <a href="#" class="cat-item {{ $loop->first ? 'active' : '' }}" data-id="{{ $category->id }}"
                         data-slug="{{ $category->slug }}" onclick="loadCategory(event, this)">
-                        <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" />
+                        <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" style="border-radius: 50%;"/>
                         <h3>{{ $category->name }}</h3>
                     </a>
                 @endforeach
@@ -175,7 +175,7 @@
 
     <div class="choose-section">
         <div class="wrapper">
-            <h2>WHY CHOOSE S&Lambda;VER&Lambda;?</h2>
+            <h2>WHY CHOOSE SAVERA?</h2>
             <div class="choose-container">
                 <div class="choose-grid">
                     <div class="choose-item item-tl">
