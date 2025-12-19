@@ -517,7 +517,7 @@ img {
             margin-top: 20px;
             padding: 0 20px;
             text-align: center;
-            
+
         }
 
         p {
@@ -735,9 +735,8 @@ img {
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-68%, 0%);
-        width: 100px;
-        height: 100px;
+        transform: translate(-70%, 0%);
+        width: 16%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1626,4 +1625,8 @@ img {
     position: absolute;
     left: 10px;
     top: 11px;
+}
+
+img.saveratext {
+    width: 145px;
 }
