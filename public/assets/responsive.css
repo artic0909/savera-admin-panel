@@ -1340,10 +1340,25 @@
             }
 
             img.tablinks {
-                height: 50px;
+                height: 80px;
                 width: 100%;
-                border-radius: 10px;
+                border-radius: 8px;
                 object-fit: cover;
+                cursor: pointer;
+                border: 2px solid transparent;
+            }
+
+            .img-tab-btn {
+                overflow-x: auto;
+            }
+
+            .thumbnail-grid {
+                gap: 10px;
+            }
+
+            .thumbnail-item {
+                width: 100px;
+                height: 100px;
             }
 
         }

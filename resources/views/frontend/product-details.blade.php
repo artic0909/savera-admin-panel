@@ -44,27 +44,23 @@
                                 </p>
                             </div>
                             <div class="img-tab-btn tab">
-                                <div class="swiper product-tab-slider">
-                                    <div class="swiper-wrapper">
-                                        <!-- Main thumbnail -->
-                                        <div class="swiper-slide">
-                                            <img src="{{ asset('storage/' . $product->main_image) }}"
-                                                alt="{{ $product->product_name }}" class="tablinks"
-                                                onclick="openCity(event, 'tab1')">
-                                        </div>
-
-                                        @if (is_array($product->additional_images))
-                                            @foreach ($product->additional_images as $index => $image)
-                                                <div class="swiper-slide">
-                                                    <img src="{{ asset('storage/' . $image) }}"
-                                                        alt="{{ $product->product_name }}" class="tablinks"
-                                                        onclick="openCity(event, 'tab{{ $index + 2 }}')">
-                                                </div>
-                                            @endforeach
-                                        @endif
+                                <div class="thumbnail-grid">
+                                    <!-- Main thumbnail -->
+                                    <div class="thumbnail-item">
+                                        <img src="{{ asset('storage/' . $product->main_image) }}"
+                                            alt="{{ $product->product_name }}" class="tablinks active"
+                                            onclick="openCity(event, 'tab1')">
                                     </div>
-                                    <!-- <div class="swiper-button-next"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div     class="swiper-button-prev"></div> -->
+
+                                    @if (is_array($product->additional_images))
+                                        @foreach ($product->additional_images as $index => $image)
+                                            <div class="thumbnail-item">
+                                                <img src="{{ asset('storage/' . $image) }}"
+                                                    alt="{{ $product->product_name }}" class="tablinks"
+                                                    onclick="openCity(event, 'tab{{ $index + 2 }}')">
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -85,29 +81,35 @@
                             </div>
                             <div class="price-container" style="margin: 15px 0;">
                                 <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                                    <h5 id="dynamic-price" style="margin: 0; font-size: 32px; font-weight: 700; color: #3C3550;">
+                                    <h5 id="dynamic-price"
+                                        style="margin: 0; font-size: 32px; font-weight: 700; color: #3C3550;">
                                         @php
                                             // Get the first config MRP for initial display
                                             $configs = $product->metal_configurations;
-                                            $firstConfig = is_array($configs) && count($configs) > 0 ? reset($configs) : [];
+                                            $firstConfig =
+                                                is_array($configs) && count($configs) > 0 ? reset($configs) : [];
                                             $initialMRP = $firstConfig['mrp'] ?? 0;
                                             $displayPrice = $product->display_price;
-                                            
+
                                             // Calculate discount percentage
                                             $discountPercentage = 0;
                                             if ($initialMRP > 0 && $displayPrice > 0) {
-                                                $discountPercentage = round((($initialMRP - $displayPrice) / $initialMRP) * 100);
+                                                $discountPercentage = round(
+                                                    (($initialMRP - $displayPrice) / $initialMRP) * 100,
+                                                );
                                             }
                                         @endphp
                                         {{ $displayPrice }}
                                     </h5>
-                                    @if($initialMRP > 0 && $initialMRP != $displayPrice)
-                                        <span id="mrp" style="text-decoration: line-through; color: #999; font-size: 18px; font-weight: 500;">
+                                    @if ($initialMRP > 0 && $initialMRP != $displayPrice)
+                                        <span id="mrp"
+                                            style="text-decoration: line-through; color: #999; font-size: 18px; font-weight: 500;">
                                             ₹{{ number_format($initialMRP, 2) }}
                                         </span>
                                     @endif
-                                    @if($discountPercentage > 0)
-                                        <span id="discount-badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 600; display: inline-block;">
+                                    @if ($discountPercentage > 0)
+                                        <span id="discount-badge"
+                                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 600; display: inline-block;">
                                             {{ $discountPercentage }}% OFF
                                         </span>
                                     @endif
@@ -433,12 +435,10 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                             Weight
                                         </h6>
                                         <p>
-                                            Gross Weight(Product): <span
-                                                id="gross-weight"></span>
+                                            Gross Weight(Product): <span id="gross-weight"></span>
                                             g
                                             <br>
-                                            Net Weight({{ $matName }}): <span
-                                                id="net-weight"></span> g
+                                            Net Weight({{ $matName }}): <span id="net-weight"></span> g
                                         </p>
                                     </div>
                                     <div class="weight">
@@ -664,33 +664,144 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="{{ asset('assets/script.js') }}"></script>
     <script src="{{ asset('assets/jquery-1.12.0.min.js') }}"></script>
 
     <script>
-        var swiper = new Swiper(".product-tab-slider", {
-            slidesPerView: 4,
-            spaceBetween: 30,
-            loop: true,
-            autoplay: true
-        });
-    </script>
+        // Optimized thumbnail slider with auto-play and auto-scroll
+        (function() {
+            let currentIndex = 0;
+            let autoPlayInterval = null;
+            let autoPlayTimeout = null;
+            const AUTOPLAY_DELAY = 3000;
+            const RESUME_DELAY = 5000;
 
-    <script>
-        function openCity(evt, cityName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
+            // Main function to switch images
+            function switchToImage(index, thumbnailElement) {
+                // Hide all main images
+                const tabcontents = document.getElementsByClassName("tabcontent");
+                for (let i = 0; i < tabcontents.length; i++) {
+                    tabcontents[i].style.display = "none";
+                }
+
+                // Remove active class from all thumbnails
+                const tablinks = document.getElementsByClassName("tablinks");
+                for (let i = 0; i < tablinks.length; i++) {
+                    tablinks[i].classList.remove("active");
+                }
+
+                // Show selected main image
+                if (tabcontents[index]) {
+                    tabcontents[index].style.display = "block";
+                }
+
+                // Add active class to selected thumbnail
+                if (thumbnailElement) {
+                    thumbnailElement.classList.add("active");
+                } else if (tablinks[index]) {
+                    tablinks[index].classList.add("active");
+                }
+
+                // Scroll thumbnail into view
+                scrollThumbnailIntoView(index);
+
+                // Update current index
+                currentIndex = index;
             }
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
+
+            // Scroll active thumbnail into view
+            function scrollThumbnailIntoView(index) {
+                const tablinks = document.getElementsByClassName("tablinks");
+                const container = document.querySelector('.img-tab-btn');
+
+                if (tablinks[index] && container) {
+                    const thumbnail = tablinks[index];
+                    const containerRect = container.getBoundingClientRect();
+                    const thumbnailRect = thumbnail.getBoundingClientRect();
+
+                    // Calculate scroll position to center the thumbnail
+                    const scrollLeft = thumbnail.offsetLeft - (container.offsetWidth / 2) + (thumbnail.offsetWidth / 2);
+
+                    // Smooth scroll to position
+                    container.scrollTo({
+                        left: scrollLeft,
+                        behavior: 'smooth'
+                    });
+                }
             }
-            document.getElementById(cityName).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
+
+            // Auto-play function
+            function autoPlayNext() {
+                const tablinks = document.getElementsByClassName("tablinks");
+                if (tablinks.length === 0) return;
+
+                currentIndex = (currentIndex + 1) % tablinks.length;
+                switchToImage(currentIndex, tablinks[currentIndex]);
+            }
+
+            // Start auto-play
+            function startAutoPlay() {
+                stopAutoPlay();
+                autoPlayInterval = setInterval(autoPlayNext, AUTOPLAY_DELAY);
+            }
+
+            // Stop auto-play
+            function stopAutoPlay() {
+                if (autoPlayInterval) {
+                    clearInterval(autoPlayInterval);
+                    autoPlayInterval = null;
+                }
+                if (autoPlayTimeout) {
+                    clearTimeout(autoPlayTimeout);
+                    autoPlayTimeout = null;
+                }
+            }
+
+            // Resume auto-play after delay
+            function resumeAutoPlayAfterDelay() {
+                stopAutoPlay();
+                autoPlayTimeout = setTimeout(startAutoPlay, RESUME_DELAY);
+            }
+
+            // Initialize when DOM is ready
+            document.addEventListener('DOMContentLoaded', function() {
+                const tablinks = document.getElementsByClassName("tablinks");
+                const thumbnailGrid = document.querySelector('.thumbnail-grid');
+
+                // Set up click handlers for all thumbnails
+                for (let i = 0; i < tablinks.length; i++) {
+                    tablinks[i].addEventListener('click', function(e) {
+                        e.preventDefault();
+                        switchToImage(i, this);
+                        resumeAutoPlayAfterDelay();
+                    });
+                }
+
+                // Pause auto-play on hover
+                if (thumbnailGrid) {
+                    thumbnailGrid.addEventListener('mouseenter', stopAutoPlay);
+                    thumbnailGrid.addEventListener('mouseleave', startAutoPlay);
+                }
+
+                // Start auto-play
+                startAutoPlay();
+
+                // Ensure first image is displayed
+                switchToImage(0, tablinks[0]);
+            });
+
+            // Legacy function for backward compatibility
+            window.openCity = function(evt, cityName) {
+                if (!evt || !evt.currentTarget) return;
+
+                const tablinks = document.getElementsByClassName("tablinks");
+                const index = Array.from(tablinks).indexOf(evt.currentTarget);
+
+                if (index !== -1) {
+                    switchToImage(index, evt.currentTarget);
+                }
+            };
+        })();
     </script>
 
 @endsection
@@ -884,21 +995,21 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
 
             // Main Price Display with MRP and Discount
             document.getElementById('dynamic-price').textContent = formatCurrency(finalPrice);
-            
+
             // Update MRP and Discount Badge
             let mrpValue = parseFloat(config.mrp || 0);
             let mrpElement = document.getElementById('mrp');
             let discountBadge = document.getElementById('discount-badge');
-            
+
             if (mrpValue > 0 && mrpValue !== finalPrice) {
                 if (mrpElement) {
                     mrpElement.textContent = formatCurrency(mrpValue);
                     mrpElement.style.display = 'inline-block';
                 }
-                
+
                 // Calculate discount percentage
                 let discountPercent = Math.round(((mrpValue - finalPrice) / mrpValue) * 100);
-                
+
                 if (discountPercent > 0 && discountBadge) {
                     discountBadge.textContent = discountPercent + '% OFF';
                     discountBadge.style.display = 'inline-block';
@@ -1255,8 +1366,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
         }
 
         .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
             gap: 30px;
         }
 
@@ -1321,10 +1431,19 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
             box-shadow: none !important;
         }
 
+        .col-lg-6.col-md-6.col-12 {
+            width: 50%;
+        }
+
 
         @media (max-width: 768px) {
             .row {
-                grid-template-columns: 1fr;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .col-lg-6.col-md-6.col-12 {
+                width: 100%;
             }
 
             .additional-info {
