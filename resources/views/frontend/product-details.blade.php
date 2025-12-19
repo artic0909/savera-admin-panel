@@ -64,7 +64,7 @@
                                         @endif
                                     </div>
                                     <!-- <div class="swiper-button-next"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div     class="swiper-button-prev"></div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div     class="swiper-button-prev"></div> -->
                                 </div>
                             </div>
                         </div>
@@ -602,10 +602,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                     <h6>
                                         certificate of authenticity
                                     </h6>
-                                    <p>
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                        Ipsum has been the industry
-                                    </p>
+                                    <img src="{{ asset('assets/certificate.jpeg') }}" alt="...">
                                 </div>
                             </div>
                         </div>
