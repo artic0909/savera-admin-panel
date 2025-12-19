@@ -83,9 +83,36 @@
                                         onclick="toggleWishlist(this)"></i>
                                 </div>
                             </div>
-                            <h5 id="dynamic-price">
-                                {{ $product->display_price }}
-                            </h5>
+                            <div class="price-container" style="margin: 15px 0;">
+                                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                                    <h5 id="dynamic-price" style="margin: 0; font-size: 32px; font-weight: 700; color: #3C3550;">
+                                        @php
+                                            // Get the first config MRP for initial display
+                                            $configs = $product->metal_configurations;
+                                            $firstConfig = is_array($configs) && count($configs) > 0 ? reset($configs) : [];
+                                            $initialMRP = $firstConfig['mrp'] ?? 0;
+                                            $displayPrice = $product->display_price;
+                                            
+                                            // Calculate discount percentage
+                                            $discountPercentage = 0;
+                                            if ($initialMRP > 0 && $displayPrice > 0) {
+                                                $discountPercentage = round((($initialMRP - $displayPrice) / $initialMRP) * 100);
+                                            }
+                                        @endphp
+                                        {{ $displayPrice }}
+                                    </h5>
+                                    @if($initialMRP > 0 && $initialMRP != $displayPrice)
+                                        <span id="mrp" style="text-decoration: line-through; color: #999; font-size: 18px; font-weight: 500;">
+                                            ₹{{ number_format($initialMRP, 2) }}
+                                        </span>
+                                    @endif
+                                    @if($discountPercentage > 0)
+                                        <span id="discount-badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 600; display: inline-block;">
+                                            {{ $discountPercentage }}% OFF
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
                             <p class="p1">
                                 Price exclusive of taxes. See the full <a href="#">Price Breakup</a>
                             </p>
@@ -407,11 +434,11 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                         </h6>
                                         <p>
                                             Gross Weight(Product): <span
-                                                id="gross-weight">{{ number_format($diamondTotalWt + (float) $netWeight, 3) }}</span>
+                                                id="gross-weight"></span>
                                             g
                                             <br>
                                             Net Weight({{ $matName }}): <span
-                                                id="net-weight">{{ $netWeight }}</span> g
+                                                id="net-weight"></span> g
                                         </p>
                                     </div>
                                     <div class="weight">
@@ -498,7 +525,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                         $materialCost = $netWt * $materialPrice;
 
                                         // Diamond cost using previously calculated total weight
-                                        $diamondCost = $diamondTotalWt * $diamondPricePerCarat;
+                                        $diamondCost = floatval($defaultConfig['total_diamond_price'] ?? 0);
 
                                         $makingCharge = floatval($defaultConfig['making_charge'] ?? 0);
 
@@ -831,7 +858,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
 
             // Price Calculations
             let materialCost = netWt * matPrice;
-            let diamondCost = diamondTotalWt * diamondRate;
+            let diamondCost = parseFloat(config.total_diamond_price || 0);
             let makingCharge = parseFloat(config.making_charge || 0);
             let basePrice = materialCost + diamondCost + makingCharge;
             let gstPercent = parseFloat(config.gst_percentage || 0);
@@ -855,8 +882,33 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
             document.getElementById('gst-amount-display').textContent = formatCurrency(gstAmount);
             document.getElementById('final-total-display').textContent = formatCurrency(finalPrice);
 
-            // Main Price Display
+            // Main Price Display with MRP and Discount
             document.getElementById('dynamic-price').textContent = formatCurrency(finalPrice);
+            
+            // Update MRP and Discount Badge
+            let mrpValue = parseFloat(config.mrp || 0);
+            let mrpElement = document.getElementById('mrp');
+            let discountBadge = document.getElementById('discount-badge');
+            
+            if (mrpValue > 0 && mrpValue !== finalPrice) {
+                if (mrpElement) {
+                    mrpElement.textContent = formatCurrency(mrpValue);
+                    mrpElement.style.display = 'inline-block';
+                }
+                
+                // Calculate discount percentage
+                let discountPercent = Math.round(((mrpValue - finalPrice) / mrpValue) * 100);
+                
+                if (discountPercent > 0 && discountBadge) {
+                    discountBadge.textContent = discountPercent + '% OFF';
+                    discountBadge.style.display = 'inline-block';
+                } else if (discountBadge) {
+                    discountBadge.style.display = 'none';
+                }
+            } else {
+                if (mrpElement) mrpElement.style.display = 'none';
+                if (discountBadge) discountBadge.style.display = 'none';
+            }
         }
 
         // Add to Cart function

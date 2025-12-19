@@ -54,7 +54,7 @@ class CheckoutController extends Controller
         }
 
         $subtotal = $cartItems->sum('subtotal');
-        $tax = $subtotal * 0.03; // 3% GST
+        $tax = $subtotal * 0.00; // 3% GST
         $shipping = 0; // Free shipping
         $total = $subtotal + $tax + $shipping;
 
@@ -127,7 +127,7 @@ class CheckoutController extends Controller
         try {
             // Calculate totals
             $subtotal = $cartItems->sum('subtotal');
-            $tax = $subtotal * 0.03; // 3% GST
+            $tax = $subtotal * 0.00; // 3% GST
             $shipping = 0; // Free shipping
             $total = $subtotal + $tax + $shipping;
 

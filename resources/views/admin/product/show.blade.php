@@ -141,7 +141,7 @@
                     $diamondTotalWt += floatval($dInfo['total_weight'] ?? 0);
                     }
                     }
-                    $diamondCost = $diamondTotalWt * $diamondPricePerCarat;
+                    $diamondCost = floatval($config['total_diamond_price'] ?? 0);
 
                     $makingCharge = floatval($config['making_charge'] ?? 0);
 
@@ -174,7 +174,7 @@
                                 </tr>
                                 @if($hasDiamonds)
                                 <tr>
-                                    <td class="text-muted ps-0">Diamond <span class="text-xs">({{ number_format($diamondTotalWt, 3) }}g x {{ $diamondPricePerCarat }})</span></td>
+                                    <td class="text-muted ps-0">Diamond <span class="text-xs">Price</span></td>
                                     <td class="text-end pe-0">₹{{ number_format($diamondCost, 2) }}</td>
                                 </tr>
                                 @endif
