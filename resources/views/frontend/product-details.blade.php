@@ -64,7 +64,7 @@
                                         @endif
                                     </div>
                                     <!-- <div class="swiper-button-next"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                <div     class="swiper-button-prev"></div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                <div     class="swiper-button-prev"></div> -->
                                 </div>
                             </div>
                         </div>
@@ -336,7 +336,8 @@
                                 <a href="#" class="dc">Delivery & Cancellation</a>
                             </p>
                             <p class="p2">
-                                <a href="#" class="dc">Estimated delivery by </a>
+                                <a href="#" class="dc">Estimated delivery by
+                                    {{ now()->addDays((int) $product->delivery_time)->format('d F') }}</a>
                             </p>
                             <div class="pincode">
                                 <input type="text" id="pincode-input" placeholder="Enter Pincode" maxlength="10"
