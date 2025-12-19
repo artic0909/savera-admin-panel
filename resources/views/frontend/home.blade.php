@@ -40,7 +40,7 @@
                 @foreach ($categories as $category)
                     <a href="#" class="cat-item {{ $loop->first ? 'active' : '' }}" data-id="{{ $category->id }}"
                         data-slug="{{ $category->slug }}" onclick="loadCategory(event, this)">
-                        <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" style="border-radius: 50%;"/>
+                        <img src="{{ asset($category->image) }}" alt="{{ $category->name }}"/>
                         <h3>{{ $category->name }}</h3>
                     </a>
                 @endforeach
