@@ -9,8 +9,8 @@
 </head>
 
 <body>
-    <img class="desktop" src="{{ asset('assets/commingsoon-desktop.png') }}" alt="Coming Soon">
-    <img class="mobile" src="{{ asset('assets/commingsoon-mobile.png') }}" alt="Coming Soon">
+    <img class="desktop" src="{{ asset('assets/commingsoon-desktop.webp') }}" alt="Coming Soon">
+    <img class="mobile" src="{{ asset('assets/commingsoon-mobile.webp') }}" alt="Coming Soon">
 </body>
 <style>
     html,
