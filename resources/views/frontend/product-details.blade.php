@@ -64,7 +64,7 @@
                                         @endif
                                     </div>
                                     <!-- <div class="swiper-button-next"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div     class="swiper-button-prev"></div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div     class="swiper-button-prev"></div> -->
                                 </div>
                             </div>
                         </div>
@@ -403,7 +403,9 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                             Weight
                                         </h6>
                                         <p>
-                                            Gross Weight(Product): <span id="gross-weight">{{ $grossWeight }}</span> g
+                                            Gross Weight(Product): <span
+                                                id="gross-weight">{{ number_format($diamondTotalWt + (float) $netWeight, 3) }}</span>
+                                            g
                                             <br>
                                             Net Weight({{ $matName }}): <span
                                                 id="net-weight">{{ $netWeight }}</span> g
@@ -780,7 +782,6 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
             let netWt = parseFloat(config.net_weight_gold || 0);
             let grossWt = parseFloat(config.gross_weight_product || 0);
 
-            document.getElementById('gross-weight').textContent = grossWt;
             document.getElementById('net-weight').textContent = netWt;
             document.getElementById('purity-display').textContent = config.purity || '--';
 
@@ -823,6 +824,10 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
             document.getElementById('diamond-total-wt').textContent = formatNumber(diamondTotalWt, 3);
             document.getElementById('diamond-total-count').textContent = totalDiamondCount;
             diamondWrapper.style.display = hasDiamonds ? 'block' : 'none';
+
+            // Calculate and Update Gross Weight (Net + Diamond)
+            let calculatedGrossWt = netWt + diamondTotalWt;
+            document.getElementById('gross-weight').textContent = formatNumber(calculatedGrossWt, 3);
 
             // Price Calculations
             let materialCost = netWt * matPrice;
