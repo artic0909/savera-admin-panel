@@ -64,7 +64,7 @@
                                         @endif
                                     </div>
                                     <!-- <div class="swiper-button-next"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                <div     class="swiper-button-prev"></div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div     class="swiper-button-prev"></div> -->
                                 </div>
                             </div>
                         </div>
@@ -379,6 +379,7 @@ $diamondInfo = $product->diamond_gemstone_info; // This might be top-level or in
 $shownDiamondInfo =
     $defaultConfig['diamond_info'] ?? ($product->diamond_gemstone_info ?? []);
 $netWeight = $defaultConfig['net_weight_gold'] ?? '--';
+$purity = $defaultConfig['purity'] ?? '--';
 $grossWeight = $defaultConfig['gross_weight_product'] ?? '--';
 
 $matId = $defaultConfig['material_id'] ?? null;
@@ -404,7 +405,8 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                         <p>
                                             Gross Weight(Product): <span id="gross-weight">{{ $grossWeight }}</span> g
                                             <br>
-                                            Net Weight(gold): <span id="net-weight">{{ $netWeight }}</span> g
+                                            Net Weight({{ $matName }}): <span
+                                                id="net-weight">{{ $netWeight }}</span> g
                                         </p>
                                     </div>
                                     <div class="weight">
@@ -412,7 +414,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                             Purity
                                         </h6>
                                         <p id="purity-display">
-                                            {{ $matName }}
+                                            {{ $purity }}
                                         </p>
                                     </div>
                                 </div>
@@ -780,7 +782,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
 
             document.getElementById('gross-weight').textContent = grossWt;
             document.getElementById('net-weight').textContent = netWt;
-            document.getElementById('purity-display').textContent = matName;
+            document.getElementById('purity-display').textContent = config.purity || '--';
 
             // Diamond Info
             let diamondTotalWt = 0;
