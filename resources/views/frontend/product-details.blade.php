@@ -119,7 +119,7 @@
                                 Price exclusive of taxes. See the full <a href="#price-breakup">Price Breakup</a>
                             </p>
                             <p class="p2">
-                                <a href="#">Special Offer for you</a>
+                                {{-- <a href="#">Special Offer for you</a> --}}
                             </p>
                             <div class="apply-coupon-div" id="coupon-rotator"
                                 style="display: none; background: #fff5f5; border: 1px dashed #ff9999; padding: 15px; border-radius: 8px; margin-top: 15px; position: relative; transition: all 0.3s ease;">
@@ -364,9 +364,9 @@
                                     </a>
                                 @endif
                             </div>
-                            <p class="p2">
+                            {{-- <p class="p2">
                                 <a href="#" class="dc">Delivery & Cancellation</a>
-                            </p>
+                            </p> --}}
                             <p class="p2">
                                 <a href="#" class="dc">Estimated delivery by
                                     {{ now()->addDays((int) $product->delivery_time)->format('d F') }}</a>
@@ -460,7 +460,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                             <p class="d-flex justify-content-between">
                                                 <span>
                                                     <b>Total Weight <span
-                                                            id="diamond-total-wt">{{ $diamondTotalWt }}</span> g</b>
+                                                            id="diamond-total-wt">{{ $diamondTotalWt }}</span> ct</b>
                                                 </span>
                                                 <span>
                                                     <b>Diamonds No. of <span
@@ -486,7 +486,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                                             <td>{{ $info['clarity'] ?? '--' }}</td>
                                                             <td>{{ $info['shape'] ?? '--' }}</td>
                                                             <td>{{ $info['number_of_diamonds'] ?? '--' }}</td>
-                                                            <td>{{ $info['total_weight'] ?? '--' }} g</td>
+                                                            <td>{{ $info['total_weight'] ?? '--' }} ct</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
@@ -549,7 +549,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                             </tr>
                                             <tr id="diamond-row" style="display: {{ $hasDiamonds ? '' : 'none' }};">
                                                 <td>
-                                                    Diamond <span style="font-size: 10px;"
+                                                    Diamond Price<span style="font-size: 10px; visibility: hidden;"
                                                         id="diamond-breakdown-text">({{ number_format($diamondTotalWt, 3) }}g
                                                         x {{ $diamondPricePerCarat }})</span>
                                                 </td>
@@ -610,7 +610,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                     </li>
                                     <li>
                                         <img src="{{ asset('assets/images/i3.png') }}" alt="...">
-                                        Easy 15days return
+                                        Easy 7 days return
                                     </li>
                                     <li>
                                         <img src="{{ asset('assets/images/i4.png') }}" alt="...">
@@ -953,7 +953,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                     <td>${info.clarity || '--'}</td>
                     <td>${info.shape || '--'}</td>
                     <td>${info.number_of_diamonds || '--'}</td>
-                    <td>${info.total_weight || '--'} g</td>
+                    <td>${info.total_weight || '--'} ct</td>
                 </tr>`;
                     diamondTableBody.innerHTML += row;
                 });
