@@ -40,7 +40,7 @@
                 @foreach ($categories as $category)
                     <a href="#" class="cat-item {{ $loop->first ? 'active' : '' }}" data-id="{{ $category->id }}"
                         data-slug="{{ $category->slug }}" onclick="loadCategory(event, this)">
-                        <img src="{{ asset($category->image) }}" alt="{{ $category->name }}"/>
+                        <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" />
                         <h3>{{ $category->name }}</h3>
                     </a>
                 @endforeach
@@ -175,7 +175,8 @@
 
     <div class="choose-section">
         <div class="wrapper">
-            <h2>WHY CHOOSE SAVERA?</h2>
+            <h2>WHY CHOOSE <img class="saveratext" src="{{ asset('assets/images/saveratext.png') }}" alt="savera" />
+            </h2>
             <div class="choose-container">
                 <div class="choose-grid">
                     <div class="choose-item item-tl">
@@ -207,9 +208,9 @@
             <img src="assets/images/cartier.png" alt="Store Front" />
         </div>
         <div class="store-content">
-            <h2>Store Front</h2>
+            {{-- <h2>Store Front</h2>
             <p>Sub Text</p>
-            <a href="#" class="find-store-btn">Find Store</a>
+            <a href="#" class="find-store-btn">Find Store</a> --}}
         </div>
     </div>
 @endsection
