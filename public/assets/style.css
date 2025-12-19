@@ -1149,8 +1149,8 @@ img {
             overflow: hidden;
 
             img.tabcontent {
-                width: 100%;
-                height: 400px;
+                width: 585px;
+                height: 585px;
                 object-fit: cover;
                 margin-bottom: 10px;
                 display: none;
