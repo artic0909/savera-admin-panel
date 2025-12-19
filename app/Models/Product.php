@@ -89,9 +89,7 @@ class Product extends Model
                 $diamondTotalWt += floatval($dInfo['total_weight'] ?? 0);
             }
         }
-        // $diamondCost = $diamondTotalWt * $diamondPricePerCarat;
-        $diamondCost = floatval($config['total_diamond_price'] ?? 0);
-
+        $diamondCost = $diamondTotalWt * $diamondPricePerCarat;
 
         $makingCharge = floatval($config['making_charge'] ?? 0);
 
