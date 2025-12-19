@@ -104,14 +104,27 @@ class Product extends Model
     protected static function booted()
     {
         static::creating(function ($product) {
-            $product->slug = \Illuminate\Support\Str::slug($product->product_name) . '-' . uniqid();
+            $product->slug = static::generateUniqueSlug($product->product_name);
         });
 
         static::updating(function ($product) {
             if ($product->isDirty('product_name') && !$product->slug) {
-                $product->slug = \Illuminate\Support\Str::slug($product->product_name) . '-' . uniqid();
+                $product->slug = static::generateUniqueSlug($product->product_name);
             }
         });
+    }
+
+    protected static function generateUniqueSlug($name)
+    {
+        $slug = \Illuminate\Support\Str::slug($name);
+        $originalSlug = $slug;
+        $count = 1;
+
+        while (static::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $count++;
+        }
+
+        return $slug;
     }
 
     public function getRouteKeyName()
