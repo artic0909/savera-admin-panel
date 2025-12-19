@@ -142,6 +142,16 @@
                         <input type="text" name="metal_configurations[INDEX][gst_percentage]" class="form-control">
                     </div>
 
+                    <div class="col-md-2">
+                        <label class="form-label">MRP</label>
+                        <input type="text" name="metal_configurations[INDEX][mrp]" class="form-control">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Total Diamond Price</label>
+                        <input type="text" name="metal_configurations[INDEX][total_diamond_price]" class="form-control">
+                    </div>
+
                     <div class="col-md-3 mt-4">
                         <input type="checkbox" class="use-diamond">
                         <label class="ms-1">Used Diamond?</label>

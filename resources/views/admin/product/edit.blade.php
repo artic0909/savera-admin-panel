@@ -190,6 +190,22 @@
                                                         value="{{ $config['gst_percentage'] ?? '' }}">
                                                 </div>
 
+                                                <div class="col-md-2">
+                                                    <label class="form-label">MRP</label>
+                                                    <input type="text"
+                                                        name="metal_configurations[{{ $index }}][mrp]"
+                                                        class="form-control"
+                                                        value="{{ $config['mrp'] ?? '' }}">
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <label class="form-label">Total Diamond Price</label>
+                                                    <input type="text"
+                                                        name="metal_configurations[{{ $index }}][total_diamond_price]"
+                                                        class="form-control"
+                                                        value="{{ $config['total_diamond_price'] ?? '' }}">
+                                                </div>
+
                                                 <div class="col-md-3 mt-4">
                                                     <!-- Check if diamond_info exists and is not empty to set checked state -->
                                                     @php
@@ -344,6 +360,16 @@
                     <div class="col-md-2">
                         <label class="form-label">GST %</label>
                         <input type="text" name="metal_configurations[INDEX][gst_percentage]" class="form-control">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">MRP</label>
+                        <input type="text" name="metal_configurations[INDEX][mrp]" class="form-control">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Total Diamond Price</label>
+                        <input type="text" name="metal_configurations[INDEX][total_diamond_price]" class="form-control">
                     </div>
 
                     <div class="col-md-3 mt-4">

@@ -498,7 +498,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                         $materialCost = $netWt * $materialPrice;
 
                                         // Diamond cost using previously calculated total weight
-                                        $diamondCost = $diamondTotalWt * $diamondPricePerCarat;
+                                        $diamondCost = floatval($defaultConfig['total_diamond_price'] ?? 0);
 
                                         $makingCharge = floatval($defaultConfig['making_charge'] ?? 0);
 
@@ -831,7 +831,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
 
             // Price Calculations
             let materialCost = netWt * matPrice;
-            let diamondCost = diamondTotalWt * diamondRate;
+            let diamondCost = parseFloat(config.total_diamond_price || 0);
             let makingCharge = parseFloat(config.making_charge || 0);
             let basePrice = materialCost + diamondCost + makingCharge;
             let gstPercent = parseFloat(config.gst_percentage || 0);

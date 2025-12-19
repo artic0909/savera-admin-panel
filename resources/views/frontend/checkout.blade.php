@@ -171,15 +171,15 @@
                                 <span>Rs. {{ number_format($subtotal, 2) }}</span>
                             </div>
 
-                            <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
+                            <!-- <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
                                 <span>Tax (3%):</span>
                                 <span>Rs. {{ number_format($tax, 2) }}</span>
-                            </div>
+                            </div> -->
 
-                            <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
+                            <!-- <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
                                 <span>Shipping:</span>
                                 <span style="color: green;">FREE</span>
-                            </div>
+                            </div> -->
 
                             <div id="discount-row"
                                 style="margin-bottom: 15px; display: none; justify-content: space-between; color: green;">
