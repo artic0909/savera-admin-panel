@@ -33,36 +33,70 @@ class ProductController extends Controller
         return view('admin.product.create', compact('categories', 'metals', 'sizes', 'colors', 'materials'));
     }
 
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'category_id' => 'required|exists:categories,id',
+    //         'product_name' => 'required|string|max:255',
+    //         'main_image' => 'required|image|mimes:jpeg,png,jpg,gif',
+    //         'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+    //         'delivery_time' => 'required|string',
+    //     ]);
+
+    //     $data = $request->all();
+
+    //     // Handle File Uploads
+    //     if ($request->hasFile('main_image')) {
+    //         $data['main_image'] = $request->file('main_image')->store('products', 'public');
+    //     }
+
+    //     if ($request->hasFile('additional_images')) {
+    //         $images = [];
+    //         foreach ($request->file('additional_images') as $image) {
+    //             $images[] = $image->store('products', 'public');
+    //         }
+    //         $data['additional_images'] = $images;
+    //     }
+
+
+
+    //     Product::create($data);
+
+    //     return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
+    // }
+
     public function store(Request $request)
     {
-        $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'product_name' => 'required|string|max:255',
-            'main_image' => 'required|image|mimes:jpeg,png,jpg,gif',
-            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
-            'delivery_time' => 'required|string',
-        ]);
+        try {
+            $request->validate([
+                'category_id' => 'required|exists:categories,id',
+                'product_name' => 'required|string|max:255',
+                'main_image' => 'required|image|mimes:jpeg,png,jpg,gif',
+                'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+                'delivery_time' => 'required|string',
+            ]);
 
-        $data = $request->all();
+            $data = $request->all();
 
-        // Handle File Uploads
-        if ($request->hasFile('main_image')) {
-            $data['main_image'] = $request->file('main_image')->store('products', 'public');
-        }
-
-        if ($request->hasFile('additional_images')) {
-            $images = [];
-            foreach ($request->file('additional_images') as $image) {
-                $images[] = $image->store('products', 'public');
+            // Handle File Uploads
+            if ($request->hasFile('main_image')) {
+                $data['main_image'] = $request->file('main_image')->store('products', 'public');
             }
-            $data['additional_images'] = $images;
+
+            if ($request->hasFile('additional_images')) {
+                $images = [];
+                foreach ($request->file('additional_images') as $image) {
+                    $images[] = $image->store('products', 'public');
+                }
+                $data['additional_images'] = $images;
+            }
+
+            Product::create($data);
+
+            return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to create product. Please try again.');
         }
-
-
-
-        Product::create($data);
-
-        return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
 
     public function show(string $id)
@@ -90,45 +124,95 @@ class ProductController extends Controller
         return view('admin.product.edit', compact('product', 'categories', 'metals', 'sizes', 'colors', 'materials'));
     }
 
+    // public function update(Request $request, string $id)
+    // {
+    //     $product = Product::findOrFail($id);
+
+    //     $request->validate([
+    //         'category_id' => 'required|exists:categories,id',
+    //         'product_name' => 'required|string|max:255',
+    //         'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+    //         'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+    //         'delivery_time' => 'required|string',
+    //     ]);
+
+    //     $data = $request->except(['main_image', 'additional_images']);
+
+    //     if ($request->hasFile('main_image')) {
+    //         if ($product->main_image) {
+    //             // Storage::disk('public')->delete($product->main_image); // Optional: delete old image
+    //         }
+    //         $data['main_image'] = $request->file('main_image')->store('products', 'public');
+    //     }
+
+    //     if ($request->hasFile('additional_images')) {
+    //         // Optional: delete old additional images logic
+    //         $images = [];
+    //         foreach ($request->file('additional_images') as $image) {
+    //             $images[] = $image->store('products', 'public');
+    //         }
+    //         $data['additional_images'] = $images; // Or merge with existing if needed
+    //     }
+
+    //     $product->update($data);
+
+    //     return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
+    // }
+
+    // public function destroy(string $id)
+    // {
+    //     $product = Product::findOrFail($id);
+    //     $product->delete();
+    //     return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
+    // }
+
     public function update(Request $request, string $id)
     {
-        $product = Product::findOrFail($id);
+        try {
+            $product = Product::findOrFail($id);
 
-        $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'product_name' => 'required|string|max:255',
-            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
-            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
-            'delivery_time' => 'required|string',
-        ]);
+            $request->validate([
+                'category_id' => 'required|exists:categories,id',
+                'product_name' => 'required|string|max:255',
+                'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+                'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+                'delivery_time' => 'required|string',
+            ]);
 
-        $data = $request->except(['main_image', 'additional_images']);
+            $data = $request->except(['main_image', 'additional_images']);
 
-        if ($request->hasFile('main_image')) {
-            if ($product->main_image) {
-                // Storage::disk('public')->delete($product->main_image); // Optional: delete old image
+            if ($request->hasFile('main_image')) {
+                if ($product->main_image) {
+                    // Storage::disk('public')->delete($product->main_image); // Optional: delete old image
+                }
+                $data['main_image'] = $request->file('main_image')->store('products', 'public');
             }
-            $data['main_image'] = $request->file('main_image')->store('products', 'public');
-        }
 
-        if ($request->hasFile('additional_images')) {
-            // Optional: delete old additional images logic
-            $images = [];
-            foreach ($request->file('additional_images') as $image) {
-                $images[] = $image->store('products', 'public');
+            if ($request->hasFile('additional_images')) {
+                // Optional: delete old additional images logic
+                $images = [];
+                foreach ($request->file('additional_images') as $image) {
+                    $images[] = $image->store('products', 'public');
+                }
+                $data['additional_images'] = $images; // Or merge with existing if needed
             }
-            $data['additional_images'] = $images; // Or merge with existing if needed
+
+            $product->update($data);
+
+            return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to update product. Please try again.');
         }
-
-        $product->update($data);
-
-        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
     }
 
     public function destroy(string $id)
     {
-        $product = Product::findOrFail($id);
-        $product->delete();
-        return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
+        try {
+            $product = Product::findOrFail($id);
+            $product->delete();
+            return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to delete product. Please try again.');
+        }
     }
 }
