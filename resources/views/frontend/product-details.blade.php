@@ -37,12 +37,12 @@
                                     @endforeach
                                 @endif
                             </div>
-                            <div class="rating-div">
+                            {{-- <div class="rating-div">
                                 <p>
                                     <img src="{{ asset('assets/images/star.png') }}" alt="...">
                                     4.2 | 12
                                 </p>
-                            </div>
+                            </div> --}}
                             <div class="img-tab-btn tab">
                                 <div class="thumbnail-grid">
                                     <!-- Main thumbnail -->
@@ -618,7 +618,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                     </li>
                                     <li>
                                         <img src="{{ asset('assets/images/i5.png') }}" alt="...">
-                                        Hallmarked gold
+                                        Hallmarked {{ $matName }}
                                     </li>
                                     <li>
                                         <img src="{{ asset('assets/images/i6.png') }}" alt="...">
