@@ -64,22 +64,25 @@
                                         @endif
                                     </div>
                                     <!-- <div class="swiper-button-next"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div     class="swiper-button-prev"></div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div     class="swiper-button-prev"></div> -->
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-12 mt-4 mt-lg-0">
                         <div class="product-single-right">
-                            <h2 class="d-flex">
-                                {{ $product->product_name }}
-                                <div style="position: relative;">
+                            <div class="title-pd">
+                                <h2 class="d-flex">
+                                    {{ $product->product_name }}
+
+                                </h2>
+                                <div>
 
                                     <i class="fi {{ $wishlistItem ? 'fi-sr-heart' : 'fi-rr-heart' }}" id="wishlist-icon"
                                         style="font-size: 25px; cursor: pointer; transition: color 0.3s; color: {{ $wishlistItem ? 'red' : 'inherit' }};"
                                         onclick="toggleWishlist(this)"></i>
                                 </div>
-                            </h2>
+                            </div>
                             <h5 id="dynamic-price">
                                 {{ $product->display_price }}
                             </h5>
