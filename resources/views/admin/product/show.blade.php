@@ -63,17 +63,7 @@
                 </div>
             </div>
         </div>
-
-        @if($productPincodes->isNotEmpty())
-        <div class="mt-3">
-            <div class="d-flex align-items-center mb-1 text-muted small"><i class="bx bx-map me-1"></i> Available Pincodes</div>
-            <div class="d-flex flex-wrap gap-1" style="max-height: 80px; overflow-y: auto;">
-                @foreach($productPincodes as $pincode)
-                <span class="badge bg-label-info text-xs">{{ $pincode->code }}</span>
-                @endforeach
-            </div>
-        </div>
-        @endif
+<!-- -->
 
         <hr class="my-4">
 
@@ -167,7 +157,7 @@
                     <tr>
                         <td class="align-top">
                             <div class="d-flex flex-column gap-1">
-                                <span class="badge bg-label-dark align-self-start">{{ $sizeName }}</span>
+                                <span class="badge bg-label-dark align-self-start">Size- {{ $sizeName }}</span>
                                 <small class="fw-bold text-dark">{{ $materialName }}</small>
                                 <div class="text-muted text-xs">
                                     <div>Net Wt: {{ $config['net_weight_gold'] ?? 0 }}g</div>

@@ -26,7 +26,7 @@
 
         <!-- Category -->
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Category</span>
+            <span class="menu-header-text">Category & Material</span>
         </li>
         <li class="menu-item {{ Request::routeIs('admin.categories.*') ? 'active' : '' }}">
             <a href="{{ route('admin.categories.index') }}" class="menu-link">
@@ -35,10 +35,6 @@
             </a>
         </li>
 
-        <!-- Material -->
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Material</span>
-        </li>
         <li class="menu-item {{ Request::routeIs('admin.materials.*') ? 'active' : '' }}">
             <a href="{{ route('admin.materials.index') }}" class="menu-link">
                 <i class='menu-icon tf-icons bx bx-cube'></i>
@@ -46,10 +42,19 @@
             </a>
         </li>
 
+
         <!-- Product -->
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Product</span>
+            <span class="menu-header-text">Mange Product</span>
         </li>
+
+        <li class="menu-item {{ Request::routeIs('admin.pincodes.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.pincodes.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-map-pin"></i>
+                <div data-i18n="availableArea">Available Area (Pin)</div>
+            </a>
+        </li>
+
         <li class="menu-item {{ Request::routeIs('admin.products.create') ? 'active' : '' }}">
             <a href="{{ route('admin.products.create') }}" class="menu-link">
                 <i class='menu-icon tf-icons bx bx-plus-circle'></i>
@@ -64,21 +69,6 @@
             </a>
         </li>
 
-        <!-- Delivery Settings -->
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Delivery Settings</span>
-        </li>
-        <li class="menu-item {{ Request::routeIs('admin.pincodes.*') ? 'active' : '' }}">
-            <a href="{{ route('admin.pincodes.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-map-pin"></i>
-                <div data-i18n="availableArea">Available Area (Pin)</div>
-            </a>
-        </li>
-
-        <!-- Marketing -->
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Marketing</span>
-        </li>
         <li class="menu-item {{ Request::routeIs('admin.coupons.*') ? 'active' : '' }}">
             <a href="{{ route('admin.coupons.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-gift"></i>
@@ -86,10 +76,6 @@
             </a>
         </li>
 
-        <!-- Orders -->
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Orders</span>
-        </li>
         <li class="menu-item {{ Request::routeIs('admin.orders.*') ? 'active' : '' }}">
             <a href="{{ route('admin.orders.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-shopping-bag"></i>
@@ -99,7 +85,7 @@
 
         <!-- Setting -->
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Profile</span>
+            <span class="menu-header-text">Mange Profile</span>
         </li>
         <li class="menu-item {{ Request::routeIs('admin.profile') ? 'active' : '' }}">
             <a href="{{ route('admin.profile') }}" class="menu-link">
