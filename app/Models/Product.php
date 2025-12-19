@@ -73,11 +73,11 @@ class Product extends Model
         }
 
         // Diamond Price
-        $diamondPricePerCarat = 0;
-        $diamondMaterial = Material::where('name', 'Diamond')->first();
-        if ($diamondMaterial) {
-            $diamondPricePerCarat = $diamondMaterial->price;
-        }
+        // $diamondPricePerCarat = 0;
+        // $diamondMaterial = Material::where('name', 'Diamond')->first();
+        // if ($diamondMaterial) {
+        //     $diamondPricePerCarat = $diamondMaterial->price;
+        // }
 
         // 4. Calculate
         $netWt = floatval($config['net_weight_gold'] ?? 0);
@@ -89,7 +89,7 @@ class Product extends Model
                 $diamondTotalWt += floatval($dInfo['total_weight'] ?? 0);
             }
         }
-        $diamondCost = $diamondTotalWt * $diamondPricePerCarat;
+        $diamondCost = floatval($config['total_diamond_price'] ?? 0);;
 
         $makingCharge = floatval($config['making_charge'] ?? 0);
 
