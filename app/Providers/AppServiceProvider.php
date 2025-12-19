@@ -20,11 +20,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         \Illuminate\Support\Facades\View::composer('frontend.includes.header', function ($view) {
-            $view->with('menuCategories', \App\Models\Category::where('menu', true)->orderBy('id', 'desc')->take(8)->get());
+            $view->with('menuCategories', \App\Models\Category::where('menu', true)->orderBy('id', 'asc')->take(8)->get());
         });
 
         \Illuminate\Support\Facades\View::composer('frontend.includes.footer', function ($view) {
-            $view->with('categories', \App\Models\Category::where('footer', true)->orderBy('id', 'desc')->get());
+            $view->with('categories', \App\Models\Category::where('footer', true)->orderBy('id', 'asc')->get());
         });
     }
 }
