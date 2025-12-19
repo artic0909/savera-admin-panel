@@ -517,6 +517,7 @@ img {
             margin-top: 20px;
             padding: 0 20px;
             text-align: center;
+            
         }
 
         p {
@@ -1204,11 +1205,12 @@ img {
         .title-pd {
             display: flex;
             justify-content: space-between;
-            gap: 20px;
+            gap: 30px;
 
 
             h2 {
-                font-size: 38px;
+                font-size: 36px;
+                word-spacing: -5px;
                 color: black;
                 font-weight: 700;
                 line-height: normal;
