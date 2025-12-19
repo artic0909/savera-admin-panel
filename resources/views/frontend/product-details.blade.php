@@ -88,8 +88,8 @@
                                             $configs = $product->metal_configurations;
                                             $firstConfig =
                                                 is_array($configs) && count($configs) > 0 ? reset($configs) : [];
-                                            $initialMRP = $firstConfig['mrp'] ?? 0;
-                                            $displayPrice = $product->display_price;
+                                            $initialMRP = floatval($firstConfig['mrp'] ?? 0);
+                                            $displayPrice = floatval($product->display_price ?? 0);
 
                                             // Calculate discount percentage
                                             $discountPercentage = 0;
