@@ -1186,12 +1186,12 @@ img {
         }
 
         img.tablinks:hover {
-            border-color: #0c2f48;
+            border-color: #312110;
             transform: scale(1.05);
         }
 
         img.tablinks.active {
-            border-color: #0c2f48;
+            border-color: #312110;
             opacity: 1;
         }
 
@@ -1320,10 +1320,10 @@ img {
 
             a.dc {
                 font-family: 'Myriad Pro';
-                color: #0c2f48;
+                color: #312110;
                 font-size: 17px;
                 line-height: 1.5;
-                border-bottom: 1px solid #0c2f48;
+                border-bottom: 1px solid #312110;
             }
         }
 
@@ -1462,7 +1462,7 @@ img {
                 width: fit-content;
                 font-size: 15px;
                 font-weight: 600;
-                background-color: #0c2f48;
+                background-color: #312110;
                 border: 0;
                 color: white;
                 outline: none;
@@ -1494,7 +1494,7 @@ img {
                 border: 0px;
                 width: fit-content;
                 padding: 8px 15px;
-                background-color: #0c2f48;
+                background-color: #312110;
                 border-radius: 5px;
                 color: white;
                 font-size: 15px;

@@ -82,7 +82,7 @@
                             <div class="price-container" style="margin: 15px 0;">
                                 <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
                                     <h5 id="dynamic-price"
-                                        style="margin: 0; font-size: 32px; font-weight: 700; color: #3C3550;">
+                                        style="margin: 0; font-size: 32px; font-weight: 700; color: #312110;">
                                         @php
                                             // Get the first config MRP for initial display
                                             $configs = $product->metal_configurations;
@@ -1332,7 +1332,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
     </script>
     <style>
         .metal-btn.active {
-            background-color: #3C3550 !important;
+            background-color: #312110 !important;
             color: white;
         }
 
