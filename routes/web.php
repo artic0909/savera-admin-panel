@@ -12,6 +12,8 @@ use App\Http\Controllers\FrontendController;
 Route::get('/', function () {
     return view('frontend.commingsoon');
 });
+Route::get('/about', [FrontendController::class, 'aboutView'])->name('about');
+Route::get('/privacy-policy', [FrontendController::class, 'privacyPolicyView'])->name('privacy-policy');
 Route::get('/home', [FrontendController::class, 'home'])->name('home');
 Route::get('/ajax/products', [FrontendController::class, 'ajaxProducts'])->name('ajax.products');
 Route::get('/category/{slug}', [FrontendController::class, 'category'])->name('category.show');
