@@ -76,7 +76,7 @@
                                     {{ $product->product_name }}
 
                                 </h2>
-                                <div>
+                                <div style="position: relative;">
 
                                     <i class="fi {{ $wishlistItem ? 'fi-sr-heart' : 'fi-rr-heart' }}" id="wishlist-icon"
                                         style="font-size: 25px; cursor: pointer; transition: color 0.3s; color: {{ $wishlistItem ? 'red' : 'inherit' }};"

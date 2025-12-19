@@ -1205,6 +1205,7 @@ img {
             justify-content: space-between;
             gap: 20px;
 
+
             h2 {
                 font-size: 38px;
                 color: black;
@@ -1213,6 +1214,11 @@ img {
                 margin-bottom: 20px;
                 font-family: 'Microsoft Yi Baiti', sans-serif;
 
+            }
+
+            i {
+                margin-top: 10px;
+                display: block;
             }
         }
 
