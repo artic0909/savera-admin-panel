@@ -74,7 +74,7 @@ class AdminController extends Controller
         try {
             $validated = $request->validate([
                 'name'  => 'required|string|max:255',
-                'image' => 'required|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
+                'image' => 'required|image|mimes:jpg,jpeg,png,gif,svg',
             ]);
 
             $imagePath = null;
@@ -146,7 +146,7 @@ class AdminController extends Controller
 
             $validated = $request->validate([
                 'name'  => 'required|string|max:255',
-                'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
+                'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg',
             ]);
 
             $imagePath = $category->image;

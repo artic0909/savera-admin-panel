@@ -38,8 +38,8 @@ class ProductController extends Controller
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'product_name' => 'required|string|max:255',
-            'main_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'main_image' => 'required|image|mimes:jpeg,png,jpg,gif',
+            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'delivery_time' => 'required|string',
         ]);
 
@@ -97,8 +97,8 @@ class ProductController extends Controller
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'product_name' => 'required|string|max:255',
-            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'delivery_time' => 'required|string',
         ]);
 

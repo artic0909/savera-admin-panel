@@ -13,6 +13,7 @@ class SizeSeeder extends Seeder
     public function run(): void
     {
         $sizes = [
+            '5',
             '6',
             '7',
             '8',
@@ -20,6 +21,14 @@ class SizeSeeder extends Seeder
             '10',
             '11',
             '12',
+            '13',
+            '14',
+            '15',
+            '16',
+            '17',
+            '18',
+            '19',
+            '20',
         ];
 
         foreach ($sizes as $size) {
