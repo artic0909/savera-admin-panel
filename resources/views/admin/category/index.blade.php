@@ -54,6 +54,7 @@
                                             <th scope="col">Category Name</th>
                                             <th scope="col">Menu</th>
                                             <th scope="col">Home</th>
+                                            <th scope="col">Footer</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
@@ -79,6 +80,13 @@
                                                     @endif
                                                 </td>
                                                 <td>
+                                                    @if ($category->footer)
+                                                        <span class="badge bg-success">Yes</span>
+                                                    @else
+                                                        <span class="badge bg-secondary">No</span>
+                                                    @endif
+                                                </td>
+                                                <td>
                                                     <a href="{{ route('admin.categories.edit', $category->id) }}"
                                                         class="btn btn-primary" data-bs-toggle="modal"
                                                         data-bs-target="#editModal{{ $category->id }}">Edit</a>
@@ -89,7 +97,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="6" class="text-center text-danger fw-bold">
+                                                <td colspan="7" class="text-center text-danger fw-bold">
                                                     No record found
                                                 </td>
                                             </tr>
@@ -199,6 +207,11 @@
                                 value="1">
                             <label class="form-check-label" for="addHomeCategory">Add to Home Category</label>
                         </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="footer" id="addFooter"
+                                value="1">
+                            <label class="form-check-label" for="addFooter">Add to Footer</label>
+                        </div>
                     </div>
                 </div>
 
@@ -251,6 +264,12 @@
                                     {{ $category->home_category ? 'checked' : '' }}>
                                 <label class="form-check-label" for="editHomeCategory{{ $category->id }}">Add to Home
                                     Category</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="footer"
+                                    id="editFooter{{ $category->id }}" value="1"
+                                    {{ $category->footer ? 'checked' : '' }}>
+                                <label class="form-check-label" for="editFooter{{ $category->id }}">Add to Footer</label>
                             </div>
                         </div>
                     </div>

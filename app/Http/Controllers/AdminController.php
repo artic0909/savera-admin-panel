@@ -96,6 +96,7 @@ class AdminController extends Controller
 
             $isMenu = $request->has('menu') ? true : false;
             $isHomeCategory = $request->has('home_category') ? true : false;
+            $isFooter = $request->has('footer') ? true : false;
 
             if ($isMenu) {
                 if (Category::where('menu', true)->count() >= 8) {
@@ -115,6 +116,7 @@ class AdminController extends Controller
                 'image' => $imagePath,
                 'menu'  => $isMenu,
                 'home_category' => $isHomeCategory,
+                'footer' => $isFooter,
             ]);
 
             return redirect()->back()->with('success', 'Category created successfully');
@@ -175,6 +177,7 @@ class AdminController extends Controller
 
             $isMenu = $request->has('menu') ? true : false;
             $isHomeCategory = $request->has('home_category') ? true : false;
+            $isFooter = $request->has('footer') ? true : false;
 
             if ($isMenu) {
                 if (Category::where('menu', true)->where('id', '!=', $id)->count() >= 8) {
@@ -194,6 +197,7 @@ class AdminController extends Controller
                 'image' => $imagePath,
                 'menu'  => $isMenu,
                 'home_category' => $isHomeCategory,
+                'footer' => $isFooter,
             ]);
 
             return redirect()->back()->with('success', 'Category updated successfully');

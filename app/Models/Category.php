@@ -12,5 +12,6 @@ class Category extends Model
         'slug',
         'menu',
         'home_category',
+        'footer',
     ];
 }
