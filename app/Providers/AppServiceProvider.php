@@ -22,5 +22,9 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Support\Facades\View::composer('frontend.includes.header', function ($view) {
             $view->with('menuCategories', \App\Models\Category::where('menu', true)->orderBy('id', 'desc')->take(8)->get());
         });
+
+        \Illuminate\Support\Facades\View::composer('frontend.includes.footer', function ($view) {
+            $view->with('categories', \App\Models\Category::where('footer', true)->orderBy('id', 'desc')->get());
+        });
     }
 }

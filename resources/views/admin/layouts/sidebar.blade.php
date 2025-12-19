@@ -24,6 +24,13 @@
             </a>
         </li>
 
+        <li class="menu-item {{ Request::routeIs('admin.whychoose.index') ? 'active' : '' }}">
+            <a href="{{ route('admin.whychoose.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-list-check"></i>
+                <div data-i18n="WhyChooseUs">Why Choose Us</div>
+            </a>
+        </li>
+
         <!-- Category -->
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Category & Material</span>

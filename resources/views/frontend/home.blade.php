@@ -7,13 +7,16 @@
         <div class="carousel-container">
             <!-- Slide 1 -->
             <div class="carousel-slide active">
-                <img src="assets/images/bg-banner-x.webp" alt="Model" />
+                <img src="{{asset('assets/images/1.jpg')}}" alt="Model" />
             </div>
             <div class="carousel-slide ">
-                <img src="assets/images/bg-banner-x.webp" alt="Model" />
+                <img src="{{asset('assets/images/2.jpg')}}" alt="Model" />
             </div>
             <div class="carousel-slide ">
-                <img src="assets/images/bg-banner-x.webp" alt="Model" />
+                <img src="{{asset('assets/images/3.jpg')}}" alt="Model" />
+            </div>
+            <div class="carousel-slide ">
+                <img src="{{asset('assets/images/4.jpg')}}" alt="Model" />
             </div>
 
 
@@ -21,6 +24,7 @@
 
             <div class="carousel-dots">
                 <span class="dot active"></span>
+                <span class="dot"></span>
                 <span class="dot"></span>
                 <span class="dot"></span>
             </div>
@@ -113,31 +117,28 @@
         <div class="swiper beginning-swiper">
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
+                    <img src="{{asset('assets/images/s1.jpg')}}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
+                    <img src="{{asset('assets/images/s2.jpg')}}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
+                    <img src="{{asset('assets/images/s3.jpg')}}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
+                    <img src="{{asset('assets/images/s4.jpg')}}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
+                    <img src="{{asset('assets/images/s5.jpg')}}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
+                    <img src="{{asset('assets/images/s6.jpg')}}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
+                    <img src="{{asset('assets/images/s7.jpg')}}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
-                </div>
-                <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
+                    <img src="{{asset('assets/images/s8.jpg')}}" alt="Beginning Collection" />
                 </div>
             </div>
             <div class="swiper-button-next"></div>
@@ -180,16 +181,16 @@
             <div class="choose-container">
                 <div class="choose-grid">
                     <div class="choose-item item-tl">
-                        <img src="assets/images/choose-img.png" alt="Why Choose 1" />
+                        <img src="{{ asset('storage/' . optional($chooses->get(0))->image) }}" alt="Why Choose 1" />
                     </div>
                     <div class="choose-item item-tr">
-                        <img src="assets/images/choose-img-1.png" alt="Why Choose 2" />
+                        <img src="{{ asset('storage/' . optional($chooses->get(1))->image) }}" alt="Why Choose 2" />
                     </div>
                     <div class="choose-item item-bl">
-                        <img src="assets/images/choose-img-1.png" alt="Why Choose 3" />
+                        <img src="{{ asset('storage/' . optional($chooses->get(2))->image) }}" alt="Why Choose 3" />
                     </div>
                     <div class="choose-item item-br">
-                        <img src="assets/images/choose-img.png" alt="Why Choose 4" />
+                        <img src="{{ asset('storage/' . optional($chooses->get(3))->image) }}" alt="Why Choose 4" />
                     </div>
                 </div>
                 <div class="center-logo">
@@ -205,7 +206,7 @@
 
     <div class="store-section">
         <div class="store-image">
-            <img src="assets/images/cartier.png" alt="Store Front" />
+            <img src="{{asset('assets/images/carti.jpg')}}" alt="Store Front" />
         </div>
         <div class="store-content">
             {{-- <h2>Store Front</h2>

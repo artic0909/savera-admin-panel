@@ -56,6 +56,13 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::delete('/admin/orders/{id}', [OrderController::class, 'destroy'])->name('admin.orders.destroy');
 
 
+    // Why Choose
+    Route::get('/admin/whychoose', [AdminController::class, 'adminWhyChooseView'])->name('admin.whychoose.index');
+    Route::post('/admin/whychoose/store', [AdminController::class, 'whyChooseStore'])->name('admin.whychoose.store');
+    Route::post('/admin/whychoose/update/{id}', [AdminController::class, 'whyChooseUpdate'])->name('admin.whychoose.update');
+    Route::post('/admin/whychoose/delete/{id}', [AdminController::class, 'whyChooseDelete'])->name('admin.whychoose.delete');
+
+
     // Profile ==================================================================================================================================>
     Route::get('/admin/profile', [AdminController::class, 'adminProfileView'])->name('admin.profile');
     Route::post('/admin/profile/update', [AdminController::class, 'adminUpdateProfile'])->name('admin.profile.update');

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use App\Models\Material;
+use App\Models\WhyChoose;
 
 class AdminController extends Controller
 {
@@ -95,6 +96,7 @@ class AdminController extends Controller
 
             $isMenu = $request->has('menu') ? true : false;
             $isHomeCategory = $request->has('home_category') ? true : false;
+            $isFooter = $request->has('footer') ? true : false;
 
             if ($isMenu) {
                 if (Category::where('menu', true)->count() >= 8) {
@@ -114,6 +116,7 @@ class AdminController extends Controller
                 'image' => $imagePath,
                 'menu'  => $isMenu,
                 'home_category' => $isHomeCategory,
+                'footer' => $isFooter,
             ]);
 
             return redirect()->back()->with('success', 'Category created successfully');
@@ -174,6 +177,7 @@ class AdminController extends Controller
 
             $isMenu = $request->has('menu') ? true : false;
             $isHomeCategory = $request->has('home_category') ? true : false;
+            $isFooter = $request->has('footer') ? true : false;
 
             if ($isMenu) {
                 if (Category::where('menu', true)->where('id', '!=', $id)->count() >= 8) {
@@ -193,6 +197,7 @@ class AdminController extends Controller
                 'image' => $imagePath,
                 'menu'  => $isMenu,
                 'home_category' => $isHomeCategory,
+                'footer' => $isFooter,
             ]);
 
             return redirect()->back()->with('success', 'Category updated successfully');
@@ -302,6 +307,90 @@ class AdminController extends Controller
 
 
 
+    // Why Choose ===================================================================================================================================>
+    public function adminWhyChooseView()
+    {
+        $whyChooses = WhyChoose::get();
+        return view('admin.whychoose.index', compact('whyChooses'));
+    }
+
+    public function whyChooseStore(Request $request)
+    {
+        try {
+            // Check if already 4 images exist
+            if (WhyChoose::count() >= 4) {
+                return redirect()->back()->with('error', 'Maximum 4 images allowed!');
+            }
+
+            $request->validate([
+                'image' => 'required|image|mimes:jpg,jpeg,png,gif,svg,webp|max:2048',
+            ]);
+
+            $imagePath = null;
+
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('whychoose', 'public');
+            }
+
+            WhyChoose::create([
+                'image' => $imagePath,
+            ]);
+
+            return redirect()->back()->with('success', 'Image added successfully');
+        } catch (\Exception $e) {
+            Log::error('WhyChoose Store Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong!');
+        }
+    }
+
+    public function whyChooseUpdate(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg,webp|max:2048',
+            ]);
+
+            $whyChoose = WhyChoose::findOrFail($id);
+            $imagePath = $whyChoose->image;
+
+            if ($request->hasFile('image')) {
+                // Delete old image
+                if ($whyChoose->image && \Storage::disk('public')->exists($whyChoose->image)) {
+                    \Storage::disk('public')->delete($whyChoose->image);
+                }
+
+                $imagePath = $request->file('image')->store('whychoose', 'public');
+            }
+
+            $whyChoose->update([
+                'image' => $imagePath,
+            ]);
+
+            return redirect()->back()->with('success', 'Image updated successfully');
+        } catch (\Exception $e) {
+            Log::error('WhyChoose Update Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong!');
+        }
+    }
+
+    public function whyChooseDelete($id)
+    {
+        try {
+            $whyChoose = WhyChoose::findOrFail($id);
+
+            // Delete image from storage
+            if ($whyChoose->image && \Storage::disk('public')->exists($whyChoose->image)) {
+                \Storage::disk('public')->delete($whyChoose->image);
+            }
+
+            $whyChoose->delete();
+
+            return redirect()->back()->with('success', 'Image deleted successfully');
+        } catch (\Exception $e) {
+            Log::error('WhyChoose Delete Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong!');
+        }
+    }
 
 
 
