@@ -206,7 +206,7 @@
 
     <div class="store-section">
         <div class="store-image">
-            <img src="assets/images/cartier.png" alt="Store Front" />
+            <img src="{{asset('assets/images/carti.jpg')}}" alt="Store Front" />
         </div>
         <div class="store-content">
             {{-- <h2>Store Front</h2>
