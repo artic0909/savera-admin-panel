@@ -460,7 +460,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                             <p class="d-flex justify-content-between">
                                                 <span>
                                                     <b>Total Weight <span
-                                                            id="diamond-total-wt">{{ $diamondTotalWt }}</span> ct</b>
+                                                            id="diamond-total-wt">{{ $diamondTotalWt }}</span> g</b>
                                                 </span>
                                                 <span>
                                                     <b>Diamonds No. of <span
@@ -549,7 +549,9 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                             </tr>
                                             <tr id="diamond-row" style="display: {{ $hasDiamonds ? '' : 'none' }};">
                                                 <td>
-                                                    Diamonds Price
+                                                    Diamond <span style="font-size: 10px;"
+                                                        id="diamond-breakdown-text">({{ number_format($diamondTotalWt, 3) }}g
+                                                        x {{ $diamondPricePerCarat }})</span>
                                                 </td>
                                                 <td id="diamond-cost-display">
                                                     ₹ {{ number_format($diamondCost, 2) }}
