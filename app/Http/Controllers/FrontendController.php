@@ -6,11 +6,13 @@ use Illuminate\Http\Request;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\WhyChoose;
 
 class FrontendController extends Controller
 {
     public function home(Request $request)
     {
+        $chooses = WhyChoose::all();
         $categories = Category::where('home_category', true)->take(5)->get();
         // Default to first category if none or invalid
         $selectedCategory = $categories->first();
@@ -20,7 +22,7 @@ class FrontendController extends Controller
             $products = Product::where('category_id', $selectedCategory->id)->take(10)->get();
         }
 
-        return view('frontend.home', compact('categories', 'selectedCategory', 'products'));
+        return view('frontend.home', compact('categories', 'selectedCategory', 'products', 'chooses'));
     }
 
     public function ajaxProducts(Request $request)

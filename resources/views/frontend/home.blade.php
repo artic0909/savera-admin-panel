@@ -180,16 +180,16 @@
             <div class="choose-container">
                 <div class="choose-grid">
                     <div class="choose-item item-tl">
-                        <img src="assets/images/choose-img.png" alt="Why Choose 1" />
+                        <img src="{{ asset('storage/' . optional($chooses->get(0))->image) }}" alt="Why Choose 1" />
                     </div>
                     <div class="choose-item item-tr">
-                        <img src="assets/images/choose-img-1.png" alt="Why Choose 2" />
+                        <img src="{{ asset('storage/' . optional($chooses->get(1))->image) }}" alt="Why Choose 2" />
                     </div>
                     <div class="choose-item item-bl">
-                        <img src="assets/images/choose-img-1.png" alt="Why Choose 3" />
+                        <img src="{{ asset('storage/' . optional($chooses->get(2))->image) }}" alt="Why Choose 3" />
                     </div>
                     <div class="choose-item item-br">
-                        <img src="assets/images/choose-img.png" alt="Why Choose 4" />
+                        <img src="{{ asset('storage/' . optional($chooses->get(3))->image) }}" alt="Why Choose 4" />
                     </div>
                 </div>
                 <div class="center-logo">
