@@ -133,7 +133,7 @@ var swiper = new Swiper(".beginning-swiper", {
     grabCursor: true,
     centeredSlides: true,
     slidesPerView: "auto",
-    initialSlide: 4, // Start in middle
+    initialSlide: 5, // Start in middle
     coverflowEffect: {
         rotate: 15,
         stretch: 0,

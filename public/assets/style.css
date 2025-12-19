@@ -127,19 +127,19 @@ img {
 
     .main {
         display: flex;
-        justify-content: end;
+        justify-content: center;
 
         .wrapper {
             display: flex;
             align-items: center;
-            width: 58%;
-            justify-content: space-between;
+            justify-content: end;
             padding: 35px 5%;
             margin: 0 0;
+            gap: 293px;
 
             .logo {
                 img {
-                    width: 70%;
+                    width: 400px;
                     object-fit: contain;
                     display: block;
                 }
@@ -1488,7 +1488,7 @@ img {
                         font-weight: 600;
                         margin-bottom: 15px;
                         color: #4d4b44;
-                        margin-left: 35px;
+                        margin-right: 35px;
                         margin-top: 0px;
                     }
 
