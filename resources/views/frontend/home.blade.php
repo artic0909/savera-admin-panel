@@ -117,31 +117,28 @@
         <div class="swiper beginning-swiper">
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
+                    <img src="{{asset('assets/images/s1.jpg')}}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
+                    <img src="{{asset('assets/images/s2.jpg')}}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
+                    <img src="{{asset('assets/images/s3.jpg')}}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
+                    <img src="{{asset('assets/images/s4.jpg')}}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
+                    <img src="{{asset('assets/images/s5.jpg')}}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
+                    <img src="{{asset('assets/images/s6.jpg')}}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
+                    <img src="{{asset('assets/images/s7.jpg')}}" alt="Beginning Collection" />
                 </div>
                 <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
-                </div>
-                <div class="swiper-slide">
-                    <img src="assets/images/carusol.png" alt="Beginning Collection" />
+                    <img src="{{asset('assets/images/s8.jpg')}}" alt="Beginning Collection" />
                 </div>
             </div>
             <div class="swiper-button-next"></div>
