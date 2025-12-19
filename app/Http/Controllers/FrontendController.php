@@ -36,10 +36,12 @@ class FrontendController extends Controller
         if ($request->has('metal') && $request->metal != '') {
             $metalIds = explode(',', $request->metal);
             $products = $products->filter(function ($product) use ($metalIds) {
-                if (empty($product->metal_configurations)) return false;
+                if (empty($product->metal_configurations))
+                    return false;
                 foreach ($product->metal_configurations as $config) {
                     // Check direct material_id or nested
-                    if (isset($config['material_id']) && in_array($config['material_id'], $metalIds)) return true;
+                    if (isset($config['material_id']) && in_array($config['material_id'], $metalIds))
+                        return true;
                 }
                 return false;
             });
@@ -51,11 +53,13 @@ class FrontendController extends Controller
             // Case insensitive search needed?
             // Let's normalize both to lowercase for comparison if needed, or just exact match from DB
             $products = $products->filter(function ($product) use ($shapeNames) {
-                if (empty($product->metal_configurations)) return false;
+                if (empty($product->metal_configurations))
+                    return false;
                 foreach ($product->metal_configurations as $config) {
                     if (isset($config['diamond_info']) && is_array($config['diamond_info'])) {
                         foreach ($config['diamond_info'] as $dParams) {
-                            if (isset($dParams['shape']) && in_array($dParams['shape'], $shapeNames)) return true;
+                            if (isset($dParams['shape']) && in_array($dParams['shape'], $shapeNames))
+                                return true;
                         }
                     }
                 }
@@ -198,4 +202,19 @@ class FrontendController extends Controller
             'code' => $coupon->code,
         ]);
     }
+
+
+    // About Us
+    public function aboutView()
+    {
+        $categories = Category::where('home_category', true)->take(5)->get();
+        return view('frontend.aboutus', compact('categories'))->with(['pageclass' => 'hedersolution bg-1']);
+    }
+
+    public function privacyPolicyView()
+    {
+        $categories = Category::where('home_category', true)->take(5)->get();
+        return view('frontend.privacy-policy', compact('categories'))->with(['pageclass' => 'hedersolution bg-1']);
+    }
+
 }
