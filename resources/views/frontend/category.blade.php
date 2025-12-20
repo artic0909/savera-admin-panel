@@ -8,18 +8,13 @@
     <section>
         <div class="inner-banner-sec">
             <div class="wrapper">
-                <div class="inner-banner-div">
-                    <div class="inner-banner-left">
-                        <h1>
-                            Flat Rs. 50 OFF <br> on Earrings!
-                        </h1>
-                        <p>
-                            Use Code: WLCM200
-                        </p>
+                <div class="inner-banner-div ">
+                    {{-- <div class="inner-banner-left">
+
                     </div>
                     <div class="inner-banner-right">
                         <img src="{{ asset('assets/images/banner-3.webp') }}" alt="...">
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

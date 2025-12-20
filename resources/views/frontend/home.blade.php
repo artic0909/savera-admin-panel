@@ -7,16 +7,16 @@
         <div class="carousel-container">
             <!-- Slide 1 -->
             <div class="carousel-slide active">
-                <img src="{{ asset('assets/images/1.jpg') }}" alt="Model" />
+                <img src="{{ asset('assets/images/Banner-1.jpg') }}" alt="Model" />
             </div>
             <div class="carousel-slide ">
-                <img src="{{ asset('assets/images/2.jpg') }}" alt="Model" />
+                <img src="{{ asset('assets/images/Banner-2.jpg') }}" alt="Model" />
             </div>
             <div class="carousel-slide ">
-                <img src="{{ asset('assets/images/3.jpg') }}" alt="Model" />
+                <img src="{{ asset('assets/images/Banner-3.jpg') }}" alt="Model" />
             </div>
             <div class="carousel-slide ">
-                <img src="{{ asset('assets/images/4.jpg') }}" alt="Model" />
+                <img src="{{ asset('assets/images/Banner-4.jpg') }}" alt="Model" />
             </div>
 
 
@@ -210,10 +210,10 @@
     </style>
     <div class="media-section">
         <div class="wrapper">
-            <h2>Fir the moments that matter</h2>
+            <h2>For the moments that matter</h2>
             <div class="media-grid">
                 <div class="media-card" onclick="playVideo(this)">
-                    <img src="assets/images/media.png" class="thumb" />
+                    <img src="assets/images/th-1.jpg" class="thumb" />
                     <div class="play-btn"><i class="fi fi-rr-play"></i></div>
 
                     <video class="video" controls>
@@ -221,7 +221,7 @@
                     </video>
                 </div>
                 <div class="media-card down" onclick="playVideo(this)">
-                    <img src="assets/images/media.png" class="thumb" />
+                    <img src="assets/images/th-2.jpg" class="thumb" />
                     <div class="play-btn"><i class="fi fi-rr-play"></i></div>
 
                     <video class="video" controls>
@@ -229,7 +229,7 @@
                     </video>
                 </div>
                 <div class="media-card" onclick="playVideo(this)">
-                    <img src="assets/images/media.png" class="thumb" />
+                    <img src="assets/images/th-3.jpg" class="thumb" />
                     <div class="play-btn"><i class="fi fi-rr-play"></i></div>
 
                     <video class="video" controls>
@@ -237,7 +237,7 @@
                     </video>
                 </div>
                 <div class="media-card down" onclick="playVideo(this)">
-                    <img src="assets/images/media.png" class="thumb" />
+                    <img src="assets/images/th-4.jpg" class="thumb" />
                     <div class="play-btn"><i class="fi fi-rr-play"></i></div>
 
                     <video class="video" controls>
@@ -287,9 +287,9 @@
             <img src="{{ asset('assets/images/carti.jpg') }}" alt="Store Front" />
         </div>
         <!-- <div class="store-content">
-            {{-- <h2>Store Front</h2>
+                            {{-- <h2>Store Front</h2>
             <p>Sub Text</p>
             <a href="#" class="find-store-btn">Find Store</a> --}}
-        </div> -->
+                        </div> -->
     </div>
 @endsection

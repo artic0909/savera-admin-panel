@@ -868,4 +868,9 @@
     img.saveratext {
         width: 96px;
     }
+
+    .inner-banner-sec {
+
+        height: 9vh;
+    }
 }
