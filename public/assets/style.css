@@ -35,6 +35,9 @@ body {
     font-family: 'Myriad Pro', sans-serif;
     margin: 0;
     padding: 0;
+    background: url('images/fullbg.webp');
+    background-size: 100%;
+    background-repeat: repeat-y;
 }
 
 
@@ -96,7 +99,7 @@ img {
 }
 
 .bg-1 {
-    background: url('images/bg-2.webp');
+
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -268,10 +271,10 @@ img {
 }
 
 .banner {
-    background: url('images/bg-1.webp');
+
     background-size: cover;
     background-position: center;
-    min-height: 765px;
+    min-height: 777px;
     /* Prevent overlapping on zoom/small screens */
     /* Reduced height to fit viewport better with header */
     display: flex;
@@ -460,7 +463,7 @@ img {
 
 .category {
     text-align: center;
-    background: url('images/bg-2.webp');
+
     background-size: cover;
     padding: 40px;
 
@@ -531,7 +534,7 @@ img {
 }
 
 .beginning-section {
-    background: url('images/bg-1.webp');
+
     background-size: cover;
     /* Light beige background */
     padding: 80px 0 0px;
@@ -571,7 +574,7 @@ img {
 }
 
 .media-section {
-    background: url('images/bg-2.webp');
+
     background-size: cover;
     background-position: center;
     padding: 80px 0 60px;
@@ -675,7 +678,7 @@ img {
 }
 
 .choose-section {
-    background: url('images/bg-1.webp');
+
     background-size: cover;
     background-position: center;
     padding: 60px 0 80px;
@@ -1008,7 +1011,7 @@ img {
 
 .header-bg {
     height: 217px;
-    background-image: url('images/bg-1.webp');
+
     background-size: 100% 100%;
 }
 
@@ -1053,7 +1056,7 @@ img {
 
 .cetagory-sec {
     padding: 50px 0 50px 0;
-    background-image: url('images/bg-1.webp');
+
     background-size: cover;
     background-position: center;
 
@@ -1137,7 +1140,7 @@ img {
 
 .product-single-sec {
     padding: 50px 0 50px 0;
-    background-image: url('images/bg-1.webp');
+
     background-size: cover;
     background-position: center;
 
@@ -1628,7 +1631,7 @@ img {
 
 .similar-product {
     padding: 0px 0 50px 0;
-    background-image: url(images/bg-1.webp);
+
     background-size: 100% 100%;
 
     h2 {

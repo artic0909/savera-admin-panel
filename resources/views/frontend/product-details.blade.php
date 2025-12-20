@@ -116,7 +116,7 @@
                                 </div>
                             </div>
                             <p class="p1">
-                                Price exclusive of taxes. See the full <a href="#price-breakup">Price Breakup</a>
+                                Price inclusive of taxes. See the full <a href="#price-breakup">Price Breakup</a>
                             </p>
                             <p class="p2">
                                 {{-- <a href="#">Special Offer for you</a> --}}
@@ -336,7 +336,7 @@
                             </div>
                             <div class="ring-size">
                                 <p>
-                                    Ring Size
+                                    Size
                                 </p>
                                 <div class="ring-size-option">
                                     <select id="size-selector" onchange="selectSize(this.value)">

@@ -169,26 +169,80 @@
             <div class="swiper-button-prev"></div>
         </div>
     </div>
+    <script>
+        function playVideo(card) {
+            const video = card.querySelector("video");
+            card.classList.add("playing");
+            video.play();
+        }
+    </script>
+    <style>
+        .media-card {
+            position: relative;
+            cursor: pointer;
+        }
 
+        .media-card video {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .play-btn {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .media-card.playing img,
+        .media-card.playing .play-btn {
+            display: none;
+        }
+
+        .media-card.playing video {
+            display: block;
+        }
+    </style>
     <div class="media-section">
         <div class="wrapper">
-            <h2>Catchy title here...</h2>
+            <h2>Fir the moments that matter</h2>
             <div class="media-grid">
-                <div class="media-card">
-                    <img src="assets/images/media.png" alt="Video Thumbnail" />
+                <div class="media-card" onclick="playVideo(this)">
+                    <img src="assets/images/media.png" class="thumb" />
                     <div class="play-btn"><i class="fi fi-rr-play"></i></div>
+
+                    <video class="video" controls>
+                        <source src="{{ asset('assets/videos/website-1st-video.mp4') }}" type="video/mp4">
+                    </video>
                 </div>
-                <div class="media-card down">
-                    <img src="assets/images/media.png" alt="Video Thumbnail" />
+                <div class="media-card down" onclick="playVideo(this)">
+                    <img src="assets/images/media.png" class="thumb" />
                     <div class="play-btn"><i class="fi fi-rr-play"></i></div>
+
+                    <video class="video" controls>
+                        <source src="{{ asset('assets/videos/website-video-2nd.mp4') }}" type="video/mp4">
+                    </video>
                 </div>
-                <div class="media-card">
-                    <img src="assets/images/media.png" alt="Video Thumbnail" />
+                <div class="media-card" onclick="playVideo(this)">
+                    <img src="assets/images/media.png" class="thumb" />
                     <div class="play-btn"><i class="fi fi-rr-play"></i></div>
+
+                    <video class="video" controls>
+                        <source src="{{ asset('assets/videos/website-video-3rd.mp4') }}" type="video/mp4">
+                    </video>
                 </div>
-                <div class="media-card down">
-                    <img src="assets/images/media.png" alt="Video Thumbnail" />
+                <div class="media-card down" onclick="playVideo(this)">
+                    <img src="assets/images/media.png" class="thumb" />
                     <div class="play-btn"><i class="fi fi-rr-play"></i></div>
+
+                    <video class="video" controls>
+                        <source src="{{ asset('assets/videos/website-video-4th.mp4') }}" type="video/mp4">
+                    </video>
                 </div>
             </div>
         </div>
