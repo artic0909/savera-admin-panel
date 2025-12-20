@@ -286,10 +286,10 @@
         <div class="store-image">
             <img src="{{ asset('assets/images/carti.jpg') }}" alt="Store Front" />
         </div>
-        <div class="store-content">
+        <!-- <div class="store-content">
             {{-- <h2>Store Front</h2>
             <p>Sub Text</p>
             <a href="#" class="find-store-btn">Find Store</a> --}}
-        </div>
+        </div> -->
     </div>
 @endsection
