@@ -1,8 +1,8 @@
 <header class="header">
     <div class="top">
         <span class="dynamic-text"
-            data-texts='["Coupons and deals over here with dynamic animation!", "Get Flat 20% OFF on your first order!", "Free Shipping on all orders above ₹999"]'>Coupons
-            and deals over here with dynamic animation!</span>
+            data-texts='["Launch day exclusive drop: Flat 50% OFF", "Launch day exclusive drop: Flat 50% OFF", "Unlock Your Savera Privilege with Your Coupon"]'>Launch
+            day exclusive drop: Flat 50% OFF</span>
     </div>
     <div class="main">
         <div class="wrapper">
@@ -17,11 +17,10 @@
                         <i class="fi fi-rr-heart"></i>
                         <span class="count" id="wishlist-count">0</span>
                     </a>
-                        <a href="{{ route('profile') }}" class="icon-btn" title="My Profile"><i
-                                class="fi fi-rr-user"></i></a>
+                    <a href="{{ route('profile') }}" class="icon-btn" title="My Profile"><i
+                            class="fi fi-rr-user"></i></a>
                 @else
-                        <a href="{{ route('login') }}" class="icon-btn " title="Wishlist"><i
-                                class="fi fi-rr-heart"></i></a>
+                    <a href="{{ route('login') }}" class="icon-btn " title="Wishlist"><i class="fi fi-rr-heart"></i></a>
                     <a href="{{ route('login') }}" class="icon-btn" title="Login / Register"><i
                             class="fi fi-rr-user"></i></a>
                 @endif
