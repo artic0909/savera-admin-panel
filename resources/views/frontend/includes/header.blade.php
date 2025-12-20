@@ -1,8 +1,7 @@
 <header class="header">
     <div class="top">
         <span class="dynamic-text"
-            data-texts='["Launch day exclusive drop: Flat 50% OFF", "Unlock Your Savera Privilege with Your Coupon","Launch day exclusive drop: Flat 50% OFF"]'>Launch
-            day exclusive drop: Flat 50% OFF</span>
+            data-texts='["Launch day exclusive drop: Flat 50% OFF", "Launch day exclusive drop: Flat 50% OFF", "Unlock Your Savera Privilege with Your Coupon"]'></span>
     </div>
     <div class="main">
         <div class="wrapper">
