@@ -120,6 +120,8 @@
         @media (max-width: 576px) {
             .register-container {
                 padding: 1rem;
+                max-width: 90%;
+
             }
 
             .register-body {

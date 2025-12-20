@@ -266,6 +266,8 @@
         @media (max-width: 768px) {
             .account-container {
                 padding: 1rem;
+                max-width: 90%;
+
             }
 
             .row-grid {

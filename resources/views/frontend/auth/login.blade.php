@@ -134,6 +134,7 @@
         @media (max-width: 576px) {
             .login-container {
                 padding: 1rem;
+                max-width: 90%;
             }
 
             .login-body {
