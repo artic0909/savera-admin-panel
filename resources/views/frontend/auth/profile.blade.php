@@ -263,6 +263,54 @@
             opacity: 0.3;
         }
 
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .page-item .page-link,
+        .page-item span {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            background: #f8f9fa;
+            color: #333;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .page-item.active .page-link,
+        .page-item.active span {
+            background: var(--primary-color, #312111) !important;
+            color: white !important;
+            border-color: var(--primary-color, #312111) !important;
+        }
+
+        .page-item.disabled .page-link,
+        .page-item.disabled span {
+            background: #f1f1f1 !important;
+            color: #ccc !important;
+            cursor: not-allowed;
+            border-color: #eee !important;
+        }
+
+        .page-item:not(.active):not(.disabled) .page-link:hover {
+            background: #e9ecef;
+            border-color: #ccc;
+            color: var(--primary-color, #312111);
+        }
+
         @media (max-width: 768px) {
             .account-container {
                 padding: 1rem;
@@ -416,7 +464,7 @@
                     @endforeach
 
                     <div style="margin-top: 2rem;">
-                        {{ $orders->links() }}
+                        {{ $orders->links('frontend.partials.pagination') }}
                     </div>
                 @endif
             </div>
@@ -424,18 +472,48 @@
     </div>
 
     <script>
-        // Tab switching functionality
-        document.querySelectorAll('.tab-link').forEach(link => {
-            link.addEventListener('click', function() {
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to switch tabs
+            function switchTab(tabId) {
                 // Remove active class from all
                 document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
-                // Add active to clicked
-                this.classList.add('active');
-                const target = document.getElementById(this.getAttribute('data-tab'));
-                target.classList.add('active');
+                // Add active to target
+                const tabLink = document.querySelector(`.tab-link[data-tab="${tabId}"]`);
+                const tabContent = document.getElementById(tabId);
+
+                if (tabLink && tabContent) {
+                    tabLink.classList.add('active');
+                    tabContent.classList.add('active');
+                }
+            }
+
+            // Event listeners for tab clicks
+            document.querySelectorAll('.tab-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    switchTab(tabId);
+
+                    // Optional: Update URL without reload (for history)
+                    // history.pushState(null, null, '#' + tabId);
+                });
             });
+
+            // Check URL parameters for pagination
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('page')) {
+                switchTab('orders');
+
+                // Scroll to top of orders section
+                const orderSection = document.getElementById('orders');
+                if (orderSection) {
+                    orderSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
         });
     </script>
 @endsection
