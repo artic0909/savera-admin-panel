@@ -63,10 +63,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function resetAutoPlay() {
         clearInterval(slideInterval);
-        // startAutoPlay();
+        startAutoPlay();
     }
 
-    // startAutoPlay();
+    startAutoPlay();
 
     // Event listeners
     nextBtn.addEventListener('click', () => {
