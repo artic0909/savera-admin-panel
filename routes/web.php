@@ -18,6 +18,7 @@ Route::get('/home', [FrontendController::class, 'home'])->name('home');
 Route::get('/ajax/products', [FrontendController::class, 'ajaxProducts'])->name('ajax.products');
 Route::get('/category/{slug}', [FrontendController::class, 'category'])->name('category.show');
 Route::get('/product/{slug}', [FrontendController::class, 'productDetails'])->name('product.show');
+Route::get('/search-product', [FrontendController::class, 'searchProduct'])->name('search-product');
 
 // API endpoints
 Route::post('/api/check-pincode', [FrontendController::class, 'checkPincode'])->name('api.checkPincode');
@@ -39,7 +40,7 @@ Route::middleware(['auth'])->group(function () {
         ->middleware(
             when(
                 Features::canManageTwoFactorAuthentication()
-                    && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
+                && Features::optionEnabled(Features::twoFactorAuthentication(), 'confirmPassword'),
                 ['password.confirm'],
                 [],
             ),

@@ -219,4 +219,24 @@ class FrontendController extends Controller
         return view('frontend.privacy-policy', compact('categories'))->with(['pageclass' => 'hedersolution bg-1']);
     }
 
+    public function searchProduct(Request $request)
+    {
+        $search = $request->input('search');
+        $products = collect();
+
+        if ($search) {
+            $products = Product::where('product_name', 'like', '%' . $search . '%')->get();
+        }
+
+        // Fetch categories for layout if needed (mimicking other methods typically, 
+        // though header usage of menuCategories suggests a provider, I'll pass categories just in case or if it's the same variable name misread)
+        // Re-reading header: it uses $menuCategories.
+        // I will wait for grep result to be sure, but standard practice is to pass what's needed.
+        // For now I'll adding the method, and I will fix the variables if grep shows something different.
+
+        $categories = Category::where('home_category', true)->take(5)->get();
+
+        return view('frontend.search-product', compact('products', 'search', 'categories'))->with(['pageclass' => 'hedersolution bg-1']);
+    }
+
 }

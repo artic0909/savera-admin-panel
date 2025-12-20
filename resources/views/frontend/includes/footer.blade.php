@@ -30,7 +30,7 @@
                     <li><a href="{{ route('about') }}#contact">Contacts</a></li>
                 </ul>
             </div>
-            <div class="footer-col">
+            <!-- <div class="footer-col">
                 <h3><i class="fi fi-rr-info"></i> Socials</h3>
                 <ul>
                     <li><a href="https://www.instagram.com/mysavera.in/"
@@ -50,7 +50,7 @@
                                 class="fi fi-brands-pinterest"></i> <span
                                 style="margin-bottom: 2px;">Pinterest</span></a></li>
                 </ul>
-            </div>
+            </div> -->
             <div class="footer-col newsletter">
                 <h3><i class="fi fi-rr-envelope"></i> Newsletter</h3>
                 <form>
