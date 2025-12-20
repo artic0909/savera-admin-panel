@@ -13,7 +13,7 @@
                 <img src="{{ asset('assets/images/Banner-2.webp') }}" alt="Model" />
             </div>
             <div class="carousel-slide ">
-                <img src="{{ asset('assets/images/Banner-3.webp') }}" alt="Model" />
+                <img src="{{ asset('assets/images/Bannerd-3.webp') }}" alt="Model" />
             </div>
             <div class="carousel-slide ">
                 <img src="{{ asset('assets/images/Banner-4.webp') }}" alt="Model" />
@@ -287,9 +287,9 @@
             <img src="{{ asset('assets/images/carti.jpg') }}" alt="Store Front" />
         </div>
         <!-- <div class="store-content">
-                                    {{-- <h2>Store Front</h2>
+                                        {{-- <h2>Store Front</h2>
             <p>Sub Text</p>
             <a href="#" class="find-store-btn">Find Store</a> --}}
-                                </div> -->
+                                    </div> -->
     </div>
 @endsection
