@@ -288,7 +288,7 @@ img {
     .carousel-container {
         width: 100%;
         max-width: 1200px;
-        background: url('images/bg-carrasol.png');
+        /* background: url('images/bg-carrasol.png'); */
         background-size: cover;
         background-position: center;
         border-radius: 50px;
