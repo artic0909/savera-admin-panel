@@ -16,9 +16,15 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Pincode List</h5>
-                <a href="{{ route('admin.pincodes.create') }}" class="btn btn-primary">
-                    <i class="bx bx-plus"></i> Add New Pincode
-                </a>
+                <div>
+                    <button type="button" class="btn btn-secondary me-2" data-bs-toggle="modal"
+                        data-bs-target="#importModal">
+                        <i class="bx bx-import"></i> Import Pincodes
+                    </button>
+                    <a href="{{ route('admin.pincodes.create') }}" class="btn btn-primary">
+                        <i class="bx bx-plus"></i> Add New Pincode
+                    </a>
+                </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive text-nowrap">
@@ -74,6 +80,35 @@
                 <div class="mt-3">
                     {{ $pincodes->links() }}
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal fade" id="importModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Import Pincodes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('admin.pincodes.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="file" class="form-label">Excel File (XLSX, CSV)</label>
+                                <input class="form-control" type="file" id="file" name="file" required
+                                    accept=".xlsx,.xls,.csv">
+                                <div class="form-text">File must have a header named "PINCODE".</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Import</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

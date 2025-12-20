@@ -16,6 +16,73 @@
                             <h4 style="margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Shipping
                                 Address</h4>
 
+                            @if (isset($addresses) && $addresses->count() > 0)
+                                <div
+                                    style="margin-bottom: 25px; background: #f9f9f9; padding: 15px; border-radius: 5px; border: 1px solid #eee;">
+                                    <label
+                                        style="display: block; margin-bottom: 10px; font-weight: bold; color: #333;">Select
+                                        Saved Address</label>
+                                    <select id="saved-address-selector"
+                                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer;">
+                                        <option value="">-- Choose a saved address --</option>
+                                        @foreach ($addresses as $addr)
+                                            <option value="{{ $addr->id }}" data-fullname="{{ $addr->full_name }}"
+                                                data-phone="{{ $addr->phone }}" data-line1="{{ $addr->address_line1 }}"
+                                                data-line2="{{ $addr->address_line2 }}" data-city="{{ $addr->city }}"
+                                                data-state="{{ $addr->state }}" data-postal="{{ $addr->postal_code }}"
+                                                data-country="{{ $addr->country }}">
+                                                {{ $addr->full_name }} - {{ $addr->address_line1 }}, {{ $addr->city }}
+                                                ({{ $addr->postal_code }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        const addressSelector = document.getElementById('saved-address-selector');
+                                        if (addressSelector) {
+                                            addressSelector.addEventListener('change', function() {
+                                                const selectedOption = this.options[this.selectedIndex];
+                                                if (selectedOption.value) {
+                                                    // Populate fields
+                                                    document.querySelector('input[name="shipping_full_name"]').value = selectedOption
+                                                        .dataset.fullname;
+                                                    document.querySelector('input[name="shipping_phone"]').value = selectedOption
+                                                        .dataset.phone;
+                                                    document.querySelector('input[name="shipping_address_line1"]').value =
+                                                        selectedOption.dataset.line1;
+                                                    document.querySelector('input[name="shipping_address_line2"]').value =
+                                                        selectedOption.dataset.line2 || '';
+                                                    document.querySelector('input[name="shipping_city"]').value = selectedOption.dataset
+                                                        .city;
+                                                    document.querySelector('input[name="shipping_state"]').value = selectedOption
+                                                        .dataset.state;
+                                                    document.querySelector('input[name="shipping_postal_code"]').value = selectedOption
+                                                        .dataset.postal;
+                                                    document.querySelector('input[name="shipping_country"]').value = selectedOption
+                                                        .dataset.country;
+
+                                                    // Trigger input events in case there are other listeners (like validation)
+                                                    const fields = ['shipping_full_name', 'shipping_phone', 'shipping_address_line1',
+                                                        'shipping_city', 'shipping_state', 'shipping_postal_code',
+                                                        'shipping_country'
+                                                    ];
+                                                    fields.forEach(name => {
+                                                        const event = new Event('input', {
+                                                            bubbles: true
+                                                        });
+                                                        document.querySelector(`input[name="${name}"]`).dispatchEvent(event);
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                </script>
+                            @endif
+                            <h4 style="margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Shipping
+                                Address</h4>
+
                             <div class="row">
                                 <div class="col-md-6" style="margin-bottom: 15px;">
                                     <label style="display: block; margin-bottom: 5px; font-weight: bold;">Full Name
@@ -123,7 +190,8 @@
                             <div style="margin-bottom: 15px;">
                                 <label style="display: block; margin-bottom: 5px; font-weight: bold;">Order Notes
                                     (Optional)</label>
-                                <textarea name="notes" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">{{ old('notes') }}</textarea>
+                                <textarea name="notes" rows="4"
+                                    style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">{{ old('notes') }}</textarea>
                             </div>
 
                             <input type="hidden" name="billing_same_as_shipping" value="1">
@@ -172,14 +240,14 @@
                             </div>
 
                             <!-- <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
-                                <span>Tax (3%):</span>
-                                <span>Rs. {{ number_format($tax, 2) }}</span>
-                            </div> -->
+                                    <span>Tax (3%):</span>
+                                    <span>Rs. {{ number_format($tax, 2) }}</span>
+                                </div> -->
 
                             <!-- <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
-                                <span>Shipping:</span>
-                                <span style="color: green;">FREE</span>
-                            </div> -->
+                                    <span>Shipping:</span>
+                                    <span style="color: green;">FREE</span>
+                                </div> -->
 
                             <div id="discount-row"
                                 style="margin-bottom: 15px; display: none; justify-content: space-between; color: green;">

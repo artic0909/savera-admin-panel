@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Pincode;
+use App\Imports\PincodesImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PincodeController extends Controller
 {
@@ -88,5 +90,24 @@ class PincodeController extends Controller
 
         return redirect()->route('admin.pincodes.index')
             ->with('success', 'Pincode deleted successfully.');
+    }
+
+    /**
+     * Import pincodes from excel file
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        try {
+            Excel::import(new PincodesImport, $request->file('file'));
+            return redirect()->route('admin.pincodes.index')
+                ->with('success', 'Pincodes imported successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.pincodes.index')
+                ->with('error', 'Error importing pincodes: ' . $e->getMessage());
+        }
     }
 }

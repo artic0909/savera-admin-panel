@@ -42,6 +42,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::resource('admin/products', ProductController::class)->names('admin.products');
 
     // Pincodes
+    Route::post('admin/pincodes/import', [PincodeController::class, 'import'])->name('admin.pincodes.import');
     Route::resource('admin/pincodes', PincodeController::class)->names('admin.pincodes');
 
     // Coupons

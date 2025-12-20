@@ -42,10 +42,10 @@
                     </div>
                 </div>
 
-                <div
+                {{-- <div
                     style="background: #fff3cd; border: 1px solid #ffc107; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
-                    <p style="margin: 0; color: #856404;">Estimated delivery: <strong>5-7 business days</strong></p>
-                </div>
+                    <p style="margin: 0; color: #856404;">Estimated delivery: <strong></strong></p>
+                </div> --}}
 
                 <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
                     <a href="{{ route('order.details', $order->order_number) }}"
