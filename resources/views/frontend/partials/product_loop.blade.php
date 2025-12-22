@@ -4,7 +4,7 @@
             style="text-decoration: none; color: inherit; width: 100%; display: flex; flex-direction: column; align-items: center;">
             <img src="{{ asset('storage/' . $product->main_image) }}" alt="{{ $product->product_name }}">
             <span>{{ substr($product->product_name, 0, 14) }}...</span>
-            <p>₹ {{ number_format($product->display_price, 0, '.', ',') }}</p>
+            <p>₹ {{ number_format((float) $product->display_price, 0, '.', ',') }}</p>
 
         </a>
     </div>
