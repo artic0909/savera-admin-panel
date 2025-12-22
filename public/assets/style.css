@@ -26,13 +26,55 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'Playfair Display SC';
+    src: url('fonts/PlayfairDisplaySC-Black.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Playfair Display SC Regular';
+    src: url('fonts/PlayfairDisplaySC-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Playfair Display SC Bold';
+    src: url('fonts/PlayfairDisplaySC-Bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Playfair Display SC Italic';
+    src: url('fonts/PlayfairDisplaySC-BlackItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Playfair Display SC Bold Italic';
+    src: url('fonts/PlayfairDisplaySC-BoldItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Satoshi';
+    src: url('fonts/Satoshi-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 :root {
     --primary-color: #312111;
     --secondary-color: #000000;
 }
 
 body {
-    font-family: 'Myriad Pro', sans-serif;
+    font-family: 'Satoshi';
     margin: 0;
     padding: 0;
     background: url('images/fullbg.webp');
@@ -48,14 +90,14 @@ body {
 
 h2 {
     font-size: 56px;
-    font-family: 'Microsoft Yi Baiti', sans-serif;
+    font-family: 'Playfair Display SC', sans-serif;
     font-weight: normal;
     margin: 0;
 }
 
 h3 {
     font-size: 24px;
-    font-family: 'Microsoft Yi Baiti', sans-serif;
+    font-family: 'Playfair Display SC', sans-serif;
     font-weight: normal;
     margin: 0;
     padding: 0;
@@ -85,7 +127,7 @@ img {
         padding: 12px 24px;
         border-radius: 50px;
         display: inline-block;
-        font-family: 'Microsoft Yi Baiti', sans-serif;
+        font-family: 'Satoshi';
 
         &:hover {
             transform: scale(1.05);
@@ -516,7 +558,7 @@ img {
 
         span {
             font-size: 25px;
-            font-family: 'Microsoft Yi Baiti', sans-serif;
+            font-family: 'Satoshi', sans-serif;
             margin-top: 20px;
             padding: 0 20px;
             text-align: center;
@@ -525,7 +567,7 @@ img {
 
         p {
             font-size: 30px;
-            font-family: 'Microsoft Yi Baiti', sans-serif;
+            font-family: 'Satoshi', sans-serif;
             margin: 0 0px;
             padding: 10px 0 30px;
 
@@ -683,7 +725,7 @@ img {
     background-position: center;
     padding: 60px 0 80px;
     text-align: center;
-    font-family: 'Monbaiti', sans-serif;
+    font-family: 'Satoshi', sans-serif;
 
     h2 {
         font-size: 48px;
@@ -798,7 +840,7 @@ img {
         z-index: 10;
 
         h2 {
-            font-family: 'Monbaiti', sans-serif;
+            font-family: 'Satoshi', sans-serif;
             /* Using consistent title font */
             font-size: 60px;
             font-weight: normal;
@@ -835,14 +877,14 @@ img {
     background-color: #000;
     color: #fff;
     padding: 80px 0 40px;
-    font-family: 'Myriad Pro', sans-serif;
+    font-family: 'Satoshi', sans-serif;
 
     .footer-header {
         margin-bottom: 50px;
 
         h2 {
             font-size: 60px;
-            font-family: 'Myriad Pro', sans-serif;
+            font-family: 'Playfair Display SC', sans-serif;
             font-weight: bold;
             color: #fff;
         }
@@ -1277,7 +1319,7 @@ img {
                 font-weight: 700;
                 line-height: normal;
                 margin-bottom: 20px;
-                font-family: 'Microsoft Yi Baiti', sans-serif;
+                font-family: 'Playfair Display SC', sans-serif;
 
             }
 
@@ -1298,7 +1340,7 @@ img {
             color: black;
             font-weight: 600;
             margin: 0;
-            font-family: 'Myriad Pro';
+            font-family: 'Satoshi', sans-serif;
             font-size: 20px;
 
             a {
@@ -1318,12 +1360,12 @@ img {
             a {
                 color: #368db8;
                 font-size: 16px;
-                font-family: 'Segoe Print';
+                font-family: 'Satoshi', sans-serif;
 
             }
 
             a.dc {
-                font-family: 'Myriad Pro';
+                font-family: 'Satoshi';
                 color: #312110;
                 font-size: 17px;
                 line-height: 1.5;
@@ -1378,7 +1420,7 @@ img {
                 margin: 0px;
                 font-size: 16px;
                 font-weight: 700;
-                font-family: 'Myriad Pro', sans-serif;
+                font-family: 'Satoshi', sans-serif;
             }
 
             .color-option {
@@ -1407,7 +1449,7 @@ img {
                 margin: 0px;
                 font-size: 16px;
                 font-weight: 700;
-                font-family: 'Myriad Pro', sans-serif;
+                font-family: 'Satoshi', sans-serif;
             }
 
             .metal-option {
@@ -1437,7 +1479,7 @@ img {
                 margin: 0px;
                 font-size: 16px;
                 font-weight: 700;
-                font-family: 'Myriad Pro', sans-serif;
+                font-family: 'Satoshi', sans-serif;
             }
 
             .ring-size-option {
