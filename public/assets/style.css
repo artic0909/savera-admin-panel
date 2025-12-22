@@ -90,14 +90,14 @@ body {
 
 h2 {
     font-size: 56px;
-    font-family: 'Playfair Display SC', sans-serif;
+    font-family: 'Playfair Display SC Bold', sans-serif;
     font-weight: normal;
     margin: 0;
 }
 
 h3 {
     font-size: 24px;
-    font-family: 'Playfair Display SC', sans-serif;
+    font-family: 'Playfair Display SC Bold', sans-serif;
     font-weight: normal;
     margin: 0;
     padding: 0;
@@ -884,7 +884,7 @@ img {
 
         h2 {
             font-size: 60px;
-            font-family: 'Playfair Display SC', sans-serif;
+            font-family: 'Playfair Display SC Bold', sans-serif;
             font-weight: bold;
             color: #fff;
         }
@@ -1319,7 +1319,7 @@ img {
                 font-weight: 700;
                 line-height: normal;
                 margin-bottom: 20px;
-                font-family: 'Playfair Display SC', sans-serif;
+                font-family: 'Playfair Display SC Bold', sans-serif;
 
             }
 

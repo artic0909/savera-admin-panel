@@ -254,7 +254,8 @@
 
     <div class="choose-section">
         <div class="wrapper">
-            <h2>WHY CHOOSE <img class="saveratext" src="{{ asset('assets/images/saveratext.png') }}" alt="savera" />
+            <h2>WHY CHOOSE SAVERA
+                <!-- <img class="saveratext" src="{{ asset('assets/images/saveratext.png') }}" alt="savera" /> -->
             </h2>
             <div class="choose-container">
                 <div class="choose-grid">
