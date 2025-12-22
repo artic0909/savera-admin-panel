@@ -82,7 +82,7 @@
                             <div class="price-container" style="margin: 15px 0;">
                                 <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
                                     <h5 id="dynamic-price"
-                                        style="margin: 0; font-size: 32px; font-weight: 700; color: #312110;">
+                                        style="margin: 0; font-weight: 700; color: #312110; letter-spacing: 3px;">
                                         @php
                                             // Get the first config MRP for initial display
                                             $configs = $product->metal_configurations;
