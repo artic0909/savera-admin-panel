@@ -557,7 +557,7 @@ img {
         }
 
         span {
-            font-size: 25px;
+            font-size: 20px;
             font-family: 'Satoshi', sans-serif;
             margin-top: 20px;
             padding: 0 20px;
@@ -1313,7 +1313,7 @@ img {
 
 
             h2 {
-                font-size: 36px;
+                font-size: 32px;
                 word-spacing: -5px;
                 color: black;
                 font-weight: 700;
