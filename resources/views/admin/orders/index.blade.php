@@ -14,12 +14,12 @@
             <div class="card-body">
                 <form method="GET" action="{{ route('admin.orders.index') }}">
                     <div class="row g-3">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label">Search</label>
-                            <input type="text" name="search" class="form-control" placeholder="Order# or Customer"
-                                value="{{ request('search') }}">
+                            <input type="text" name="search" class="form-control"
+                                placeholder="Order#, Customer, Payment ID" value="{{ request('search') }}">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label">Order Status</label>
                             <select name="status" class="form-select">
                                 <option value="">All Status</option>
@@ -49,6 +49,16 @@
                                     Refunded</option>
                             </select>
                         </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Payment Method</label>
+                            <select name="payment_method" class="form-select">
+                                <option value="">All Methods</option>
+                                <option value="cod" {{ request('payment_method') == 'cod' ? 'selected' : '' }}>COD
+                                </option>
+                                <option value="online" {{ request('payment_method') == 'online' ? 'selected' : '' }}>Online
+                                </option>
+                            </select>
+                        </div>
                         <div class="col-md-3 d-flex align-items-end gap-2">
                             <button type="submit" class="btn btn-primary">Filter</button>
                             <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">Reset</a>
@@ -75,6 +85,7 @@
                             <th>Total</th>
                             <th>Status</th>
                             <th>Payment</th>
+                            <th>Method</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -110,6 +121,13 @@
                                         @elseif($order->payment_status == 'pending') bg-warning
                                         @else bg-danger @endif
                                     ">{{ ucfirst($order->payment_status) }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-label-primary">{{ strtoupper($order->payment_method) }}</span>
+                                    @if ($order->transaction_id)
+                                        <br><small class="text-muted text-truncate d-inline-block" style="max-width: 100px;"
+                                            title="{{ $order->transaction_id }}">{{ $order->transaction_id }}</small>
+                                    @endif
                                 </td>
                                 <td>
                                     <div class="dropdown">

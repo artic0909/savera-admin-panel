@@ -109,6 +109,11 @@
                             ; color: white; border-radius: 15px; font-size: 12px; text-transform: uppercase;">{{ $order->payment_status }}</span>
                             </p>
 
+                            @if ($order->transaction_id)
+                                <p style="margin-bottom: 10px;"><strong>Transaction ID:</strong>
+                                    {{ $order->transaction_id }}</p>
+                            @endif
+
                             @if ($order->notes)
                                 <div style="margin-top: 20px; padding: 15px; background: #f8f8f8; border-radius: 5px;">
                                     <strong>Order Notes:</strong>

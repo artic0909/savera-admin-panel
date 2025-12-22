@@ -34,6 +34,13 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('/admin/materials/delete/{id}', [AdminController::class, 'materialDelete'])->name('admin.materials.delete');
 
 
+    // Sizes
+    Route::get('/admin/sizes', [AdminController::class, 'adminSizesView'])->name('admin.sizes.index');
+    Route::post('/admin/sizes/store', [AdminController::class, 'sizeStore'])->name('admin.sizes.store');
+    Route::post('/admin/sizes/update/{id}', [AdminController::class, 'sizeUpdate'])->name('admin.sizes.update');
+    Route::post('/admin/sizes/delete/{id}', [AdminController::class, 'sizeDelete'])->name('admin.sizes.delete');
+
+
     // Products
     // Route::get('/admin/products/add', [AdminController::class, 'addProductView'])->name('admin.products.add');
     // Route::get('/admin/products/edit', [AdminController::class, 'editProductView'])->name('admin.products.edit');
@@ -55,6 +62,11 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::put('/admin/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
     Route::put('/admin/orders/{id}/payment-status', [OrderController::class, 'updatePaymentStatus'])->name('admin.orders.updatePaymentStatus');
     Route::delete('/admin/orders/{id}', [OrderController::class, 'destroy'])->name('admin.orders.destroy');
+
+
+    // Payment Settings
+    Route::get('/admin/payment-settings', [App\Http\Controllers\Admin\PaymentSettingController::class, 'index'])->name('admin.payment-settings.index');
+    Route::post('/admin/payment-settings', [App\Http\Controllers\Admin\PaymentSettingController::class, 'update'])->name('admin.payment-settings.update');
 
 
     // Why Choose

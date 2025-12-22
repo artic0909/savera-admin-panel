@@ -25,6 +25,11 @@
                                     <input type="text" name="product_name" class="form-control" required>
                                 </div>
 
+                                <div class="mb-3 col-md-12">
+                                    <label class="form-label">Product Description</label>
+                                    <textarea name="description" class="form-control" rows="3"></textarea>
+                                </div>
+
                                 <div class="mb-3 col-md-6">
                                     <label class="form-label">Category</label>
                                     <select name="category_id" class="form-select" required>
@@ -149,7 +154,8 @@
 
                     <div class="col-md-2">
                         <label class="form-label">Total Diamond Price</label>
-                        <input type="text" name="metal_configurations[INDEX][total_diamond_price]" class="form-control">
+                        <input type="text" name="metal_configurations[INDEX][total_diamond_price]"
+                            class="form-control">
                     </div>
 
                     <div class="col-md-3 mt-4">

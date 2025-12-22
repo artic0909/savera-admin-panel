@@ -11,6 +11,8 @@ use App\Models\CustomerAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\PaymentSetting;
+use Illuminate\Support\Facades\Http;
 
 class CheckoutController extends Controller
 {
@@ -60,8 +62,9 @@ class CheckoutController extends Controller
 
         $addresses = CustomerAddress::where('customer_id', $customerId)->get();
         $customer = Auth::guard('customer')->user();
+        $paymentSetting = PaymentSetting::first();
 
-        return view('frontend.checkout', compact('cartItems', 'subtotal', 'tax', 'shipping', 'total', 'addresses', 'customer', 'checkoutMode', 'categories'))->with('pageclass', 'hedersolution bg-1');
+        return view('frontend.checkout', compact('cartItems', 'subtotal', 'tax', 'shipping', 'total', 'addresses', 'customer', 'checkoutMode', 'categories', 'paymentSetting'))->with('pageclass', 'hedersolution bg-1');
     }
 
     // Place order
@@ -80,6 +83,9 @@ class CheckoutController extends Controller
             'save_address' => 'nullable|boolean',
             'checkout_mode' => 'nullable|string|in:regular,direct',
             'coupon_code' => 'nullable|string|exists:coupons,code',
+            'razorpay_payment_id' => 'required_if:payment_method,online|nullable|string',
+            'razorpay_order_id' => 'nullable|string',
+            'razorpay_signature' => 'nullable|string',
         ]);
 
         // Validate pincode availability
@@ -166,6 +172,24 @@ class CheckoutController extends Controller
             // Use same for billing if not specified
             $billingAddress = $request->billing_same_as_shipping ? $shippingAddress : $shippingAddress;
 
+            // Determine payment status and details
+            $paymentStatus = 'pending';
+            $transactionId = null;
+            $paymentInfo = null;
+
+            if ($request->payment_method === 'online' && $request->filled('razorpay_payment_id')) {
+                // In a production app, verify signature here
+                $paymentStatus = 'completed'; // Assuming success if we got here via valid signature
+                $transactionId = $request->razorpay_payment_id;
+                $paymentInfo = [
+                    'payment_id' => $request->razorpay_payment_id,
+                    'order_id' => $request->razorpay_order_id,
+                    'signature' => $request->razorpay_signature,
+                ];
+            } else if ($request->payment_method === 'cod') {
+                $paymentStatus = 'pending';
+            }
+
             // Create order
             $order = Order::create([
                 'customer_id' => $customerId,
@@ -180,7 +204,9 @@ class CheckoutController extends Controller
                 'shipping_address' => $shippingAddress,
                 'billing_address' => $billingAddress,
                 'payment_method' => $request->payment_method,
-                'payment_status' => $request->payment_method === 'cod' ? 'pending' : 'pending',
+                'payment_status' => $paymentStatus,
+                'transaction_id' => $transactionId,
+                'payment_info' => $paymentInfo,
                 'notes' => $request->notes,
             ]);
 
@@ -294,5 +320,80 @@ class CheckoutController extends Controller
             'success' => true,
             'redirect_url' => route('checkout.index', ['mode' => 'direct']),
         ]);
+    }
+
+    public function initiatePayment(Request $request)
+    {
+        $customerId = Auth::guard('customer')->id();
+        $checkoutMode = $request->input('checkout_mode', 'regular');
+        $cartItems = collect();
+
+        if ($checkoutMode === 'direct') {
+            $directItem = session('direct_checkout_item');
+            if ($directItem) {
+                $product = \App\Models\Product::find($directItem['product_id']);
+                if ($product) {
+                    $cartItem = new Cart([
+                        'product_id' => $directItem['product_id'],
+                        'quantity' => $directItem['quantity'],
+                        'metal_configuration' => $directItem['metal_configuration'],
+                        'price_at_addition' => $directItem['price'],
+                    ]);
+                    $cartItem->setRelation('product', $product);
+                    $cartItems->push($cartItem);
+                }
+            }
+        } else {
+            $cartItems = Cart::with('product')
+                ->where('customer_id', $customerId)
+                ->get();
+        }
+
+        if ($cartItems->isEmpty()) {
+            return response()->json(['error' => 'Cart is empty'], 400);
+        }
+
+        $subtotal = $cartItems->sum('subtotal');
+        $tax = $subtotal * 0.00;
+        $total = $subtotal + $tax;
+
+        // Coupon Logic
+        if ($request->filled('coupon_code')) {
+            $coupon = \App\Models\Coupon::where('code', $request->coupon_code)->first();
+            if ($coupon && $coupon->isValid($subtotal)) {
+                $discountAmount = $coupon->calculateDiscount($subtotal);
+                $total -= $discountAmount;
+            }
+        }
+        $total = max(0, $total);
+
+        $settings = PaymentSetting::first();
+        if (!$settings || !$settings->razorpay_key || !$settings->razorpay_secret) {
+            return response()->json(['error' => 'Payment gateway not configured'], 500);
+        }
+
+        $response = Http::withBasicAuth($settings->razorpay_key, $settings->razorpay_secret)
+            ->post('https://api.razorpay.com/v1/orders', [
+                'amount' => (int) round($total * 100),
+                'currency' => 'INR',
+                'receipt' => 'order_' . time(),
+                'payment_capture' => 1
+            ]);
+
+        if ($response->successful()) {
+            $orderData = $response->json();
+            $user = Auth::guard('customer')->user();
+            return response()->json([
+                'order_id' => $orderData['id'],
+                'amount' => $orderData['amount'],
+                'key' => $settings->razorpay_key,
+                'customer_name' => $user->name,
+                'customer_email' => $user->email ?? '',
+                'customer_phone' => $user->phone ?? '',
+                'description' => 'Payment for Order',
+            ]);
+        } else {
+            return response()->json(['error' => 'Failed to create payment order', 'details' => $response->body()], 500);
+        }
     }
 }

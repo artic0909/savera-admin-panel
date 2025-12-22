@@ -71,6 +71,7 @@ class ProductController extends Controller
             $request->validate([
                 'category_id' => 'required|exists:categories,id',
                 'product_name' => 'required|string|max:255',
+                'description' => 'nullable|string',
                 'main_image' => 'required|image|mimes:jpeg,png,jpg,gif,webp',
                 'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp',
                 'delivery_time' => 'required|string',
@@ -174,6 +175,7 @@ class ProductController extends Controller
             $request->validate([
                 'category_id' => 'required|exists:categories,id',
                 'product_name' => 'required|string|max:255',
+                'description' => 'nullable|string',
                 'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp',
                 'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp',
                 'delivery_time' => 'required|string',

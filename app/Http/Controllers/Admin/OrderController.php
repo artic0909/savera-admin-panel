@@ -26,11 +26,17 @@ class OrderController extends Controller
             $query->where('payment_status', $request->payment_status);
         }
 
-        // Search by order number or customer name
+        // Filter by payment method
+        if ($request->has('payment_method') && $request->payment_method != '') {
+            $query->where('payment_method', $request->payment_method);
+        }
+
+        // Search by order number, customer name, or transaction ID
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('order_number', 'like', "%{$search}%")
+                    ->orWhere('transaction_id', 'like', "%{$search}%")
                     ->orWhereHas('customer', function ($q) use ($search) {
                         $q->where('name', 'like', "%{$search}%")
                             ->orWhere('email', 'like', "%{$search}%");

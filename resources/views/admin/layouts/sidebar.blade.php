@@ -49,6 +49,13 @@
             </a>
         </li>
 
+        <li class="menu-item {{ Request::routeIs('admin.sizes.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.sizes.index') }}" class="menu-link">
+                <i class='menu-icon tf-icons bx bx-expand'></i>
+                <div data-i18n="manageSize">Manage Sizes</div>
+            </a>
+        </li>
+
 
         <!-- Product -->
         <li class="menu-header small text-uppercase">
@@ -98,6 +105,13 @@
             <a href="{{ route('admin.profile') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-user"></i>
                 <div data-i18n="Enquiry">Profile Details</div>
+            </a>
+        </li>
+
+        <li class="menu-item {{ Request::routeIs('admin.payment-settings.index') ? 'active' : '' }}">
+            <a href="{{ route('admin.payment-settings.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-credit-card"></i>
+                <div data-i18n="PaymentSettings">Payment Settings</div>
             </a>
         </li>
     </ul>

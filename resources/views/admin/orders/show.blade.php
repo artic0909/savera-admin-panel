@@ -166,9 +166,18 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label">Payment Method</label>
-                            <p class="fw-bold">{{ strtoupper($order->payment_method) }}</p>
+                            <label class="form-label d-block">Payment Method</label>
+                            <span class="badge bg-label-primary px-3 py-2">{{ strtoupper($order->payment_method) }}</span>
                         </div>
+
+                        @if ($order->transaction_id)
+                            <div class="mb-3">
+                                <label class="form-label">Payment ID / Transaction ID</label>
+                                <div class="p-2 border rounded bg-light">
+                                    <code class="text-primary">{{ $order->transaction_id }}</code>
+                                </div>
+                            </div>
+                        @endif
 
                         <form action="{{ route('admin.orders.updatePaymentStatus', $order->id) }}" method="POST">
                             @csrf

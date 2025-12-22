@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Material;
 use App\Models\WhyChoose;
+use App\Models\Size;
 
 class AdminController extends Controller
 {
@@ -288,6 +290,64 @@ class AdminController extends Controller
     }
 
 
+    // Size ==================================================================================================================================>
+    public function adminSizesView()
+    {
+        $sizes = Size::orderBy('id', 'desc')->paginate(10);
+        return view('admin.size.index', compact('sizes'));
+    }
+
+    public function sizeStore(Request $request)
+    {
+        try {
+            $request->validate([
+                'size_name' => 'required|string|max:255|unique:sizes,size_name',
+            ]);
+
+            Size::create([
+                'size_name' => $request->size_name,
+            ]);
+
+            return redirect()->back()->with('success', 'Size added successfully');
+        } catch (\Exception $e) {
+            Log::error('Size Store Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function sizeUpdate(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'size_name' => 'required|string|max:255|unique:sizes,size_name,' . $id,
+            ]);
+
+            $size = Size::findOrFail($id);
+            $size->update([
+                'size_name' => $request->size_name,
+            ]);
+
+            return redirect()->back()->with('success', 'Size updated successfully');
+        } catch (\Exception $e) {
+            Log::error('Size Update Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong!');
+        }
+    }
+
+    public function sizeDelete($id)
+    {
+        try {
+            $size = Size::findOrFail($id);
+            $size->delete();
+
+            return redirect()->back()->with('success', 'Size deleted successfully');
+        } catch (\Exception $e) {
+            Log::error('Size Delete Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong!');
+        }
+    }
+
+
     // Admin Products ==================================================================================================================================>
     public function addProductView()
     {
@@ -355,8 +415,8 @@ class AdminController extends Controller
 
             if ($request->hasFile('image')) {
                 // Delete old image
-                if ($whyChoose->image && \Storage::disk('public')->exists($whyChoose->image)) {
-                    \Storage::disk('public')->delete($whyChoose->image);
+                if ($whyChoose->image && Storage::disk('public')->exists($whyChoose->image)) {
+                    Storage::disk('public')->delete($whyChoose->image);
                 }
 
                 $imagePath = $request->file('image')->store('whychoose', 'public');
@@ -379,8 +439,8 @@ class AdminController extends Controller
             $whyChoose = WhyChoose::findOrFail($id);
 
             // Delete image from storage
-            if ($whyChoose->image && \Storage::disk('public')->exists($whyChoose->image)) {
-                \Storage::disk('public')->delete($whyChoose->image);
+            if ($whyChoose->image && Storage::disk('public')->exists($whyChoose->image)) {
+                Storage::disk('public')->delete($whyChoose->image);
             }
 
             $whyChoose->delete();
@@ -409,6 +469,7 @@ class AdminController extends Controller
                 'password' => 'nullable|string|min:8|confirmed',
             ]);
 
+            /** @var \App\Models\Admin $user */
             $user = Auth::guard('admin')->user();
 
             if (!$user) {

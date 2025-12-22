@@ -629,7 +629,10 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                     <h6>
                                         certificate of authenticity
                                     </h6>
-                                    <img src="{{ asset('assets/certificate.jpeg') }}" alt="...">
+                                    <p>Each jewellery piece is independently certified by internationally trusted
+                                        laboratories like IGI and SGL.<br>
+                                        Our certification guarantees the authenticity, quality, and transparency of every
+                                        product—because fine jewellery should always come with complete trust.</p>
                                 </div>
                             </div>
                         </div>

@@ -22,6 +22,10 @@
                                     <input class="form-control" type="text" id="product_name" name="product_name"
                                         value="{{ old('product_name', $product->product_name) }}" required />
                                 </div>
+                                <div class="mb-3 col-md-12">
+                                    <label for="description" class="form-label">Product Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3">{{ old('description', $product->description) }}</textarea>
+                                </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="category_id" class="form-label">Category</label>
                                     <select id="category_id" name="category_id" class="form-select" required>
@@ -194,8 +198,7 @@
                                                     <label class="form-label">MRP</label>
                                                     <input type="text"
                                                         name="metal_configurations[{{ $index }}][mrp]"
-                                                        class="form-control"
-                                                        value="{{ $config['mrp'] ?? '' }}">
+                                                        class="form-control" value="{{ $config['mrp'] ?? '' }}">
                                                 </div>
 
                                                 <div class="col-md-2">
@@ -369,7 +372,8 @@
 
                     <div class="col-md-2">
                         <label class="form-label">Total Diamond Price</label>
-                        <input type="text" name="metal_configurations[INDEX][total_diamond_price]" class="form-control">
+                        <input type="text" name="metal_configurations[INDEX][total_diamond_price]"
+                            class="form-control">
                     </div>
 
                     <div class="col-md-3 mt-4">
@@ -443,9 +447,9 @@
 
             document.getElementById('add-metal-config').addEventListener('click', function() {
                 const index = metalContainer.children.length + Math.floor(Math.random() *
-                1000); // Unique index
+                    1000); // Unique index
                 const newId = 'mc_' + Date.now() + '_' + Math.floor(Math.random() *
-                1000); // Robust client-side unique ID
+                    1000); // Robust client-side unique ID
                 let html = metalTemplate.replace(/INDEX/g, index).replace(/NEW_ID/g, newId);
 
                 const temp = document.createElement('div');

@@ -179,13 +179,42 @@
                             <h4 style="margin: 30px 0 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Payment
                                 Method</h4>
 
-                            <div style="margin-bottom: 15px;">
-                                <label
-                                    style="display: flex; align-items: center; gap: 10px; padding: 15px; border: 2px solid #ddd; border-radius: 5px; cursor: pointer;">
-                                    <input type="radio" name="payment_method" value="cod" checked required>
-                                    <span><strong>Cash on Delivery</strong></span>
-                                </label>
-                            </div>
+                            @php
+                                $codEnabled = $paymentSetting?->is_cod_enabled ?? true;
+                                $razorpayKey = $paymentSetting?->razorpay_key;
+                                $onlineEnabled = !empty($razorpayKey);
+                            @endphp
+
+                            @if ($codEnabled)
+                                <div style="margin-bottom: 15px;">
+                                    <label
+                                        style="display: flex; align-items: center; gap: 10px; padding: 15px; border: 2px solid #ddd; border-radius: 5px; cursor: pointer;">
+                                        <input type="radio" name="payment_method" value="cod"
+                                            {{ $codEnabled ? 'checked' : '' }} required>
+                                        <span><strong>Cash on Delivery</strong></span>
+                                    </label>
+                                </div>
+                            @endif
+
+                            @if ($onlineEnabled)
+                                <div style="margin-bottom: 15px;">
+                                    <label
+                                        style="display: flex; align-items: center; gap: 10px; padding: 15px; border: 2px solid #ddd; border-radius: 5px; cursor: pointer;">
+                                        <input type="radio" name="payment_method" value="online"
+                                            {{ !$codEnabled ? 'checked' : '' }} required>
+                                        <span><strong>Online Payment (Razorpay)</strong></span>
+                                    </label>
+                                </div>
+                            @endif
+
+                            @if (!$codEnabled && !$onlineEnabled)
+                                <div class="alert alert-danger">No payment methods available.</div>
+                            @endif
+
+                            <!-- Hidden inputs for Razorpay -->
+                            <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+                            <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+                            <input type="hidden" name="razorpay_signature" id="razorpay_signature">
 
                             <div style="margin-bottom: 15px;">
                                 <label style="display: block; margin-bottom: 5px; font-weight: bold;">Order Notes
@@ -240,14 +269,14 @@
                             </div>
 
                             <!-- <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
-                                    <span>Tax (3%):</span>
-                                    <span>Rs. {{ number_format($tax, 2) }}</span>
-                                </div> -->
+                                            <span>Tax (3%):</span>
+                                            <span>Rs. {{ number_format($tax, 2) }}</span>
+                                        </div> -->
 
                             <!-- <div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
-                                    <span>Shipping:</span>
-                                    <span style="color: green;">FREE</span>
-                                </div> -->
+                                            <span>Shipping:</span>
+                                            <span style="color: green;">FREE</span>
+                                        </div> -->
 
                             <div id="discount-row"
                                 style="margin-bottom: 15px; display: none; justify-content: space-between; color: green;">
@@ -413,7 +442,106 @@
                         pincodeInput.focus();
                         return false;
                     }
+
+                    // Payment Logic
+                    const selectedPayment = document.querySelector('input[name="payment_method"]:checked');
+                    if (selectedPayment && selectedPayment.value === 'online') {
+                        // If we already have payment ID, let it submit
+                        if (document.getElementById('razorpay_payment_id').value) {
+                            return true;
+                        }
+
+                        e.preventDefault();
+                        loadRazorpayAndStart(this);
+                    }
                 });
+            }
+
+            function loadRazorpayAndStart(form) {
+                if (typeof Razorpay === 'undefined') {
+                    const script = document.createElement('script');
+                    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+                    script.onload = () => startPaymentProcess(form);
+                    document.body.appendChild(script);
+                } else {
+                    startPaymentProcess(form);
+                }
+            }
+
+            function startPaymentProcess(form) {
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const oldText = submitBtn.innerText;
+                submitBtn.innerText = 'Processing...';
+                submitBtn.disabled = true;
+
+                // Collect essential data manually to avoid FormData stringify issues with unchecked boxes etc necessary for backend validation
+                const data = {
+                    checkout_mode: form.querySelector('input[name="checkout_mode"]').value,
+                    coupon_code: form.querySelector('input[name="coupon_code"]').value,
+                    // Add other necessary fields if backend needs them for calculation strictly
+                };
+
+                fetch('{{ route('checkout.initiatePayment') }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                            submitBtn.innerText = oldText;
+                            submitBtn.disabled = false;
+                            return;
+                        }
+
+                        var options = {
+                            "key": data.key,
+                            "amount": data.amount,
+                            "currency": "INR",
+                            "name": "Savera",
+                            "description": data.description,
+                            "order_id": data.order_id,
+                            "handler": function(response) {
+                                document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                                document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+                                document.getElementById('razorpay_signature').value = response.razorpay_signature;
+
+                                // Re-submit form
+                                HTMLFormElement.prototype.submit.call(form);
+                            },
+                            "prefill": {
+                                "name": data.customer_name,
+                                "email": data.customer_email,
+                                "contact": data.customer_phone
+                            },
+                            "theme": {
+                                "color": "#333"
+                            },
+                            "modal": {
+                                "ondismiss": function() {
+                                    submitBtn.innerText = oldText;
+                                    submitBtn.disabled = false;
+                                }
+                            }
+                        };
+                        var rzp1 = new Razorpay(options);
+                        rzp1.on('payment.failed', function(response) {
+                            alert("Payment Failed: " + response.error.description);
+                            submitBtn.innerText = oldText;
+                            submitBtn.disabled = false;
+                        });
+                        rzp1.open();
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert('Something went wrong. Please try again.');
+                        submitBtn.innerText = oldText;
+                        submitBtn.disabled = false;
+                    });
             }
         </script>
     @endpush

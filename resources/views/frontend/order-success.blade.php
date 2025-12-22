@@ -40,6 +40,13 @@
                         <span style="color: #666;">Payment Method:</span>
                         <strong>{{ strtoupper($order->payment_method) }}</strong>
                     </div>
+
+                    @if ($order->transaction_id)
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; text-align: left;">
+                            <span style="color: #666;">Transaction ID:</span>
+                            <strong>{{ $order->transaction_id }}</strong>
+                        </div>
+                    @endif
                 </div>
 
                 {{-- <div

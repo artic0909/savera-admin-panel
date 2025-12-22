@@ -285,12 +285,12 @@
 
     <div class="store-section">
         <div class="store-image">
-            <img src="{{ asset('assets/images/carti.jpg') }}" alt="Store Front" />
+            <img src="{{ asset('assets/images/Priyanka-store-front-1.webp') }}" alt="Store Front" />
         </div>
         <!-- <div class="store-content">
-                                        {{-- <h2>Store Front</h2>
+                                            {{-- <h2>Store Front</h2>
             <p>Sub Text</p>
             <a href="#" class="find-store-btn">Find Store</a> --}}
-                                    </div> -->
+                                        </div> -->
     </div>
 @endsection
