@@ -106,6 +106,16 @@
 
         <!-- Setting -->
         <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Settings</span>
+        </li>
+        <li class="menu-item {{ Request::routeIs('admin.seo.index') ? 'active' : '' }}">
+            <a href="{{ route('admin.seo.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-search"></i>
+                <div data-i18n="manageSEO">Manage SEO</div>
+            </a>
+        </li>
+
+        <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Mange Profile</span>
         </li>
         <li class="menu-item {{ Request::routeIs('admin.profile') ? 'active' : '' }}">

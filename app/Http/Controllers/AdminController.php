@@ -13,6 +13,7 @@ use App\Models\Material;
 use App\Models\WhyChoose;
 use App\Models\Size;
 use App\Models\Color;
+use App\Models\SeoSetting;
 
 class AdminController extends Controller
 {
@@ -559,5 +560,50 @@ class AdminController extends Controller
 
             return redirect()->back()->with('error', 'Something went wrong. Please try again.');
         }
+    }
+
+    // --- SEO Settings CRUD ---
+
+    public function seoIndex()
+    {
+        $seoSettings = SeoSetting::latest()->get();
+        return view('admin.seo.index', compact('seoSettings'));
+    }
+
+    public function seoStore(Request $request)
+    {
+        $request->validate([
+            'page_url' => 'required|string|unique:seo_settings,page_url',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string',
+            'extra_tags' => 'nullable|string',
+        ]);
+
+        SeoSetting::create($request->all());
+
+        return redirect()->back()->with('success', 'SEO Setting added successfully.');
+    }
+
+    public function seoUpdate(Request $request, $id)
+    {
+        $seo = SeoSetting::findOrFail($id);
+
+        $request->validate([
+            'page_url' => 'required|string|unique:seo_settings,page_url,' . $id,
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string',
+            'extra_tags' => 'nullable|string',
+        ]);
+
+        $seo->update($request->all());
+
+        return redirect()->back()->with('success', 'SEO Setting updated successfully.');
+    }
+
+    public function seoDestroy($id)
+    {
+        $seo = SeoSetting::findOrFail($id);
+        $seo->delete();
+        return redirect()->back()->with('success', 'SEO Setting deleted successfully.');
     }
 }

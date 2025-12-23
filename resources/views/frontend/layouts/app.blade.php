@@ -2,10 +2,34 @@
 <html lang="en">
 
 <head>
+    @php
+        $currentPath = '/' . request()->path();
+        if ($currentPath == '//') {
+            $currentPath = '/';
+        }
+        $seo = \App\Models\SeoSetting::where('page_url', $currentPath)->first();
+    @endphp
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title') </title>
+
+    <title>
+        @if ($seo && $seo->meta_title)
+            {{ $seo->meta_title }}
+        @else
+            @yield('title')
+        @endif
+    </title>
+
+    @if ($seo && $seo->meta_description)
+        <meta name="description" content="{{ $seo->meta_description }}">
+    @endif
+
+    @if ($seo && $seo->extra_tags)
+        {!! $seo->extra_tags !!}
+    @endif
+
     <link rel="stylesheet" href="{{ asset('assets/style.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/responsive.css') }}" />
     <link rel="icon" href="{{ asset('assets/images/logo-icon.png') }}" type="image/x-icon">

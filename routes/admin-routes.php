@@ -76,6 +76,12 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('/admin/payment-settings', [App\Http\Controllers\Admin\PaymentSettingController::class, 'update'])->name('admin.payment-settings.update');
 
 
+    // SEO Settings
+    Route::get('/admin/seo', [AdminController::class, 'seoIndex'])->name('admin.seo.index');
+    Route::post('/admin/seo/store', [AdminController::class, 'seoStore'])->name('admin.seo.store');
+    Route::post('/admin/seo/update/{id}', [AdminController::class, 'seoUpdate'])->name('admin.seo.update');
+    Route::post('/admin/seo/delete/{id}', [AdminController::class, 'seoDestroy'])->name('admin.seo.delete');
+
     // Why Choose
     Route::get('/admin/whychoose', [AdminController::class, 'adminWhyChooseView'])->name('admin.whychoose.index');
     Route::post('/admin/whychoose/store', [AdminController::class, 'whyChooseStore'])->name('admin.whychoose.store');
