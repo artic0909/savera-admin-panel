@@ -3,6 +3,151 @@
 @section('title', 'Home')
 
 @section('content')
+    <style>
+        .product-single-left {
+            padding: 20px;
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Main Slider */
+        .product-main-slider {
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #f8f8f8;
+            margin-bottom: 15px;
+        }
+
+        .product-main-slider .swiper-slide {
+            aspect-ratio: 1 / 1;
+            /* Slightly shorter than square to reduce vertical space */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-main-slider img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        .product-main-slider video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 20px;
+        }
+
+
+        /* Thumbnails Slider */
+        .product-thumb-slider {
+            width: 100%;
+            padding: 5px 0;
+        }
+
+        .product-thumb-slider .swiper-slide {
+            aspect-ratio: 1/1;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+            background: #f0f0f0;
+        }
+
+        .product-thumb-slider .swiper-slide-thumb-active {
+            border-color: #312110;
+            opacity: 1;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-thumb-slider img,
+        .product-thumb-slider video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+
+        .video-thumbnail-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(2px);
+        }
+
+        /* Swiper Navigation Custom Styling */
+        .product-main-slider .swiper-button-next,
+        .product-main-slider .swiper-button-prev {
+            background: rgba(255, 255, 255, 0.9);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            color: #312110 !important;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .product-main-slider .swiper-button-next:after,
+        .product-main-slider .swiper-button-prev:after {
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .product-main-slider .swiper-button-next:hover,
+        .product-main-slider .swiper-button-prev:hover {
+            background: #312110;
+            color: #fff !important;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(49, 33, 16, 0.3);
+        }
+
+        .product-main-slider .swiper-button-disabled {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .product-single-left {
+                padding: 10px;
+                border-radius: 15px;
+            }
+
+            .product-thumb-slider .swiper-slide {
+                width: 80px;
+                height: 80px;
+            }
+
+            .product-main-slider .swiper-button-next,
+            .product-main-slider .swiper-button-prev {
+                width: 35px;
+                height: 35px;
+                background: rgba(255, 255, 255, 0.7);
+            }
+
+            .product-main-slider .swiper-button-next:after,
+            .product-main-slider .swiper-button-prev:after {
+                font-size: 14px;
+            }
+        }
+    </style>
     {{-- <link rel="stylesheet" href="{{ asset('assets/bootstrap.min.css') }}" /> --}}
 
     <script>
@@ -25,39 +170,82 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-12">
                         <div class="product-single-left">
-                            <div class="big-img">
-                                <!-- Main Image as first tab -->
-                                <img src="{{ asset('storage/' . $product->main_image) }}" alt="{{ $product->product_name }}"
-                                    id="tab1" class="tabcontent" style="display: block;">
-
-                                @if (is_array($product->additional_images))
-                                    @foreach ($product->additional_images as $index => $image)
-                                        <img src="{{ asset('storage/' . $image) }}" alt="{{ $product->product_name }}"
-                                            id="tab{{ $index + 2 }}" class="tabcontent">
-                                    @endforeach
-                                @endif
-                            </div>
-                            {{-- <div class="rating-div">
-                                <p>
-                                    <img src="{{ asset('assets/images/star.png') }}" alt="...">
-                                    4.2 | 12
-                                </p>
-                            </div> --}}
-                            <div class="img-tab-btn tab">
-                                <div class="thumbnail-grid">
-                                    <!-- Main thumbnail -->
-                                    <div class="thumbnail-item">
+                            {{-- Main Slider --}}
+                            <div class="swiper product-main-slider">
+                                <div class="swiper-wrapper">
+                                    {{-- Main Image --}}
+                                    <div class="swiper-slide">
                                         <img src="{{ asset('storage/' . $product->main_image) }}"
-                                            alt="{{ $product->product_name }}" class="tablinks active"
-                                            onclick="openCity(event, 'tab1')">
+                                            alt="{{ $product->product_name }}">
                                     </div>
 
+                                    {{-- Additional Media --}}
                                     @if (is_array($product->additional_images))
-                                        @foreach ($product->additional_images as $index => $image)
-                                            <div class="thumbnail-item">
-                                                <img src="{{ asset('storage/' . $image) }}"
-                                                    alt="{{ $product->product_name }}" class="tablinks"
-                                                    onclick="openCity(event, 'tab{{ $index + 2 }}')">
+                                        @foreach ($product->additional_images as $file)
+                                            @php
+                                                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                                                $isVideo = in_array(strtolower($extension), [
+                                                    'mp4',
+                                                    'mov',
+                                                    'ogg',
+                                                    'qt',
+                                                    'webm',
+                                                ]);
+                                            @endphp
+                                            <div class="swiper-slide">
+                                                @if ($isVideo)
+                                                    <video controls class="w-100 h-100">
+                                                        <source src="{{ asset('storage/' . $file) }}"
+                                                            type="video/{{ $extension }}">
+                                                    </video>
+                                                @else
+                                                    <img src="{{ asset('storage/' . $file) }}"
+                                                        alt="{{ $product->product_name }}">
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                                {{-- Navigation --}}
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+                            </div>
+
+                            {{-- Thumbnails Slider --}}
+                            <div class="swiper product-thumb-slider">
+                                <div class="swiper-wrapper">
+                                    {{-- Main Thumbnail --}}
+                                    <div class="swiper-slide">
+                                        <img src="{{ asset('storage/' . $product->main_image) }}"
+                                            alt="{{ $product->product_name }}">
+                                    </div>
+
+                                    {{-- Additional Thumbnails --}}
+                                    @if (is_array($product->additional_images))
+                                        @foreach ($product->additional_images as $file)
+                                            @php
+                                                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                                                $isVideo = in_array(strtolower($extension), [
+                                                    'mp4',
+                                                    'mov',
+                                                    'ogg',
+                                                    'qt',
+                                                    'webm',
+                                                ]);
+                                            @endphp
+                                            <div class="swiper-slide">
+                                                @if ($isVideo)
+                                                    <video muted class="w-100 h-100">
+                                                        <source src="{{ asset('storage/' . $file) }}"
+                                                            type="video/{{ $extension }}">
+                                                    </video>
+                                                    <div class="video-thumbnail-overlay">
+                                                        <i class="fi fi-rr-play"></i>
+                                                    </div>
+                                                @else
+                                                    <img src="{{ asset('storage/' . $file) }}"
+                                                        alt="{{ $product->product_name }}">
+                                                @endif
                                             </div>
                                         @endforeach
                                     @endif
@@ -80,7 +268,7 @@
                                 </div>
                             </div>
                             <div class="price-container" style="margin: 15px 0;">
-                                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                                     <h5 id="dynamic-price"
                                         style="margin: 0; font-weight: 700; color: #312110; letter-spacing: 3px;">
                                         @php
@@ -102,7 +290,7 @@
                                         {{ $displayPrice }}
                                     </h5>
                                     @if ($initialMRP > 0 && $initialMRP != $displayPrice)
-                                        <span id="mrp"
+                                        MRP :<span id="mrp"
                                             style="text-decoration: line-through; color: #999; font-size: 18px; font-weight: 500;">
                                             ₹{{ number_format($initialMRP, 2) }}
                                         </span>
@@ -248,59 +436,18 @@
                                     @if (is_array($product->colors) && count($product->colors) > 0)
                                         @foreach ($product->colors as $index => $colorId)
                                             @php
-                                                // Resolve color object from the passed $colors collection
                                                 $colorObj = $colors->find($colorId);
-                                                $colorVal = $colorObj ? $colorObj->color_name : $colorId;
-
-                                                // Custom Color Map for names not standard in CSS or missing Hex
-                                                $colorMap = [
-                                                    'rose gold' => '#B76E79',
-                                                    'gold' => '#FFD700',
-                                                    'silver' => '#C0C0C0',
-                                                ];
-
-                                                $lowerVal = strtolower($colorVal);
-                                                $mappedHex = $colorMap[$lowerVal] ?? null;
-
-                                                // Check if it looks like a hex code OR is in our custom map OR is a standard color
-                                                $isHex =
-                                                    preg_match('/^#[a-f0-9]{6}$/i', $colorVal) ||
-                                                    preg_match('/^#[a-f0-9]{3}$/i', $colorVal) ||
-                                                    $mappedHex ||
-                                                    in_array(strtolower($colorVal), [
-                                                        'red',
-                                                        'blue',
-                                                        'green',
-                                                        'yellow',
-                                                        'black',
-                                                        'white',
-                                                        'pink',
-                                                    ]);
-
-                                                // Determine the background style value
-                                                $bgStyle = $mappedHex ? $mappedHex : $colorVal;
+                                                $colorName = $colorObj ? $colorObj->color_name : 'Unknown';
+                                                $bgStyle = $colorObj ? $colorObj->color_code ?? '#000000' : '#000000';
                                             @endphp
 
-                                            @if ($isHex)
-                                                <button class="color-btn {{ $index === 0 ? 'active' : '' }}"
-                                                    style="background-color: {{ $bgStyle }}; position: relative;"
-                                                    data-color-id="{{ $colorId }}"
-                                                    data-color-name="{{ $colorObj ? $colorObj->color_name : $colorVal }}"
-                                                    onclick="selectColor(this)"
-                                                    title="{{ $colorObj ? $colorObj->color_name : $colorVal }}">
-                                                    <span class="checkmark"
-                                                        style="display: {{ $index === 0 ? 'block' : 'none' }};">✓</span>
-                                                </button>
-                                            @else
-                                                <button class="text-btn color-btn {{ $index === 0 ? 'active' : '' }}"
-                                                    title="{{ $colorVal }}" data-color-id="{{ $colorId }}"
-                                                    data-color-name="{{ $colorVal }}" onclick="selectColor(this)"
-                                                    style="width: auto; padding: 0 10px; font-size: 12px; position: relative;">
-                                                    {{ $colorVal }}
-                                                    <span class="checkmark"
-                                                        style="display: {{ $index === 0 ? 'inline' : 'none' }}; margin-left: 5px;">✓</span>
-                                                </button>
-                                            @endif
+                                            <button class="color-btn {{ $index === 0 ? 'active' : '' }}"
+                                                style="background-color: {{ $bgStyle }}; position: relative;"
+                                                data-color-id="{{ $colorId }}" data-color-name="{{ $colorName }}"
+                                                onclick="selectColor(this)" title="{{ $colorName }}">
+                                                <span class="checkmark"
+                                                    style="display: {{ $index === 0 ? 'block' : 'none' }}; color: {{ $bgStyle === '#ffffff' || $bgStyle === '#fff' ? '#000' : '#fff' }};">✓</span>
+                                            </button>
                                         @endforeach
                                     @else
                                         <span>No colors available</span>
@@ -671,140 +818,46 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
     <script src="{{ asset('assets/jquery-1.12.0.min.js') }}"></script>
 
     <script>
-        // Optimized thumbnail slider with auto-play and auto-scroll
-        (function() {
-            let currentIndex = 0;
-            let autoPlayInterval = null;
-            let autoPlayTimeout = null;
-            const AUTOPLAY_DELAY = 3000;
-            const RESUME_DELAY = 5000;
-
-            // Main function to switch images
-            function switchToImage(index, thumbnailElement) {
-                // Hide all main images
-                const tabcontents = document.getElementsByClassName("tabcontent");
-                for (let i = 0; i < tabcontents.length; i++) {
-                    tabcontents[i].style.display = "none";
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Swiper for Thumbnails
+            var thumbSwiper = new Swiper(".product-thumb-slider", {
+                spaceBetween: 10,
+                slidesPerView: 4,
+                freeMode: true,
+                watchSlidesProgress: true,
+                breakpoints: {
+                    320: {
+                        slidesPerView: 3,
+                        spaceBetween: 8
+                    },
+                    480: {
+                        slidesPerView: 4,
+                        spaceBetween: 10
+                    }
                 }
-
-                // Remove active class from all thumbnails
-                const tablinks = document.getElementsByClassName("tablinks");
-                for (let i = 0; i < tablinks.length; i++) {
-                    tablinks[i].classList.remove("active");
-                }
-
-                // Show selected main image
-                if (tabcontents[index]) {
-                    tabcontents[index].style.display = "block";
-                }
-
-                // Add active class to selected thumbnail
-                if (thumbnailElement) {
-                    thumbnailElement.classList.add("active");
-                } else if (tablinks[index]) {
-                    tablinks[index].classList.add("active");
-                }
-
-                // Scroll thumbnail into view
-                scrollThumbnailIntoView(index);
-
-                // Update current index
-                currentIndex = index;
-            }
-
-            // Scroll active thumbnail into view
-            function scrollThumbnailIntoView(index) {
-                const tablinks = document.getElementsByClassName("tablinks");
-                const container = document.querySelector('.img-tab-btn');
-
-                if (tablinks[index] && container) {
-                    const thumbnail = tablinks[index];
-                    const containerRect = container.getBoundingClientRect();
-                    const thumbnailRect = thumbnail.getBoundingClientRect();
-
-                    // Calculate scroll position to center the thumbnail
-                    const scrollLeft = thumbnail.offsetLeft - (container.offsetWidth / 2) + (thumbnail.offsetWidth / 2);
-
-                    // Smooth scroll to position
-                    container.scrollTo({
-                        left: scrollLeft,
-                        behavior: 'smooth'
-                    });
-                }
-            }
-
-            // Auto-play function
-            function autoPlayNext() {
-                const tablinks = document.getElementsByClassName("tablinks");
-                if (tablinks.length === 0) return;
-
-                currentIndex = (currentIndex + 1) % tablinks.length;
-                switchToImage(currentIndex, tablinks[currentIndex]);
-            }
-
-            // Start auto-play
-            function startAutoPlay() {
-                stopAutoPlay();
-                autoPlayInterval = setInterval(autoPlayNext, AUTOPLAY_DELAY);
-            }
-
-            // Stop auto-play
-            function stopAutoPlay() {
-                if (autoPlayInterval) {
-                    clearInterval(autoPlayInterval);
-                    autoPlayInterval = null;
-                }
-                if (autoPlayTimeout) {
-                    clearTimeout(autoPlayTimeout);
-                    autoPlayTimeout = null;
-                }
-            }
-
-            // Resume auto-play after delay
-            function resumeAutoPlayAfterDelay() {
-                stopAutoPlay();
-                autoPlayTimeout = setTimeout(startAutoPlay, RESUME_DELAY);
-            }
-
-            // Initialize when DOM is ready
-            document.addEventListener('DOMContentLoaded', function() {
-                const tablinks = document.getElementsByClassName("tablinks");
-                const thumbnailGrid = document.querySelector('.thumbnail-grid');
-
-                // Set up click handlers for all thumbnails
-                for (let i = 0; i < tablinks.length; i++) {
-                    tablinks[i].addEventListener('click', function(e) {
-                        e.preventDefault();
-                        switchToImage(i, this);
-                        resumeAutoPlayAfterDelay();
-                    });
-                }
-
-                // Pause auto-play on hover
-                if (thumbnailGrid) {
-                    thumbnailGrid.addEventListener('mouseenter', stopAutoPlay);
-                    thumbnailGrid.addEventListener('mouseleave', startAutoPlay);
-                }
-
-                // Start auto-play
-                startAutoPlay();
-
-                // Ensure first image is displayed
-                switchToImage(0, tablinks[0]);
             });
 
-            // Legacy function for backward compatibility
-            window.openCity = function(evt, cityName) {
-                if (!evt || !evt.currentTarget) return;
-
-                const tablinks = document.getElementsByClassName("tablinks");
-                const index = Array.from(tablinks).indexOf(evt.currentTarget);
-
-                if (index !== -1) {
-                    switchToImage(index, evt.currentTarget);
+            // Initialize Swiper for Main slider
+            var mainSwiper = new Swiper(".product-main-slider", {
+                spaceBetween: 10,
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+                thumbs: {
+                    swiper: thumbSwiper,
+                },
+                on: {
+                    slideChangeTransitionStart: function() {
+                        // Pause all videos when slide changes
+                        document.querySelectorAll('.product-main-slider video').forEach(v => {
+                            v.pause();
+                            v.currentTime = 0;
+                        });
+                    }
                 }
-            };
-        })();
+            });
+        });
     </script>
 
 @endsection

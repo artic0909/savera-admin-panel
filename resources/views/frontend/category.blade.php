@@ -75,7 +75,7 @@
                                 </div>
                             </li>
                             {{-- Shape Filter --}}
-                            <li class="dropbtn-li-1 dropdown1">
+                            {{-- <li class="dropbtn-li-1 dropdown1">
                                 <button class="dropbtn1">
                                     Shape
                                 </button>
@@ -92,9 +92,9 @@
                                         @endforeach
                                     </ul>
                                 </div>
-                            </li>
+                            </li> --}}
                             {{-- Style Filter --}}
-                            <li class="dropbtn-li-1 dropdown1">
+                            {{-- <li class="dropbtn-li-1 dropdown1">
                                 <button class="dropbtn1">
                                     Style
                                 </button>
@@ -111,7 +111,7 @@
                                         @endforeach
                                     </ul>
                                 </div>
-                            </li>
+                            </li> --}}
                         </ul>
                     </div>
                 </div>

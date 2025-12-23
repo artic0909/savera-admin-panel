@@ -90,7 +90,7 @@
             </div>
             <div class="legal-links">
                 <a href="{{ route('privacy-policy') }}#privacyPolicy">Privacy statement</a>
-                <a href="#">Terms and Conditions</a>
+                {{-- <a href="#">Terms and Conditions</a> --}}
             </div>
         </div>
     </div>

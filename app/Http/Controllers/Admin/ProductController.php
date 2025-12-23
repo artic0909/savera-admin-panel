@@ -73,7 +73,7 @@ class ProductController extends Controller
                 'product_name' => 'required|string|max:255',
                 'description' => 'nullable|string',
                 'main_image' => 'required|image|mimes:jpeg,png,jpg,gif,webp',
-                'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp',
+                'additional_images.*' => 'nullable|mimes:jpeg,png,jpg,gif,webp,mp4,mov,ogg,wmv,avi,flv,mkv,webm',
                 'delivery_time' => 'required|string',
             ]);
 
@@ -85,11 +85,11 @@ class ProductController extends Controller
             }
 
             if ($request->hasFile('additional_images')) {
-                $images = [];
-                foreach ($request->file('additional_images') as $image) {
-                    $images[] = $image->store('products', 'public');
+                $media = [];
+                foreach ($request->file('additional_images') as $file) {
+                    $media[] = $file->store('products', 'public');
                 }
-                $data['additional_images'] = $images;
+                $data['additional_images'] = $media;
             }
 
             Product::create($data);
@@ -177,27 +177,39 @@ class ProductController extends Controller
                 'product_name' => 'required|string|max:255',
                 'description' => 'nullable|string',
                 'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp',
-                'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp',
+                'additional_images.*' => 'nullable|mimes:jpeg,png,jpg,gif,webp,mp4,mov,ogg,wmv,avi,flv,mkv,webm',
                 'delivery_time' => 'required|string',
             ]);
 
-            $data = $request->except(['main_image', 'additional_images']);
+            $data = $request->except(['main_image', 'additional_images', 'deleted_additional_images']);
 
             if ($request->hasFile('main_image')) {
-                if ($product->main_image) {
-                    // Storage::disk('public')->delete($product->main_image); // Optional: delete old image
-                }
                 $data['main_image'] = $request->file('main_image')->store('products', 'public');
             }
 
-            if ($request->hasFile('additional_images')) {
-                // Optional: delete old additional images logic
-                $images = [];
-                foreach ($request->file('additional_images') as $image) {
-                    $images[] = $image->store('products', 'public');
-                }
-                $data['additional_images'] = $images; // Or merge with existing if needed
+            // Get current additional images
+            $currentMedia = $product->additional_images ?? [];
+
+            // Handle deletions
+            if ($request->has('deleted_additional_images')) {
+                $deletedItems = $request->input('deleted_additional_images');
+                $currentMedia = array_values(array_filter($currentMedia, function ($item) use ($deletedItems) {
+                    if (in_array($item, $deletedItems)) {
+                        Storage::disk('public')->delete($item);
+                        return false;
+                    }
+                    return true;
+                }));
             }
+
+            // Handle new uploads
+            if ($request->hasFile('additional_images')) {
+                foreach ($request->file('additional_images') as $file) {
+                    $currentMedia[] = $file->store('products', 'public');
+                }
+            }
+
+            $data['additional_images'] = $currentMedia;
 
             $product->update($data);
 

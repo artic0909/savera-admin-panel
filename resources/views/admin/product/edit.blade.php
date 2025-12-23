@@ -42,19 +42,27 @@
                                     <input class="form-control" type="text" id="delivery_time" name="delivery_time"
                                         value="{{ old('delivery_time', $product->delivery_time) }}" required />
                                 </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="colors" class="form-label">Colors</label>
+                                <div class="mb-3 col-md-12">
+                                    <label class="form-label">Colors</label>
                                     @php $selectedColors = $product->colors ?? []; @endphp
-                                    <select id="colors" name="colors[]" class="form-select" multiple>
+                                    <div class="d-flex flex-wrap gap-3 p-3 border rounded bg-light">
                                         @foreach ($colors as $color)
-                                            <option value="{{ $color->id }}"
-                                                {{ in_array($color->id, $selectedColors) ? 'selected' : '' }}>
-                                                {{ $color->color_name }}</option>
+                                            <div class="form-check custom-color-plate">
+                                                <input class="form-check-input" type="checkbox" name="colors[]"
+                                                    value="{{ $color->id }}" id="color_{{ $color->id }}"
+                                                    {{ in_array($color->id, $selectedColors) ? 'checked' : '' }}>
+                                                <label class="form-check-label fw-semibold"
+                                                    for="color_{{ $color->id }}">
+                                                    <span class="color-circle"
+                                                        style="background-color: {{ $color->color_code }};"></span>
+                                                    {{ $color->color_name }}
+                                                </label>
+                                            </div>
                                         @endforeach
-                                    </select>
+                                    </div>
                                 </div>
                                 <div class="mb-3 col-md-6">
-                                    <label for="main_image" class="form-label">Main Image</label>
+                                    <label for="main_image" class="form-label">Main Image(1:1 Aspect Ratio)</label>
                                     <input class="form-control" type="file" id="main_image" name="main_image" />
                                     <div class="mt-2">
                                         <img src="{{ asset('storage/' . $product->main_image) }}" alt="Current Image"
@@ -62,16 +70,46 @@
                                     </div>
                                 </div>
                                 <div class="mb-3 col-md-6">
-                                    <label for="additional_images" class="form-label">Additional Images</label>
+                                    <label for="additional_images" class="form-label">Additional Media
+                                        (Images/Videos - 1:1 Aspect Ratio)</label>
                                     <input class="form-control" type="file" id="additional_images"
-                                        name="additional_images[]" multiple />
+                                        name="additional_images[]" multiple accept="image/*,video/*" />
                                     @if ($product->additional_images)
-                                        <div class="mt-2 d-flex gap-2">
-                                            @foreach ($product->additional_images as $img)
-                                                <img src="{{ asset('storage/' . $img) }}" alt="Additional Image"
-                                                    width="50">
+                                        <div class="mt-3 d-flex flex-wrap gap-3" id="additional-media-container">
+                                            @foreach ($product->additional_images as $index => $file)
+                                                @php
+                                                    $extension = pathinfo($file, PATHINFO_EXTENSION);
+                                                    $isVideo = in_array(strtolower($extension), [
+                                                        'mp4',
+                                                        'mov',
+                                                        'ogg',
+                                                        'qt',
+                                                        'webm',
+                                                    ]);
+                                                @endphp
+                                                <div class="position-relative media-item" style="width: 100px;">
+                                                    @if ($isVideo)
+                                                        <video width="100" height="100"
+                                                            style="object-fit: cover; border-radius: 5px;">
+                                                            <source src="{{ asset('storage/' . $file) }}"
+                                                                type="video/{{ $extension }}">
+                                                        </video>
+                                                    @else
+                                                        <img src="{{ asset('storage/' . $file) }}" alt="Additional Image"
+                                                            width="100" height="100"
+                                                            style="object-fit: cover; border-radius: 5px;">
+                                                    @endif
+                                                    <button type="button"
+                                                        class="btn btn-danger btn-xs position-absolute top-0 end-0 remove-saved-media"
+                                                        data-path="{{ $file }}"
+                                                        style="padding: 2px 5px; font-size: 10px;">
+                                                        <i class="bx bx-x"></i>
+                                                    </button>
+                                                </div>
                                             @endforeach
                                         </div>
+                                        <!-- Hidden container for deleted items -->
+                                        <div id="deleted-media-inputs"></div>
                                     @endif
                                 </div>
                             </div>
@@ -431,87 +469,159 @@
 
 @endsection
 
+@push('styles')
+    <style>
+        .custom-color-plate {
+            display: inline-block;
+            cursor: pointer;
+            margin-bottom: 0;
+            user-select: none;
+        }
+
+        .custom-color-plate .form-check-input {
+            display: none;
+        }
+
+        .custom-color-plate .form-check-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-width: 100px;
+            gap: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .color-circle {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            display: inline-block;
+        }
+
+        .custom-color-plate .form-check-input:checked+.form-check-label {
+            border-color: #696cff;
+            background-color: #696cff;
+            color: #fff;
+            box-shadow: 0 4px 8px rgba(105, 108, 255, 0.2);
+        }
+
+        .custom-color-plate .form-check-input:checked+.form-check-label .color-circle {
+            border-color: #fff;
+        }
+
+        .custom-color-plate .form-check-label:hover {
+            border-color: #696cff;
+            background-color: #f8f9ff;
+        }
+    </style>
+@endpush
+
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
-            const metalContainer = document.getElementById('metal-configs');
-            const metalTemplate = document.getElementById('metal-config-template').innerHTML;
-            const diamondTemplate = document.getElementById('diamond-template').innerHTML;
+                    const metalContainer = document.getElementById('metal-configs');
+                    const metalTemplate = document.getElementById('metal-config-template').innerHTML;
+                    const diamondTemplate = document.getElementById('diamond-template').innerHTML;
 
-            // Initialize existing rows
-            const existingRows = metalContainer.querySelectorAll('.metal-config-row');
-            existingRows.forEach((row, index) => {
-                setupMetalRowResults(row, index);
-            });
-
-            document.getElementById('add-metal-config').addEventListener('click', function() {
-                const index = metalContainer.children.length + Math.floor(Math.random() *
-                    1000); // Unique index
-                const newId = 'mc_' + Date.now() + '_' + Math.floor(Math.random() *
-                    1000); // Robust client-side unique ID
-                let html = metalTemplate.replace(/INDEX/g, index).replace(/NEW_ID/g, newId);
-
-                const temp = document.createElement('div');
-                temp.innerHTML = html;
-                const metalRow = temp.firstElementChild;
-
-                setupMetalRowResults(metalRow, index);
-                metalContainer.appendChild(metalRow);
-            });
-
-            function setupMetalRowResults(metalRow, index) {
-                // Remove Metal
-                const removeMetalBtn = metalRow.querySelector('.remove-metal');
-                if (removeMetalBtn) {
-                    removeMetalBtn.onclick = () => metalRow.remove();
-                }
-
-                // Diamond Checkbox
-                const checkbox = metalRow.querySelector('.use-diamond');
-                const diamondSection = metalRow.querySelector('.diamond-section');
-                const diamondContainer = metalRow.querySelector('.diamond-rows');
-
-                if (checkbox && diamondSection) {
-                    checkbox.onchange = () => {
-                        diamondSection.style.display = checkbox.checked ? 'block' : 'none';
-                    };
-                }
-
-                // Add Diamond
-                const addDiamondBtn = metalRow.querySelector('.add-diamond');
-                if (addDiamondBtn) {
-                    addDiamondBtn.onclick = () => {
-                        const dIndex = diamondContainer.children.length + Math.floor(Math.random() * 1000);
-                        let dHtml = diamondTemplate
-                            .replace(/METAL/g, index) // Note: METAL placeholder in template is for metal index
-                            .replace(/DIAMOND/g, dIndex);
-
-                        const dTemp = document.createElement('div');
-                        dTemp.innerHTML = dHtml;
-
-                        const dRow = dTemp.firstElementChild;
-                        const removeDBtn = dRow.querySelector('.remove-diamond');
-                        if (removeDBtn) {
-                            removeDBtn.onclick = () => dRow.remove();
-                        }
-
-                        diamondContainer.appendChild(dRow);
-                    };
-                }
-
-                // Initialize existing diamond rows removal
-                if (diamondContainer) {
-                    const existingDiamonds = diamondContainer.querySelectorAll('.diamond-row');
-                    existingDiamonds.forEach(dRow => {
-                        const removeDBtn = dRow.querySelector('.remove-diamond');
-                        if (removeDBtn) {
-                            removeDBtn.onclick = () => dRow.remove();
-                        }
+                    // Initialize existing rows
+                    const existingRows = metalContainer.querySelectorAll('.metal-config-row');
+                    existingRows.forEach((row, index) => {
+                        setupMetalRowResults(row, index);
                     });
-                }
-            }
 
-        });
+                    document.getElementById('add-metal-config').addEventListener('click', function() {
+                        const index = metalContainer.children.length + Math.floor(Math.random() *
+                            1000); // Unique index
+                        const newId = 'mc_' + Date.now() + '_' + Math.floor(Math.random() *
+                            1000); // Robust client-side unique ID
+                        let html = metalTemplate.replace(/INDEX/g, index).replace(/NEW_ID/g, newId);
+
+                        const temp = document.createElement('div');
+                        temp.innerHTML = html;
+                        const metalRow = temp.firstElementChild;
+
+                        setupMetalRowResults(metalRow, index);
+                        metalContainer.appendChild(metalRow);
+                    });
+
+                    function setupMetalRowResults(metalRow, index) {
+                        // Remove Metal
+                        const removeMetalBtn = metalRow.querySelector('.remove-metal');
+                        if (removeMetalBtn) {
+                            removeMetalBtn.onclick = () => metalRow.remove();
+                        }
+
+                        // Diamond Checkbox
+                        const checkbox = metalRow.querySelector('.use-diamond');
+                        const diamondSection = metalRow.querySelector('.diamond-section');
+                        const diamondContainer = metalRow.querySelector('.diamond-rows');
+
+                        if (checkbox && diamondSection) {
+                            checkbox.onchange = () => {
+                                diamondSection.style.display = checkbox.checked ? 'block' : 'none';
+                            };
+                        }
+
+                        // Add Diamond
+                        const addDiamondBtn = metalRow.querySelector('.add-diamond');
+                        if (addDiamondBtn) {
+                            addDiamondBtn.onclick = () => {
+                                const dIndex = diamondContainer.children.length + Math.floor(Math.random() * 1000);
+                                let dHtml = diamondTemplate
+                                    .replace(/METAL/g, index) // Note: METAL placeholder in template is for metal index
+                                    .replace(/DIAMOND/g, dIndex);
+
+                                const dTemp = document.createElement('div');
+                                dTemp.innerHTML = dHtml;
+
+                                const dRow = dTemp.firstElementChild;
+                                const removeDBtn = dRow.querySelector('.remove-diamond');
+                                if (removeDBtn) {
+                                    removeDBtn.onclick = () => dRow.remove();
+                                }
+
+                                diamondContainer.appendChild(dRow);
+                            };
+                        }
+
+                        // Initialize existing diamond rows removal
+                        if (diamondContainer) {
+                            const existingDiamonds = diamondContainer.querySelectorAll('.diamond-row');
+                            existingDiamonds.forEach(dRow => {
+                                const removeDBtn = dRow.querySelector('.remove-diamond');
+                                if (removeDBtn) {
+                                    removeDBtn.onclick = () => dRow.remove();
+                                }
+                            });
+                        }
+                        // Handle removal of saved media
+                        document.querySelectorAll('.remove-saved-media').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                const path = this.getAttribute('data-path');
+                                const container = document.getElementById('deleted-media-inputs');
+
+                                // Create hidden input
+                                const input = document.createElement('input');
+                                input.type = 'hidden';
+                                input.name = 'deleted_additional_images[]';
+                                input.value = path;
+                                container.appendChild(input);
+
+                                // Remove preview
+                                this.closest('.media-item').remove();
+                            });
+                        });
+
+                    });
     </script>
 @endpush

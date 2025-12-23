@@ -1,65 +1,12 @@
 @font-face {
-    font-family: 'Myriad Pro';
-    src: url('fonts/MyriadPro-Regular.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Monbaiti';
-    src: url('fonts/monbaiti.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Microsoft Yi Baiti';
-    src: url('fonts/msyi.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Segoe Print';
-    src: url('fonts/segoepr.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Playfair Display SC';
-    src: url('fonts/PlayfairDisplaySC-Black.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Playfair Display SC Regular';
-    src: url('fonts/PlayfairDisplaySC-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
     font-family: 'Playfair Display SC Bold';
-    src: url('fonts/PlayfairDisplaySC-Bold.ttf') format('truetype');
+    src: url('fonts/playfair-display.bold.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
-@font-face {
-    font-family: 'Playfair Display SC Italic';
-    src: url('fonts/PlayfairDisplaySC-BlackItalic.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
 
-@font-face {
-    font-family: 'Playfair Display SC Bold Italic';
-    src: url('fonts/PlayfairDisplaySC-BoldItalic.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
+
 
 @font-face {
     font-family: 'Satoshi';
@@ -89,10 +36,11 @@ body {
 }
 
 h2 {
-    font-size: 50px;
+    font-size: 45px;
     font-family: 'Playfair Display SC Bold', sans-serif;
     font-weight: normal;
     margin: 0;
+    text-transform: uppercase;
 }
 
 h3 {
@@ -470,6 +418,7 @@ img {
             justify-content: center;
             z-index: 10;
             transition: all 0.3s ease;
+            display: none;
 
             img {
                 width: 65%;
@@ -523,6 +472,10 @@ img {
             height: 130px;
             border-radius: 100%;
             object-fit: contain;
+        }
+
+        h3 {
+            font-size: 16px;
         }
     }
 
@@ -1314,12 +1267,13 @@ img {
 
             h2 {
                 font-size: 32px;
-                word-spacing: -5px;
+                word-spacing: 3px;
                 color: black;
                 font-weight: 700;
                 line-height: normal;
                 margin-bottom: 20px;
                 font-family: 'Playfair Display SC Bold', sans-serif;
+                text-transform: unset;
 
             }
 

@@ -45,23 +45,32 @@
                                     <input type="text" name="delivery_time" class="form-control">
                                 </div>
 
-                                <div class="mb-3 col-md-6">
+                                <div class="mb-3 col-md-12">
                                     <label class="form-label">Colors</label>
-                                    <select name="colors[]" class="form-select" multiple>
+                                    <div class="d-flex flex-wrap gap-3 p-3 border rounded bg-light">
                                         @foreach ($colors as $color)
-                                            <option value="{{ $color->id }}">{{ $color->color_name }}</option>
+                                            <div class="form-check custom-color-plate">
+                                                <input class="form-check-input" type="checkbox" name="colors[]"
+                                                    value="{{ $color->id }}" id="color_{{ $color->id }}">
+                                                <label class="form-check-label fw-semibold" for="color_{{ $color->id }}">
+                                                    <span class="color-circle"
+                                                        style="background-color: {{ $color->color_code }};"></span>
+                                                    {{ $color->color_name }}
+                                                </label>
+                                            </div>
                                         @endforeach
-                                    </select>
+                                    </div>
                                 </div>
 
                                 <div class="mb-3 col-md-6">
-                                    <label class="form-label">Main Image</label>
+                                    <label class="form-label">Main Image(1:1 Aspect Ratio)</label>
                                     <input type="file" name="main_image" class="form-control" required>
                                 </div>
 
                                 <div class="mb-3 col-md-6">
-                                    <label class="form-label">Additional Images</label>
-                                    <input type="file" name="additional_images[]" class="form-control" multiple>
+                                    <label class="form-label">Additional Media (Images/Videos-1:1 Aspect Ratio)</label>
+                                    <input type="file" name="additional_images[]" class="form-control" multiple
+                                        accept="image/*,video/*">
                                 </div>
 
                             </div>
@@ -211,6 +220,62 @@
         </div>
     </template>
 @endsection
+
+@push('styles')
+    <style>
+        .custom-color-plate {
+            display: inline-block;
+            cursor: pointer;
+            margin-bottom: 0;
+            user-select: none;
+        }
+
+        .custom-color-plate .form-check-input {
+            display: none;
+        }
+
+        .custom-color-plate .form-check-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-width: 100px;
+            gap: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .color-circle {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            display: inline-block;
+        }
+
+        .custom-color-plate .form-check-input:checked+.form-check-label {
+            border-color: #696cff;
+            background-color: #696cff;
+            color: #fff;
+            box-shadow: 0 4px 8px rgba(105, 108, 255, 0.2);
+        }
+
+        .custom-color-plate .form-check-input:checked+.form-check-label .color-circle {
+            border-color: #fff;
+        }
+
+        .custom-color-plate .form-check-label:hover {
+            border-color: #696cff;
+            background-color: #f8f9ff;
+        }
+    </style>
+@endpush
 
 @push('scripts')
     <script>

@@ -56,6 +56,13 @@
             </a>
         </li>
 
+        <li class="menu-item {{ Request::routeIs('admin.colors.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.colors.index') }}" class="menu-link">
+                <i class='menu-icon tf-icons bx bx-palette'></i>
+                <div data-i18n="manageColor">Manage Colors</div>
+            </a>
+        </li>
+
 
         <!-- Product -->
         <li class="menu-header small text-uppercase">

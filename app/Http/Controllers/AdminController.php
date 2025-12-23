@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Material;
 use App\Models\WhyChoose;
 use App\Models\Size;
+use App\Models\Color;
 
 class AdminController extends Controller
 {
@@ -343,6 +344,68 @@ class AdminController extends Controller
             return redirect()->back()->with('success', 'Size deleted successfully');
         } catch (\Exception $e) {
             Log::error('Size Delete Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong!');
+        }
+    }
+
+
+    // Color ==================================================================================================================================>
+    public function adminColorsView()
+    {
+        $colors = Color::orderBy('id', 'desc')->paginate(10);
+        return view('admin.color.index', compact('colors'));
+    }
+
+    public function colorStore(Request $request)
+    {
+        try {
+            $request->validate([
+                'color_name' => 'required|string|max:255|unique:colors,color_name',
+                'color_code' => 'nullable|string|max:7',
+            ]);
+
+            Color::create([
+                'color_name' => $request->color_name,
+                'color_code' => $request->color_code ?? '#000000',
+            ]);
+
+            return redirect()->back()->with('success', 'Color added successfully');
+        } catch (\Exception $e) {
+            Log::error('Color Store Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function colorUpdate(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'color_name' => 'required|string|max:255|unique:colors,color_name,' . $id,
+                'color_code' => 'nullable|string|max:7',
+            ]);
+
+            $color = Color::findOrFail($id);
+            $color->update([
+                'color_name' => $request->color_name,
+                'color_code' => $request->color_code ?? '#000000',
+            ]);
+
+            return redirect()->back()->with('success', 'Color updated successfully');
+        } catch (\Exception $e) {
+            Log::error('Color Update Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong!');
+        }
+    }
+
+    public function colorDelete($id)
+    {
+        try {
+            $color = Color::findOrFail($id);
+            $color->delete();
+
+            return redirect()->back()->with('success', 'Color deleted successfully');
+        } catch (\Exception $e) {
+            Log::error('Color Delete Error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong!');
         }
     }

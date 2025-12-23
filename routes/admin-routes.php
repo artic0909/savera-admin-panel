@@ -41,6 +41,13 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('/admin/sizes/delete/{id}', [AdminController::class, 'sizeDelete'])->name('admin.sizes.delete');
 
 
+    // Colors
+    Route::get('/admin/colors', [AdminController::class, 'adminColorsView'])->name('admin.colors.index');
+    Route::post('/admin/colors/store', [AdminController::class, 'colorStore'])->name('admin.colors.store');
+    Route::post('/admin/colors/update/{id}', [AdminController::class, 'colorUpdate'])->name('admin.colors.update');
+    Route::post('/admin/colors/delete/{id}', [AdminController::class, 'colorDelete'])->name('admin.colors.delete');
+
+
     // Products
     // Route::get('/admin/products/add', [AdminController::class, 'addProductView'])->name('admin.products.add');
     // Route::get('/admin/products/edit', [AdminController::class, 'editProductView'])->name('admin.products.edit');
