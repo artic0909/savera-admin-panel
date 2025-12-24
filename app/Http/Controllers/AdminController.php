@@ -606,4 +606,22 @@ class AdminController extends Controller
         $seo->delete();
         return redirect()->back()->with('success', 'SEO Setting deleted successfully.');
     }
+
+    // Stock Notifications
+    public function stockNotifications()
+    {
+        $notifications = \App\Models\ProductNotification::with(['product', 'customer'])
+            ->latest()
+            ->paginate(15);
+
+        return view('admin.inventory.notifications', compact('notifications'));
+    }
+
+    public function updateNotificationStatus(Request $request, $id)
+    {
+        $notification = \App\Models\ProductNotification::findOrFail($id);
+        $notification->update(['status' => $request->status]);
+
+        return redirect()->back()->with('success', 'Notification status updated.');
+    }
 }

@@ -75,9 +75,12 @@ class ProductController extends Controller
                 'main_image' => 'required|image|mimes:jpeg,png,jpg,gif,webp',
                 'additional_images.*' => 'nullable|mimes:jpeg,png,jpg,gif,webp,mp4,mov,ogg,wmv,avi,flv,mkv,webm',
                 'delivery_time' => 'required|string',
+                'stock_quantity' => 'required|numeric|min:0',
+                'is_active' => 'sometimes|boolean',
             ]);
 
             $data = $request->all();
+            $data['is_active'] = $request->has('is_active');
 
             // Handle File Uploads
             if ($request->hasFile('main_image')) {
@@ -179,9 +182,12 @@ class ProductController extends Controller
                 'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp',
                 'additional_images.*' => 'nullable|mimes:jpeg,png,jpg,gif,webp,mp4,mov,ogg,wmv,avi,flv,mkv,webm',
                 'delivery_time' => 'required|string',
+                'stock_quantity' => 'required|numeric|min:0',
+                'is_active' => 'sometimes|boolean',
             ]);
 
             $data = $request->except(['main_image', 'additional_images', 'deleted_additional_images']);
+            $data['is_active'] = $request->has('is_active');
 
             if ($request->hasFile('main_image')) {
                 $data['main_image'] = $request->file('main_image')->store('products', 'public');

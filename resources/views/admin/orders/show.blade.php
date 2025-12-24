@@ -27,6 +27,7 @@
                             @elseif($order->status == 'processing') info
                             @elseif($order->status == 'shipped') primary
                             @elseif($order->status == 'delivered') success
+                            @elseif($order->status == 'returned') secondary
                             @else danger @endif
                         ">{{ ucfirst($order->status) }}</span>
                     </div>
@@ -150,6 +151,8 @@
                                     </option>
                                     <option value="delivered" {{ $order->status == 'delivered' ? 'selected' : '' }}>
                                         Delivered</option>
+                                    <option value="returned" {{ $order->status == 'returned' ? 'selected' : '' }}>
+                                        Returned</option>
                                     <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>
                                         Cancelled</option>
                                 </select>

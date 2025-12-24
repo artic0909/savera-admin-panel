@@ -128,6 +128,13 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Your cart is empty!');
         }
 
+        // Validate stock availability before proceeding
+        foreach ($cartItems as $item) {
+            if ($item->product->stock_quantity < $item->quantity) {
+                return redirect()->back()->with('error', 'Insufficient stock for product: ' . $item->product->product_name);
+            }
+        }
+
         DB::beginTransaction();
 
         try {
@@ -221,6 +228,9 @@ class CheckoutController extends Controller
                     'price' => $cartItem->price_at_addition,
                     'subtotal' => $cartItem->subtotal,
                 ]);
+
+                // Deduct stock
+                $cartItem->product->decrement('stock_quantity', $cartItem->quantity);
             }
 
             // Save address if requested

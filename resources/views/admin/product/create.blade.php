@@ -45,6 +45,20 @@
                                     <input type="text" name="delivery_time" class="form-control">
                                 </div>
 
+                                <div class="mb-3 col-md-6">
+                                    <label class="form-label">Stock Quantity</label>
+                                    <input type="number" name="stock_quantity" class="form-control" value="0"
+                                        min="0">
+                                </div>
+
+                                <div class="mb-3 col-md-6 d-flex align-items-center mt-4">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="is_active" id="is_active"
+                                            checked value="1">
+                                        <label class="form-check-label fw-bold" for="is_active">Product Active</label>
+                                    </div>
+                                </div>
+
                                 <div class="mb-3 col-md-12">
                                     <label class="form-label">Colors</label>
                                     <div class="d-flex flex-wrap gap-3 p-3 border rounded bg-light">
@@ -132,7 +146,8 @@
 
                     <div class="col-md-2">
                         <label class="form-label">Gross Wt (gm)</label>
-                        <input type="text" name="metal_configurations[INDEX][gross_weight_product]" class="form-control">
+                        <input type="text" name="metal_configurations[INDEX][gross_weight_product]"
+                            class="form-control">
                     </div>
 
                     <div class="col-md-2">

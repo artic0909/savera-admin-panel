@@ -16,6 +16,8 @@ class Product extends Model
         'delivery_time',
         'colors',
         'metal_configurations',
+        'stock_quantity',
+        'is_active',
     ];
 
     protected $casts = [

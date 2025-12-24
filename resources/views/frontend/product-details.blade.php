@@ -497,18 +497,33 @@
                                 </div>
                             </div>
                             <div class="btns">
-                                @if (Auth::guard('customer')->check())
-                                    <button type="button" onclick="addToCart()" style="cursor: pointer;">ADD TO
-                                        CART</button>
+                                @if ($product->stock_quantity > 0)
+                                    @if (Auth::guard('customer')->check())
+                                        <button type="button" onclick="addToCart()" style="cursor: pointer;">ADD TO
+                                            CART</button>
 
-                                    <button type="button" onclick="buyNow()"
-                                        style="cursor: pointer; background: white; color: #000; border: 2px solid #000;">BUY
-                                        NOW</button>
+                                        <button type="button" onclick="buyNow()"
+                                            style="cursor: pointer; background: white; color: #000; border: 2px solid #000;">BUY
+                                            NOW</button>
+                                    @else
+                                        <a href="{{ route('login') }}"
+                                            style="display: block; text-align: center; text-decoration: none; color: inherit;">
+                                            <button type="button">LOGIN TO ADD TO CART</button>
+                                        </a>
+                                    @endif
                                 @else
-                                    <a href="{{ route('login') }}"
-                                        style="display: block; text-align: center; text-decoration: none; color: inherit;">
-                                        <button type="button">LOGIN TO ADD TO CART</button>
-                                    </a>
+                                    @if ($alreadyRequested)
+                                        <button type="button" disabled
+                                            style="cursor: default; background: #607d8b; color: white; border: none; width: 100%; border-radius: 5px; font-weight: bold; padding: 15px;">
+                                            <i class="fi fi-rr-check" style="margin-right: 8px;"></i> ALREADY REQUESTED
+                                        </button>
+                                    @else
+                                        <button type="button" onclick="showNotifyModal()" id="notify-me-btn"
+                                            style="cursor: pointer; background: #ff9800; color: white; border: none; width: 100%; border-radius: 5px; font-weight: bold; padding: 15px;">
+                                            <i class="fi fi-rr-bell" style="margin-right: 8px;"></i> NOTIFY ME WHEN
+                                            AVAILABLE
+                                        </button>
+                                    @endif
                                 @endif
                             </div>
                             {{-- <p class="p2">
@@ -860,6 +875,47 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
         });
     </script>
 
+    <!-- Notify Me Modal -->
+    <div id="notifyModal" class="notify-modal"
+        style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center;">
+        <div class="notify-modal-content"
+            style="background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 450px; position: relative; box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
+            <span onclick="closeNotifyModal()"
+                style="position: absolute; right: 20px; top: 15px; font-size: 24px; cursor: pointer; color: #999;">&times;</span>
+            <div class="text-center mb-4">
+                <div
+                    style="background: #fff5e6; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                    <i class="fi fi-rr-bell" style="font-size: 30px; color: #ff9800;"></i>
+                </div>
+                <h4 style="font-weight: 700; margin-bottom: 10px; text-align: center;">Notify Me</h4>
+                <p class="text-muted" style="font-size: 14px; text-align: center;">We'll message you on WhatsApp as soon
+                    as <strong>{{ $product->product_name }}</strong> is back in stock.</p>
+            </div>
+            <form id="notifyForm">
+                @csrf
+                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                <div class="mb-4">
+                    <label class="form-label"
+                        style="font-weight: 600; font-size: 12px; text-transform: uppercase; color: #666; display: block; margin-bottom: 8px;">WhatsApp
+                        Number</label>
+                    <div style="position: relative;">
+                        <input type="text" name="phone_number" class="form-control"
+                            placeholder="Enter your WhatsApp number" required
+                            style="width: 100%; height: 50px; border-radius: 12px; border: 1.5px solid #eee; padding: 0 15px;">
+                    </div>
+                </div>
+                <button type="submit" id="notifySubmitBtn"
+                    style="width: 100%; height: 50px; background: #312110; color: white; border: none; border-radius: 12px; font-weight: 600; transition: all 0.3s; cursor: pointer;">
+                    SEND NOTIFICATION REQUEST
+                </button>
+            </form>
+            <div id="notifySuccess" style="display: none; text-align: center; margin-top: 20px;">
+                <div class="alert alert-success"
+                    style="background: #e8f5e9; color: #2e7d32; border: none; border-radius: 12px; padding: 15px;">Request
+                    saved successfully! We'll notify you soon.</div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -1385,6 +1441,86 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                     messageDiv.innerHTML = '<span style="color: red;">❌ Error checking pincode</span>';
                 });
         };
+
+        window.showNotifyModal = function() {
+            document.getElementById('notifyModal').style.display = 'flex';
+        };
+
+        window.closeNotifyModal = function() {
+            document.getElementById('notifyModal').style.display = 'none';
+        };
+
+        window.onclick = function(event) {
+            let modal = document.getElementById('notifyModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        };
+
+        document.getElementById('notifyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let btn = document.getElementById('notifySubmitBtn');
+            let originalTxt = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'SAVING...';
+
+            let formData = new FormData(this);
+            fetch('{{ route('product.notify') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('notifyForm').style.display = 'none';
+                        document.getElementById('notifySuccess').style.display = 'block';
+
+                        // Update the main button text and behavior
+                        let mainBtn = document.getElementById('notify-me-btn');
+                        if (mainBtn) {
+                            mainBtn.innerHTML =
+                                '<i class="fi fi-rr-check" style="margin-right: 8px;"></i> ALREADY REQUESTED';
+                            mainBtn.onclick = null;
+                            mainBtn.disabled = true;
+                            mainBtn.style.cursor = 'default';
+                            mainBtn.style.background = '#607d8b';
+                        }
+
+                        setTimeout(() => {
+                            closeNotifyModal();
+                        }, 3000);
+                    } else {
+                        if (data.already_exists) {
+                            alert(data.message);
+                            closeNotifyModal();
+                            // Update button anyway if it exists
+                            let mainBtn = document.getElementById('notify-me-btn');
+                            if (mainBtn) {
+                                mainBtn.innerHTML =
+                                    '<i class="fi fi-rr-check" style="margin-right: 8px;"></i> ALREADY REQUESTED';
+                                mainBtn.onclick = null;
+                                mainBtn.disabled = true;
+                                mainBtn.style.cursor = 'default';
+                                mainBtn.style.background = '#607d8b';
+                            }
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                        btn.disabled = false;
+                        btn.textContent = originalTxt;
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Something went wrong. Please try again.');
+                    btn.disabled = false;
+                    btn.textContent = originalTxt;
+                });
+        });
     </script>
     <style>
         .metal-btn.active {

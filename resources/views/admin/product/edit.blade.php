@@ -42,6 +42,19 @@
                                     <input class="form-control" type="text" id="delivery_time" name="delivery_time"
                                         value="{{ old('delivery_time', $product->delivery_time) }}" required />
                                 </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="stock_quantity" class="form-label">Stock Quantity</label>
+                                    <input class="form-control" type="number" id="stock_quantity" name="stock_quantity"
+                                        value="{{ old('stock_quantity', $product->stock_quantity) }}" min="0"
+                                        required />
+                                </div>
+                                <div class="mb-3 col-md-6 d-flex align-items-center mt-4">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="is_active" id="is_active"
+                                            {{ $product->is_active ? 'checked' : '' }} value="1">
+                                        <label class="form-check-label fw-bold" for="is_active">Product Active</label>
+                                    </div>
+                                </div>
                                 <div class="mb-3 col-md-12">
                                     <label class="form-label">Colors</label>
                                     @php $selectedColors = $product->colors ?? []; @endphp

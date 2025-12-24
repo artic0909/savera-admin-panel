@@ -66,6 +66,7 @@ class Order extends Model
             'shipped' => 'primary',
             'delivered' => 'success',
             'cancelled' => 'danger',
+            'returned' => 'secondary',
             default => 'secondary',
         };
     }

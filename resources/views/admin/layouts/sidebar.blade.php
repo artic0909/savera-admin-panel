@@ -104,6 +104,27 @@
             </a>
         </li>
 
+        <li class="menu-item {{ Request::routeIs('admin.inventory.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.inventory.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-collection"></i>
+                <div data-i18n="Inventory">Inventory</div>
+            </a>
+        </li>
+
+        <li class="menu-item {{ Request::routeIs('admin.stock-notifications.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.stock-notifications.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-bell"></i>
+                <div data-i18n="StockNotifications">Stock Notifications</div>
+            </a>
+        </li>
+
+        <li class="menu-item {{ Request::routeIs('admin.reports.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.reports.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
+                <div data-i18n="Reports">Reports & Exports</div>
+            </a>
+        </li>
+
         <!-- Setting -->
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Settings</span>

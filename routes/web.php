@@ -23,6 +23,7 @@ Route::get('/search-product', [FrontendController::class, 'searchProduct'])->nam
 // API endpoints
 Route::post('/api/check-pincode', [FrontendController::class, 'checkPincode'])->name('api.checkPincode');
 Route::post('/api/check-coupon', [FrontendController::class, 'checkCoupon'])->name('api.checkCoupon');
+Route::post('/api/product-notify', [FrontendController::class, 'notifyProduct'])->name('product.notify');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

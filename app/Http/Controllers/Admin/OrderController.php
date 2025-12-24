@@ -62,11 +62,27 @@ class OrderController extends Controller
     {
         try {
             $request->validate([
-                'status' => 'required|in:pending,processing,shipped,delivered,cancelled'
+                'status' => 'required|in:pending,processing,shipped,delivered,cancelled,returned'
             ]);
 
-            $order = Order::findOrFail($id);
-            $order->status = $request->status;
+            $order = Order::with('items')->findOrFail($id);
+            $oldStatus = $order->status;
+            $newStatus = $request->status;
+
+            // Logic to restore stock if order is cancelled or returned
+            if (in_array($newStatus, ['cancelled', 'returned']) && !in_array($oldStatus, ['cancelled', 'returned'])) {
+                foreach ($order->items as $item) {
+                    $item->product->increment('stock_quantity', $item->quantity);
+                }
+            }
+            // Logic to re-deduct stock if order is restored from cancelled/returned (optional but good)
+            elseif (!in_array($newStatus, ['cancelled', 'returned']) && in_array($oldStatus, ['cancelled', 'returned'])) {
+                foreach ($order->items as $item) {
+                    $item->product->decrement('stock_quantity', $item->quantity);
+                }
+            }
+
+            $order->status = $newStatus;
             $order->save();
 
             return redirect()->back()->with('success', 'Order status updated successfully!');

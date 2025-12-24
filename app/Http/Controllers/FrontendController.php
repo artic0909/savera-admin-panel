@@ -19,7 +19,7 @@ class FrontendController extends Controller
 
         $products = collect();
         if ($selectedCategory) {
-            $products = Product::where('category_id', $selectedCategory->id)->take(10)->get();
+            $products = Product::where('category_id', $selectedCategory->id)->where('is_active', true)->take(10)->get();
         }
 
         return view('frontend.home', compact('categories', 'selectedCategory', 'products', 'chooses'));
@@ -28,7 +28,7 @@ class FrontendController extends Controller
     public function ajaxProducts(Request $request)
     {
         $categoryId = $request->input('category_id');
-        $query = Product::where('category_id', $categoryId);
+        $query = Product::where('category_id', $categoryId)->where('is_active', true);
 
         // 1. Get all candidates from DB (filtering by category)
         // We will filter by other attributes in memory because they are in complex JSON or computed.
@@ -101,7 +101,7 @@ class FrontendController extends Controller
     public function category($slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
-        $products = Product::where('category_id', $category->id)->get();
+        $products = Product::where('category_id', $category->id)->where('is_active', true)->get();
         // Pass filter options
         $materials = \App\Models\Material::all();
         $shapes = \App\Models\Shape::all();
@@ -114,7 +114,7 @@ class FrontendController extends Controller
 
     public function productDetails($slug)
     {
-        $product = Product::with('category')->where('slug', $slug)->firstOrFail();
+        $product = Product::with('category')->where('slug', $slug)->where('is_active', true)->firstOrFail();
 
         $materials = \App\Models\Material::all();
         $shapes = \App\Models\Shape::all();
@@ -125,6 +125,7 @@ class FrontendController extends Controller
 
         // Similar Products Logic (same category, excluding current)
         $similarProducts = Product::where('category_id', $product->category_id)
+            ->where('is_active', true)
             ->where('id', '!=', $product->id)
             ->take(4)
             ->get();
@@ -140,7 +141,16 @@ class FrontendController extends Controller
         // Fetch active coupons
         $coupons = \App\Models\Coupon::active()->get();
 
-        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'styles', 'sizes', 'colors', 'similarProducts', 'wishlistItem', 'categories', 'coupons'))->with(['pageclass' => 'hedersolution bg-1']);
+        // Check if customer already requested stock notification
+        $alreadyRequested = false;
+        if (\Illuminate\Support\Facades\Auth::guard('customer')->check()) {
+            $alreadyRequested = \App\Models\ProductNotification::where('customer_id', \Illuminate\Support\Facades\Auth::guard('customer')->id())
+                ->where('product_id', $product->id)
+                ->where('status', 'pending')
+                ->exists();
+        }
+
+        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'styles', 'sizes', 'colors', 'similarProducts', 'wishlistItem', 'categories', 'coupons', 'alreadyRequested'))->with(['pageclass' => 'hedersolution bg-1']);
     }
 
     /**
@@ -225,7 +235,9 @@ class FrontendController extends Controller
         $products = collect();
 
         if ($search) {
-            $products = Product::where('product_name', 'like', '%' . $search . '%')->get();
+            $products = Product::where('product_name', 'like', '%' . $search . '%')
+                ->where('is_active', true)
+                ->get();
         }
 
         // Fetch categories for layout if needed (mimicking other methods typically, 
@@ -239,4 +251,46 @@ class FrontendController extends Controller
         return view('frontend.search-product', compact('products', 'search', 'categories'))->with(['pageclass' => 'hedersolution bg-1']);
     }
 
+    public function notifyProduct(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'phone_number' => 'required|string|max:20',
+        ]);
+
+        $customerId = \Illuminate\Support\Facades\Auth::guard('customer')->id();
+
+        // Check if already exists for this phone or customer
+        $query = \App\Models\ProductNotification::where('product_id', $request->product_id)
+            ->where('status', 'pending');
+
+        if ($customerId) {
+            $query->where(function ($q) use ($customerId, $request) {
+                $q->where('customer_id', $customerId)
+                    ->orWhere('phone_number', $request->phone_number);
+            });
+        } else {
+            $query->where('phone_number', $request->phone_number);
+        }
+
+        if ($query->exists()) {
+            return response()->json([
+                'success' => false,
+                'already_exists' => true,
+                'message' => 'You have already requested for this item; when it\'s available we will inform you.'
+            ]);
+        }
+
+        \App\Models\ProductNotification::create([
+            'product_id' => $request->product_id,
+            'customer_id' => $customerId,
+            'phone_number' => $request->phone_number,
+            'status' => 'pending',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Thank you! We will notify you when this product is back in stock.'
+        ]);
+    }
 }

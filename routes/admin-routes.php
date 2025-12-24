@@ -89,6 +89,17 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('/admin/whychoose/delete/{id}', [AdminController::class, 'whyChooseDelete'])->name('admin.whychoose.delete');
 
 
+    // Inventory & Stock Management
+    Route::get('/admin/inventory', [App\Http\Controllers\Admin\InventoryController::class, 'index'])->name('admin.inventory.index');
+    Route::post('/admin/inventory/update-stock', [App\Http\Controllers\Admin\InventoryController::class, 'updateStock'])->name('admin.inventory.updateStock');
+    Route::get('/admin/stock-notifications', [AdminController::class, 'stockNotifications'])->name('admin.stock-notifications.index');
+    Route::post('/admin/stock-notifications/{id}/status', [AdminController::class, 'updateNotificationStatus'])->name('admin.stock-notifications.updateStatus');
+
+    // Reports & Exports
+    Route::get('/admin/reports', [App\Http\Controllers\Admin\ReportController::class, 'index'])->name('admin.reports.index');
+    Route::get('/admin/reports/export', [App\Http\Controllers\Admin\ReportController::class, 'export'])->name('admin.reports.export');
+
+
     // Profile ==================================================================================================================================>
     Route::get('/admin/profile', [AdminController::class, 'adminProfileView'])->name('admin.profile');
     Route::post('/admin/profile/update', [AdminController::class, 'adminUpdateProfile'])->name('admin.profile.update');
