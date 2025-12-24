@@ -30,7 +30,11 @@
                                         <img src="{{ asset('storage/' . $product->main_image) }}" alt="Product Image"
                                             width="50" height="50" class="rounded-circle">
                                     </td>
-                                    <td>{{ $product->product_name }}</td>
+                                    <td>
+                                        {{ strlen($product->product_name) > 20 ? substr($product->product_name, 0, 20) . '...' : $product->product_name }}
+                                    </td>
+
+                                    </td>
                                     <td>{{ $product->category->name }}</td>
                                     <td>
                                         @if ($product->is_active)

@@ -35,7 +35,8 @@
                                             alt="{{ $notification->product->product_name }}" class="rounded me-3"
                                             width="40" height="40" style="object-fit: cover;">
                                         <div>
-                                            <span class="fw-bold d-block">{{ $notification->product->product_name }}</span>
+                                            <span
+                                                class="fw-bold d-block">{{ strlen($notification->product->product_name) > 20 ? substr($notification->product->product_name, 0, 20) . '...' : $notification->product->product_name }}</span>
                                             <small class="text-muted">Stock:
                                                 {{ $notification->product->stock_quantity }}</small>
                                         </div>

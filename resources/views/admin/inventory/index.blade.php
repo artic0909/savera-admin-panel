@@ -54,7 +54,8 @@
                                             alt="{{ $product->product_name }}" class="rounded me-3" width="40"
                                             height="40" style="object-fit: cover;">
                                         <div>
-                                            <span class="fw-bold d-block">{{ $product->product_name }}</span>
+                                            <span class="fw-bold d-block">
+                                                {{ strlen($product->product_name) > 20 ? substr($product->product_name, 0, 20) . '...' : $product->product_name }}</span>
                                             <small class="text-muted">ID: #{{ $product->id }}</small>
                                         </div>
                                     </div>
