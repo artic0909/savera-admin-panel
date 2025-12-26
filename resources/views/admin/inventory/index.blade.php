@@ -79,6 +79,8 @@
                                             <div class="d-flex gap-2">
                                                 {{-- <small class="text-muted">ID: #{{ $product->id }}</small> --}}
                                                 <small class="text-primary fw-bold">SKU: {{ $product->sku }}</small>
+                                                <small class="text-muted">| Stock: <span class="stock-display"
+                                                        data-id="{{ $product->id }}">{{ $product->stock_quantity }}</span></small>
                                             </div>
                                         </div>
                                     </div>
@@ -183,21 +185,23 @@
                             if (data.success) {
                                 const display = document.querySelector(
                                     `.stock-display[data-id="${id}"]`);
-                                display.innerText = data.new_stock;
+                                if (display) display.innerText = data.new_stock;
 
                                 // Update the status badge if needed
                                 const row = this.closest('tr');
-                                const badge = row.querySelector('td:nth-child(4) .badge');
+                                const badge = row.querySelector('td:nth-child(3) .badge');
 
-                                if (data.new_stock <= 0) {
-                                    badge.className = 'badge bg-label-danger';
-                                    badge.innerText = 'Out of Stock';
-                                } else if (data.new_stock <= 5) {
-                                    badge.className = 'badge bg-label-warning';
-                                    badge.innerText = 'Low Stock';
-                                } else {
-                                    badge.className = 'badge bg-label-success';
-                                    badge.innerText = 'In Stock';
+                                if (badge) {
+                                    if (data.new_stock <= 0) {
+                                        badge.className = 'badge bg-label-danger';
+                                        badge.innerText = 'Out of Stock';
+                                    } else if (data.new_stock <= 5) {
+                                        badge.className = 'badge bg-label-warning';
+                                        badge.innerText = 'Low Stock';
+                                    } else {
+                                        badge.className = 'badge bg-label-success';
+                                        badge.innerText = 'In Stock';
+                                    }
                                 }
 
                                 Swal.fire({

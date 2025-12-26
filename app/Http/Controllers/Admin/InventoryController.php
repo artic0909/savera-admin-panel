@@ -49,36 +49,36 @@ class InventoryController extends Controller
         $product = Product::findOrFail($request->product_id);
         $configs = $product->metal_configurations;
 
-        if (is_array($configs)) {
-            // Traverse the configs to find and update MRP
-            // The structure can be flat or nested by metal/size as seen in edit.blade.php logic
-
-            // Helper to update MRP in a nested or flat array
-            $updated = false;
-            foreach ($configs as &$item) {
-                if (is_array($item)) {
-                    if (isset($item['mrp'])) {
-                        $item['mrp'] = $request->mrp;
-                        $updated = true;
-                    } else {
-                        // Check one level deeper for nested configs
-                        foreach ($item as &$subItem) {
-                            if (is_array($subItem) && isset($subItem['mrp'])) {
-                                $subItem['mrp'] = $request->mrp;
-                                $updated = true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if ($updated) {
-                $product->metal_configurations = $configs;
-                $product->save();
-                return response()->json(['success' => true, 'message' => 'MRP updated successfully!', 'new_mrp' => $request->mrp]);
-            }
+        if (empty($configs) || !is_array($configs)) {
+            return response()->json(['success' => false, 'message' => 'This product has no configurations to update. Please edit the product to add configurations first.']);
         }
 
-        return response()->json(['success' => false, 'message' => 'No MRP found to update in configurations.']);
+        $updatedCount = 0;
+
+        // Recursive function to update MRP in any structure
+        $updateMrpRecursive = function (&$array) use (&$updateMrpRecursive, &$updatedCount, $request) {
+            if (!is_array($array)) return;
+
+            if (isset($array['mrp'])) {
+                $array['mrp'] = $request->mrp;
+                $updatedCount++;
+            }
+
+            foreach ($array as &$value) {
+                if (is_array($value)) {
+                    $updateMrpRecursive($value);
+                }
+            }
+        };
+
+        $updateMrpRecursive($configs);
+
+        if ($updatedCount > 0) {
+            $product->metal_configurations = $configs;
+            $product->save();
+            return response()->json(['success' => true, 'message' => 'MRP updated successfully across all configurations!', 'new_mrp' => $request->mrp]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'No MRP field found in current configurations to update.']);
     }
 }

@@ -542,6 +542,94 @@
                             <div id="pincode-message" style="margin-top: 10px; font-weight: bold;"></div>
 
                             <p class="cat">Category: <span>{{ $product->category->name }}</span></p>
+
+                            {{-- Share Buttons --}}
+                            <div class="share-product mt-4">
+                                <p style="font-weight: 600; margin-bottom: 10px; font-size: 14px; color: #555;">SHARE THIS
+                                    PRODUCT</p>
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    <button type="button" onclick="copyProductLink()" id="copy-link-btn"
+                                        style="background: #f5f5f5; border: 1px solid #ddd; padding: 8px 15px; border-radius: 50px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #333; transition: all 0.3s ease;">
+                                        <i class="fi fi-rr-copy"></i> <span id="copy-text">Copy Link</span>
+                                    </button>
+
+                                    <a href="https://wa.me/?text={{ urlencode($product->product_name . ' - ' . route('product.show', $product->slug)) }}"
+                                        target="_blank"
+                                        style="background: #25D366; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.2s;"
+                                        onmouseover="this.style.transform='scale(1.1)'"
+                                        onmouseout="this.style.transform='scale(1)'">
+                                        <i class="fi fi-brands-whatsapp" style="font-size: 18px; margin-top: 4px;"></i>
+                                    </a>
+
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('product.show', $product->slug)) }}"
+                                        target="_blank"
+                                        style="background: #1877F2; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.2s;"
+                                        onmouseover="this.style.transform='scale(1.1)'"
+                                        onmouseout="this.style.transform='scale(1)'">
+                                        <i class="fi fi-brands-facebook" style="font-size: 18px; margin-top: 4px;"></i>
+                                    </a>
+
+                                    <a href="https://twitter.com/intent/tweet?text={{ urlencode($product->product_name) }}&url={{ urlencode(route('product.show', $product->slug)) }}"
+                                        target="_blank"
+                                        style="background: #000; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.2s;"
+                                        onmouseover="this.style.transform='scale(1.1)'"
+                                        onmouseout="this.style.transform='scale(1)'">
+                                        <i class="fi fi-brands-twitter" style="font-size: 18px; margin-top: 4px;"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <script>
+                                function copyProductLink() {
+                                    const url = window.location.href;
+                                    const btn = document.getElementById('copy-link-btn');
+                                    const textSpan = document.getElementById('copy-text');
+                                    const icon = btn.querySelector('i');
+
+                                    if (navigator.clipboard) {
+                                        navigator.clipboard.writeText(url).then(() => {
+                                            const originalHTML = btn.innerHTML;
+                                            btn.innerHTML =
+                                                '<i class="fi fi-rr-check" style="color: #28a745;"></i> <span style="color: #28a745;">Copied!</span>';
+                                            btn.style.borderColor = '#28a745';
+
+                                            setTimeout(() => {
+                                                btn.innerHTML = '<i class="fi fi-rr-copy"></i> <span>Copy Link</span>';
+                                                btn.style.borderColor = '#ddd';
+                                            }, 2000);
+                                        }).catch(err => {
+                                            console.error('Failed to copy', err);
+                                            fallbackCopyText(url);
+                                        });
+                                    } else {
+                                        fallbackCopyText(url);
+                                    }
+                                }
+
+                                function fallbackCopyText(text) {
+                                    const textArea = document.createElement("textarea");
+                                    textArea.value = text;
+                                    // Prevent scrolling to bottom
+                                    textArea.style.position = "fixed";
+                                    textArea.style.left = "-9999px";
+                                    textArea.style.top = "0";
+                                    document.body.appendChild(textArea);
+                                    textArea.focus();
+                                    textArea.select();
+                                    try {
+                                        document.execCommand('copy');
+                                        const btn = document.getElementById('copy-link-btn');
+                                        btn.innerHTML =
+                                            '<i class="fi fi-rr-check" style="color: #28a745;"></i> <span style="color: #28a745;">Copied!</span>';
+                                        setTimeout(() => {
+                                            btn.innerHTML = '<i class="fi fi-rr-copy"></i> <span>Copy Link</span>';
+                                        }, 2000);
+                                    } catch (err) {
+                                        console.error('Fallback: Oops, unable to copy', err);
+                                    }
+                                    document.body.removeChild(textArea);
+                                }
+                            </script>
                         </div>
                     </div>
                 </div>
