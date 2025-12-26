@@ -14,6 +14,11 @@ use App\Models\WhyChoose;
 use App\Models\Size;
 use App\Models\Color;
 use App\Models\SeoSetting;
+use App\Models\Product;
+use App\Models\Customer;
+use App\Models\Order;
+use App\Models\ProductNotification;
+use App\Models\Coupon;
 
 class AdminController extends Controller
 {
@@ -57,10 +62,23 @@ class AdminController extends Controller
             ->with('success', 'You have been logged out.');
     }
 
+
+
     // Admin Dashboard View
     public function adminDashboardView(Request $request)
     {
-        return view('admin.admin-dashboard');
+        $data = [
+            'totalProducts' => Product::count(),
+            'totalCustomers' => Customer::count(),
+            'totalOrders' => Order::count(),
+            'totalSales' => Order::where('payment_status', 'completed')->sum('total'),
+            'pendingNotifications' => ProductNotification::where('status', 'pending')->count(),
+            'pendingOrders' => Order::where('status', 'pending')->count(),
+            'totalCoupons' => Coupon::count(),
+            'totalMaterials' => Material::count(),
+        ];
+
+        return view('admin.admin-dashboard', $data);
     }
 
 
