@@ -114,7 +114,10 @@
                     </div>
 
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-
+                        <div class="navbar-nav align-items-center">
+                            <div class="nav-item text-muted d-none d-md-inline-block">{{ now()->format('l, d F Y') }}
+                            </div>
+                        </div>
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
                             <!-- User -->
                             <li class="nav-item navbar-dropdown dropdown-user dropdown">
