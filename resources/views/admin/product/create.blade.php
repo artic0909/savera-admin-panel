@@ -14,15 +14,23 @@
                     <h5 class="card-header">Product Details</h5>
 
                     <div class="card-body">
-                        <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data"
+                            id="productForm">
                             @csrf
 
                             {{-- ================= BASIC DETAILS ================= --}}
                             <div class="row">
 
-                                <div class="mb-3 col-md-6">
+                                <div class="mb-3 col-md-4">
                                     <label class="form-label">Product Name</label>
                                     <input type="text" name="product_name" class="form-control" required>
+                                </div>
+
+                                <div class="mb-3 col-md-4">
+                                    <label class="form-label text-primary fw-bold">SKU (Unique Code)</label>
+                                    <input type="text" name="sku" id="sku" class="form-control"
+                                        placeholder="Enter SKU" required autocomplete="off">
+                                    <div id="sku-feedback" class="mt-1 small"></div>
                                 </div>
 
                                 <div class="mb-3 col-md-12">
@@ -102,7 +110,7 @@
 
                             <hr>
 
-                            <button type="submit" class="btn btn-primary">Create Product</button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">Create Product</button>
 
                         </form>
                     </div>
@@ -289,6 +297,10 @@
             border-color: #696cff;
             background-color: #f8f9ff;
         }
+
+        #sku-feedback {
+            font-weight: 600;
+        }
     </style>
 @endpush
 
@@ -336,6 +348,55 @@
                 };
 
                 metalContainer.appendChild(metalRow);
+            });
+
+            // SKU Uniqueness Check
+            const skuInput = document.getElementById('sku');
+            const skuFeedback = document.getElementById('sku-feedback');
+            const submitBtn = document.getElementById('submitBtn');
+            let debounceTimer;
+
+            skuInput.addEventListener('input', function() {
+                clearTimeout(debounceTimer);
+                const sku = this.value.trim();
+
+                if (sku.length < 1) {
+                    skuFeedback.innerHTML = '';
+                    skuInput.classList.remove('is-invalid', 'is-valid');
+                    return;
+                }
+
+                skuFeedback.innerHTML = '<span class="text-info">Checking...</span>';
+
+                debounceTimer = setTimeout(() => {
+                    fetch(`{{ route('admin.products.checkSKU') }}?sku=${sku}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.exists) {
+                                skuFeedback.innerHTML =
+                                    `<span class="text-danger"><i class="bx bx-error-circle"></i> ${data.message}</span>`;
+                                skuInput.classList.add('is-invalid');
+                                skuInput.classList.remove('is-valid');
+                                submitBtn.disabled = true;
+                            } else {
+                                skuFeedback.innerHTML =
+                                    `<span class="text-success"><i class="bx bx-check-circle"></i> SKU is available.</span>`;
+                                skuInput.classList.add('is-valid');
+                                skuInput.classList.remove('is-invalid');
+                                submitBtn.disabled = false;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            skuFeedback.innerHTML =
+                                '<span class="text-danger">Error checking SKU. Please try again.</span>';
+                        });
+                }, 300); // 300ms debounce
             });
 
         });

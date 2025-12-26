@@ -254,7 +254,7 @@
 
     <div class="choose-section">
         <div class="wrapper">
-            <h2>WHY CHOOSE SAVERA
+            <h2>Why Choose Savera
                 <!-- <img class="saveratext" src="{{ asset('assets/images/saveratext.png') }}" alt="savera" /> -->
             </h2>
             <div class="choose-container">
@@ -288,9 +288,9 @@
             <img src="{{ asset('assets/images/Priyanka-store-front-1.webp') }}" alt="Store Front" />
         </div>
         <!-- <div class="store-content">
-                                                {{-- <h2>Store Front</h2>
+                                                        {{-- <h2>Store Front</h2>
             <p>Sub Text</p>
             <a href="#" class="find-store-btn">Find Store</a> --}}
-                                            </div> -->
+                                                    </div> -->
     </div>
 @endsection

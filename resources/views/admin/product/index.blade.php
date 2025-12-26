@@ -7,13 +7,26 @@
         <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Product /</span> Product List</h4>
 
         <div class="card">
-            <h5 class="card-header">Products</h5>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Products</h5>
+                <form action="{{ route('admin.products.index') }}" method="GET" class="d-flex gap-2">
+                    <input type="text" name="search" class="form-control form-control-sm"
+                        placeholder="Search name or SKU..." value="{{ request('search') }}">
+                    <button type="submit" class="btn btn-primary btn-sm">Search</button>
+                </form>
+            </div>
+
+
+
+
+
             <div class="card-body">
                 <div class="table-responsive text-nowrap">
                     <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>SKU</th>
                                 <th>Image</th>
                                 <th>Name</th>
                                 <th>Category</th>
@@ -26,6 +39,7 @@
                             @foreach ($products as $product)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
+                                    <td><span class="badge bg-label-primary">{{ $product->sku }}</span></td>
                                     <td>
                                         <img src="{{ asset('storage/' . $product->main_image) }}" alt="Product Image"
                                             width="50" height="50" class="rounded-circle">

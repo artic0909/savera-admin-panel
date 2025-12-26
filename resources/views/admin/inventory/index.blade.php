@@ -27,7 +27,7 @@
                                     <i class="bx bx-search text-muted"></i>
                                 </span>
                                 <input type="text" name="search" class="form-control border-start-0 ps-0"
-                                    placeholder="Search products..." value="{{ request('search') }}">
+                                    placeholder="Search products or SKU..." value="{{ request('search') }}">
                                 <button class="btn btn-primary" type="submit">Search</button>
                             </div>
                         </form>
@@ -40,13 +40,33 @@
                         <tr>
                             <th>Product</th>
                             <th>Category</th>
-                            <th>Current Stock</th>
                             <th>Status</th>
-                            <th class="text-center">Quick Update</th>
+                            <th>MRP</th>
+                            <th class="text-center">Stock Update</th>
+                            <th class="text-center">Quick MRP Update</th>
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
                         @forelse ($products as $product)
+                            @php
+                                $mrp = 0;
+                                if (is_array($product->metal_configurations)) {
+                                    foreach ($product->metal_configurations as $config) {
+                                        if (isset($config['mrp'])) {
+                                            $mrp = $config['mrp'];
+                                            break;
+                                        }
+                                        if (is_array($config)) {
+                                            foreach ($config as $c) {
+                                                if (is_array($c) && isset($c['mrp'])) {
+                                                    $mrp = $c['mrp'];
+                                                    break 2;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            @endphp
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -56,18 +76,17 @@
                                         <div>
                                             <span class="fw-bold d-block">
                                                 {{ strlen($product->product_name) > 20 ? substr($product->product_name, 0, 20) . '...' : $product->product_name }}</span>
-                                            <small class="text-muted">ID: #{{ $product->id }}</small>
+                                            <div class="d-flex gap-2">
+                                                {{-- <small class="text-muted">ID: #{{ $product->id }}</small> --}}
+                                                <small class="text-primary fw-bold">SKU: {{ $product->sku }}</small>
+                                            </div>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
                                     <span class="badge bg-label-info">{{ $product->category->name ?? 'N/A' }}</span>
                                 </td>
-                                <td>
-                                    <span class="stock-display fw-bold" data-id="{{ $product->id }}">
-                                        {{ $product->stock_quantity }}
-                                    </span>
-                                </td>
+
                                 <td>
                                     @if ($product->stock_quantity <= 0)
                                         <span class="badge bg-label-danger">Out of Stock</span>
@@ -78,8 +97,12 @@
                                     @endif
                                 </td>
                                 <td>
+                                    <span class="fw-bold mrp-display"
+                                        data-id="{{ $product->id }}">₹{{ number_format($mrp, 2) }}</span>
+                                </td>
+                                <td>
                                     <div class="input-group input-group-sm justify-content-center"
-                                        style="max-width: 200px; margin: 0 auto;">
+                                        style="max-width: 150px; margin: 0 auto;">
                                         <input type="number" class="form-control stock-input"
                                             value="{{ $product->stock_quantity }}" data-id="{{ $product->id }}"
                                             min="0">
@@ -89,10 +112,21 @@
                                         </button>
                                     </div>
                                 </td>
+                                <td>
+                                    <div class="input-group input-group-sm justify-content-center"
+                                        style="max-width: 150px; margin: 0 auto;">
+                                        <input type="number" class="form-control mrp-input" value="{{ $mrp }}"
+                                            data-id="{{ $product->id }}" min="0">
+                                        <button class="btn btn-success update-mrp-btn" type="button"
+                                            data-id="{{ $product->id }}">
+                                            <i class="bx bx-check"></i>
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center py-5">
+                                <td colspan="6" class="text-center py-5">
                                     <div class="text-muted">
                                         <i class="bx bx-package fs-1 d-block mb-3"></i>
                                         No products found.
@@ -191,6 +225,73 @@
                                 icon: 'error',
                                 title: 'Error',
                                 text: 'Failed to update stock.'
+                            });
+                        });
+                });
+            });
+
+            const updateMrpBtns = document.querySelectorAll('.update-mrp-btn');
+
+            updateMrpBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const input = document.querySelector(`.mrp-input[data-id="${id}"]`);
+                    const newMrp = input.value;
+
+                    this.disabled = true;
+                    this.innerHTML =
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+
+                    fetch("{{ route('admin.inventory.updateMRP') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                product_id: id,
+                                mrp: newMrp
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            this.disabled = false;
+                            this.innerHTML = '<i class="bx bx-check"></i>';
+
+                            if (data.success) {
+                                const display = document.querySelector(
+                                    `.mrp-display[data-id="${id}"]`);
+                                display.innerText = '₹' + parseFloat(data.new_mrp)
+                                    .toLocaleString('en-IN', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    });
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Updated!',
+                                    text: 'MRP has been updated.',
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: data.message || 'Something went wrong!'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            this.disabled = false;
+                            this.innerHTML = '<i class="bx bx-check"></i>';
+                            console.error('Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Failed to update MRP.'
                             });
                         });
                 });

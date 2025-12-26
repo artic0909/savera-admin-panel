@@ -53,6 +53,8 @@ Route::middleware(['auth:admin'])->group(function () {
     // Route::get('/admin/products/edit', [AdminController::class, 'editProductView'])->name('admin.products.edit');
     // Route::get('/admin/products/index', [AdminController::class, 'indexProductView'])->name('admin.products.index');
 
+    // Products
+    Route::get('/admin/products/check-sku', [ProductController::class, 'checkSKU'])->name('admin.products.checkSKU');
     Route::resource('admin/products', ProductController::class)->names('admin.products');
 
     // Pincodes
@@ -92,6 +94,7 @@ Route::middleware(['auth:admin'])->group(function () {
     // Inventory & Stock Management
     Route::get('/admin/inventory', [App\Http\Controllers\Admin\InventoryController::class, 'index'])->name('admin.inventory.index');
     Route::post('/admin/inventory/update-stock', [App\Http\Controllers\Admin\InventoryController::class, 'updateStock'])->name('admin.inventory.updateStock');
+    Route::post('/admin/inventory/update-mrp', [App\Http\Controllers\Admin\InventoryController::class, 'updateMRP'])->name('admin.inventory.updateMRP');
     Route::get('/admin/stock-notifications', [AdminController::class, 'stockNotifications'])->name('admin.stock-notifications.index');
     Route::post('/admin/stock-notifications/{id}/status', [AdminController::class, 'updateNotificationStatus'])->name('admin.stock-notifications.updateStatus');
 

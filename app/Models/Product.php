@@ -11,6 +11,7 @@ class Product extends Model
         'product_name',
         'description',
         'slug',
+        'sku',
         'main_image',
         'additional_images',
         'delivery_time',

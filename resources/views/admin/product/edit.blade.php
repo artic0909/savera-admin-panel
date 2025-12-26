@@ -17,10 +17,16 @@
                             @method('PUT')
                             <div class="row">
                                 <!-- Basic Fields -->
-                                <div class="mb-3 col-md-6">
+                                <div class="mb-3 col-md-4">
                                     <label for="product_name" class="form-label">Product Name</label>
                                     <input class="form-control" type="text" id="product_name" name="product_name"
                                         value="{{ old('product_name', $product->product_name) }}" required />
+                                </div>
+                                <div class="mb-3 col-md-4">
+                                    <label for="sku" class="form-label">SKU (Unique)</label>
+                                    <input class="form-control" type="text" id="sku" name="sku"
+                                        value="{{ old('sku', $product->sku) }}" required />
+                                    <div id="sku-feedback" class="form-text"></div>
                                 </div>
                                 <div class="mb-3 col-md-12">
                                     <label for="description" class="form-label">Product Description</label>
@@ -349,7 +355,7 @@
 
 
                             <div class="mt-4">
-                                <button type="submit" class="btn btn-primary">Update Product</button>
+                                <button type="submit" class="btn btn-primary" id="submitBtn">Update Product</button>
                             </div>
                         </form>
                     </div>
@@ -535,6 +541,10 @@
             border-color: #696cff;
             background-color: #f8f9ff;
         }
+
+        #sku-feedback {
+            font-weight: 600;
+        }
     </style>
 @endpush
 
@@ -542,99 +552,153 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
-                    const metalContainer = document.getElementById('metal-configs');
-                    const metalTemplate = document.getElementById('metal-config-template').innerHTML;
-                    const diamondTemplate = document.getElementById('diamond-template').innerHTML;
+            const metalContainer = document.getElementById('metal-configs');
+            const metalTemplate = document.getElementById('metal-config-template').innerHTML;
+            const diamondTemplate = document.getElementById('diamond-template').innerHTML;
 
-                    // Initialize existing rows
-                    const existingRows = metalContainer.querySelectorAll('.metal-config-row');
-                    existingRows.forEach((row, index) => {
-                        setupMetalRowResults(row, index);
+            // Initialize existing rows
+            const existingRows = metalContainer.querySelectorAll('.metal-config-row');
+            existingRows.forEach((row, index) => {
+                setupMetalRowResults(row, index);
+            });
+
+            document.getElementById('add-metal-config').addEventListener('click', function() {
+                const index = metalContainer.children.length + Math.floor(Math.random() *
+                    1000); // Unique index
+                const newId = 'mc_' + Date.now() + '_' + Math.floor(Math.random() *
+                    1000); // Robust client-side unique ID
+                let html = metalTemplate.replace(/INDEX/g, index).replace(/NEW_ID/g, newId);
+
+                const temp = document.createElement('div');
+                temp.innerHTML = html;
+                const metalRow = temp.firstElementChild;
+
+                setupMetalRowResults(metalRow, index);
+                metalContainer.appendChild(metalRow);
+            });
+
+            function setupMetalRowResults(metalRow, index) {
+                // Remove Metal
+                const removeMetalBtn = metalRow.querySelector('.remove-metal');
+                if (removeMetalBtn) {
+                    removeMetalBtn.onclick = () => metalRow.remove();
+                }
+
+                // Diamond Checkbox
+                const checkbox = metalRow.querySelector('.use-diamond');
+                const diamondSection = metalRow.querySelector('.diamond-section');
+                const diamondContainer = metalRow.querySelector('.diamond-rows');
+
+                if (checkbox && diamondSection) {
+                    checkbox.onchange = () => {
+                        diamondSection.style.display = checkbox.checked ? 'block' : 'none';
+                    };
+                }
+
+                // Add Diamond
+                const addDiamondBtn = metalRow.querySelector('.add-diamond');
+                if (addDiamondBtn) {
+                    addDiamondBtn.onclick = () => {
+                        const dIndex = diamondContainer.children.length + Math.floor(Math.random() * 1000);
+                        let dHtml = diamondTemplate
+                            .replace(/METAL/g, index) // Note: METAL placeholder in template is for metal index
+                            .replace(/DIAMOND/g, dIndex);
+
+                        const dTemp = document.createElement('div');
+                        dTemp.innerHTML = dHtml;
+
+                        const dRow = dTemp.firstElementChild;
+                        const removeDBtn = dRow.querySelector('.remove-diamond');
+                        if (removeDBtn) {
+                            removeDBtn.onclick = () => dRow.remove();
+                        }
+
+                        diamondContainer.appendChild(dRow);
+                    };
+                }
+
+                // Initialize existing diamond rows removal
+                if (diamondContainer) {
+                    const existingDiamonds = diamondContainer.querySelectorAll('.diamond-row');
+                    existingDiamonds.forEach(dRow => {
+                        const removeDBtn = dRow.querySelector('.remove-diamond');
+                        if (removeDBtn) {
+                            removeDBtn.onclick = () => dRow.remove();
+                        }
                     });
+                }
+                // Handle removal of saved media
+                document.querySelectorAll('.remove-saved-media').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const path = this.getAttribute('data-path');
+                        const container = document.getElementById('deleted-media-inputs');
 
-                    document.getElementById('add-metal-config').addEventListener('click', function() {
-                        const index = metalContainer.children.length + Math.floor(Math.random() *
-                            1000); // Unique index
-                        const newId = 'mc_' + Date.now() + '_' + Math.floor(Math.random() *
-                            1000); // Robust client-side unique ID
-                        let html = metalTemplate.replace(/INDEX/g, index).replace(/NEW_ID/g, newId);
+                        // Create hidden input
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'deleted_additional_images[]';
+                        input.value = path;
+                        container.appendChild(input);
 
-                        const temp = document.createElement('div');
-                        temp.innerHTML = html;
-                        const metalRow = temp.firstElementChild;
-
-                        setupMetalRowResults(metalRow, index);
-                        metalContainer.appendChild(metalRow);
+                        // Remove preview
+                        this.closest('.media-item').remove();
                     });
+                });
 
-                    function setupMetalRowResults(metalRow, index) {
-                        // Remove Metal
-                        const removeMetalBtn = metalRow.querySelector('.remove-metal');
-                        if (removeMetalBtn) {
-                            removeMetalBtn.onclick = () => metalRow.remove();
-                        }
+            }
 
-                        // Diamond Checkbox
-                        const checkbox = metalRow.querySelector('.use-diamond');
-                        const diamondSection = metalRow.querySelector('.diamond-section');
-                        const diamondContainer = metalRow.querySelector('.diamond-rows');
+            // SKU Uniqueness Check
+            const skuInput = document.getElementById('sku');
+            const skuFeedback = document.getElementById('sku-feedback');
+            const submitBtn = document.getElementById('submitBtn');
+            const productId = "{{ $product->id }}";
+            let debounceTimer;
 
-                        if (checkbox && diamondSection) {
-                            checkbox.onchange = () => {
-                                diamondSection.style.display = checkbox.checked ? 'block' : 'none';
-                            };
-                        }
+            skuInput.addEventListener('input', function() {
+                clearTimeout(debounceTimer);
+                const sku = this.value.trim();
 
-                        // Add Diamond
-                        const addDiamondBtn = metalRow.querySelector('.add-diamond');
-                        if (addDiamondBtn) {
-                            addDiamondBtn.onclick = () => {
-                                const dIndex = diamondContainer.children.length + Math.floor(Math.random() * 1000);
-                                let dHtml = diamondTemplate
-                                    .replace(/METAL/g, index) // Note: METAL placeholder in template is for metal index
-                                    .replace(/DIAMOND/g, dIndex);
+                if (sku.length < 1) {
+                    skuFeedback.innerHTML = '';
+                    skuInput.classList.remove('is-invalid', 'is-valid');
+                    submitBtn.disabled = false;
+                    return;
+                }
 
-                                const dTemp = document.createElement('div');
-                                dTemp.innerHTML = dHtml;
+                skuFeedback.innerHTML = '<span class="text-info">Checking...</span>';
 
-                                const dRow = dTemp.firstElementChild;
-                                const removeDBtn = dRow.querySelector('.remove-diamond');
-                                if (removeDBtn) {
-                                    removeDBtn.onclick = () => dRow.remove();
-                                }
-
-                                diamondContainer.appendChild(dRow);
-                            };
-                        }
-
-                        // Initialize existing diamond rows removal
-                        if (diamondContainer) {
-                            const existingDiamonds = diamondContainer.querySelectorAll('.diamond-row');
-                            existingDiamonds.forEach(dRow => {
-                                const removeDBtn = dRow.querySelector('.remove-diamond');
-                                if (removeDBtn) {
-                                    removeDBtn.onclick = () => dRow.remove();
-                                }
-                            });
-                        }
-                        // Handle removal of saved media
-                        document.querySelectorAll('.remove-saved-media').forEach(btn => {
-                            btn.addEventListener('click', function() {
-                                const path = this.getAttribute('data-path');
-                                const container = document.getElementById('deleted-media-inputs');
-
-                                // Create hidden input
-                                const input = document.createElement('input');
-                                input.type = 'hidden';
-                                input.name = 'deleted_additional_images[]';
-                                input.value = path;
-                                container.appendChild(input);
-
-                                // Remove preview
-                                this.closest('.media-item').remove();
-                            });
+                debounceTimer = setTimeout(() => {
+                    fetch(
+                            `{{ route('admin.products.checkSKU') }}?sku=${sku}&product_id=${productId}`
+                        )
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.exists) {
+                                skuFeedback.innerHTML =
+                                    `<span class="text-danger"><i class="bx bx-error-circle"></i> This SKU already taken, use different</span>`;
+                                skuInput.classList.add('is-invalid');
+                                skuInput.classList.remove('is-valid');
+                                submitBtn.disabled = true;
+                            } else {
+                                skuFeedback.innerHTML =
+                                    `<span class="text-success"><i class="bx bx-check-circle"></i> SKU is available.</span>`;
+                                skuInput.classList.add('is-valid');
+                                skuInput.classList.remove('is-invalid');
+                                submitBtn.disabled = false;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            skuFeedback.innerHTML =
+                                '<span class="text-danger">Error checking SKU. Please try again.</span>';
                         });
-
-                    });
+                }, 300);
+            });
+        });
     </script>
 @endpush

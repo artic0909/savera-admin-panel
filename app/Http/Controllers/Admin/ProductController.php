@@ -17,9 +17,19 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category')->latest()->paginate(10);
+        $query = Product::with('category');
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('product_name', 'like', '%' . $search . '%')
+                    ->orWhere('sku', 'like', '%' . $search . '%');
+            });
+        }
+
+        $products = $query->latest()->paginate(10);
         return view('admin.product.index', compact('products'));
     }
 
@@ -71,6 +81,7 @@ class ProductController extends Controller
             $request->validate([
                 'category_id' => 'required|exists:categories,id',
                 'product_name' => 'required|string|max:255',
+                'sku' => 'required|string|unique:products,sku',
                 'description' => 'nullable|string',
                 'main_image' => 'required|image|mimes:jpeg,png,jpg,gif,webp',
                 'additional_images.*' => 'nullable|mimes:jpeg,png,jpg,gif,webp,mp4,mov,ogg,wmv,avi,flv,mkv,webm',
@@ -178,6 +189,7 @@ class ProductController extends Controller
             $request->validate([
                 'category_id' => 'required|exists:categories,id',
                 'product_name' => 'required|string|max:255',
+                'sku' => 'required|string|unique:products,sku,' . $id,
                 'description' => 'nullable|string',
                 'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp',
                 'additional_images.*' => 'nullable|mimes:jpeg,png,jpg,gif,webp,mp4,mov,ogg,wmv,avi,flv,mkv,webm',
@@ -234,5 +246,24 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Failed to delete product. Please try again.');
         }
+    }
+
+    public function checkSKU(Request $request)
+    {
+        $sku = $request->query('sku');
+        $productId = $request->query('product_id');
+
+        $query = Product::where('sku', $sku);
+
+        if ($productId) {
+            $query->where('id', '!=', $productId);
+        }
+
+        $exists = $query->exists();
+
+        return response()->json([
+            'exists' => $exists,
+            'message' => $exists ? 'This SKU already taken, use different' : 'SKU is available.'
+        ]);
     }
 }
