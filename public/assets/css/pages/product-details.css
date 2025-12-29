@@ -1,0 +1,423 @@
+.product-single-left {
+    padding: 20px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* Main Slider */
+.product-main-slider {
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #f8f8f8;
+    margin-bottom: 15px;
+}
+
+.product-main-slider .swiper-slide {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-main-slider img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+.product-main-slider video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 20px;
+}
+
+/* Thumbnails Slider */
+.product-thumb-slider {
+    width: 100%;
+    padding: 5px 0;
+}
+
+.product-thumb-slider .swiper-slide {
+    aspect-ratio: 1/1;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+    background: #f0f0f0;
+}
+
+.product-thumb-slider .swiper-slide-thumb-active {
+    border-color: #312110;
+    opacity: 1;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.product-thumb-slider img,
+.product-thumb-slider video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-thumbnail-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.4);
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+}
+
+/* Swiper Navigation Custom Styling */
+.product-main-slider .swiper-button-next,
+.product-main-slider .swiper-button-prev {
+    background: rgba(255, 255, 255, 0.9);
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    color: #312110 !important;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.product-main-slider .swiper-button-next:after,
+.product-main-slider .swiper-button-prev:after {
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.product-main-slider .swiper-button-next:hover,
+.product-main-slider .swiper-button-prev:hover {
+    background: #312110;
+    color: #fff !important;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(49, 33, 16, 0.3);
+}
+
+.product-main-slider .swiper-button-disabled {
+    opacity: 0;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .product-single-left {
+        padding: 10px;
+        border-radius: 15px;
+    }
+
+    .product-thumb-slider .swiper-slide {
+        width: 80px;
+        height: 80px;
+    }
+
+    .product-main-slider .swiper-button-next,
+    .product-main-slider .swiper-button-prev {
+        width: 35px;
+        height: 35px;
+        background: rgba(255, 255, 255, 0.7);
+    }
+
+    .product-main-slider .swiper-button-next:after,
+    .product-main-slider .swiper-button-prev:after {
+        font-size: 14px;
+    }
+}
+
+/* Product Photo Zoom effect - Desktop */
+@media (min-width: 992px) {
+    .product-main-slider .swiper-slide {
+        overflow: hidden;
+    }
+
+    .product-main-slider .swiper-slide img {
+        transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+    }
+
+    .product-main-slider .swiper-slide:hover img {
+        transform: scale(2);
+        cursor: crosshair;
+    }
+}
+
+/* Mobile Zoom Effect (On Click) */
+@media (max-width: 991px) {
+    .product-main-slider .swiper-slide {
+        overflow: hidden;
+        touch-action: pan-y pinch-zoom;
+    }
+
+    .product-main-slider .swiper-slide img {
+        transition: transform 0.3s ease;
+        cursor: zoom-in;
+    }
+
+    /* When zoomed on mobile */
+    .product-main-slider .swiper-slide.is-zoomed img {
+        transform: scale(2.5);
+        cursor: zoom-out;
+    }
+}
+
+/* Bottom Styles */
+.metal-btn.active {
+    background-color: #312110 !important;
+    color: white;
+}
+
+.color-btn {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.color-btn .checkmark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.color-btn.text-btn .checkmark {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    color: #4CAF50;
+    text-shadow: none;
+}
+
+.color-btn:hover {
+    transform: scale(1.1);
+}
+
+.additional-info .row {
+    display: flex;
+    gap: 30px;
+    justify-content: space-between;
+}
+
+.additional-info .col-lg-8 {
+    width: 70%;
+}
+
+.additional-info .col-lg-4 {
+    width: 30%;
+}
+
+.additional-info .d-block {
+    display: block !important;
+}
+
+.additional-info .mt-3 {
+    margin-top: 1rem !important;
+}
+
+.additional-info #diamond-details-table thead,
+.additional-info #diamond-details-table tbody {
+    display: block;
+    width: 100%;
+}
+
+.additional-info #diamond-details-table tr {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+}
+
+#diamond-details-table {
+    display: block;
+    width: 100%;
+}
+
+#pincode-input,
+#pincode-input:focus,
+#pincode-input:active,
+#pincode-input:hover {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.mt-0 {
+    margin-top: 0px;
+}
+
+@media (max-width: 768px) {
+    .additional-info .row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .additional-info .col-lg-8 {
+        width: 100%;
+    }
+
+    .additional-info .col-lg-4 {
+        width: 100%;
+    }
+
+    .additional-info #diamond-details-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .additional-info #diamond-details-table tr {
+        min-width: 600px;
+    }
+}
+.metal-btn.active {
+    background-color: #312110 !important;
+    color: white;
+}
+
+.color-btn {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.color-btn .checkmark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.color-btn.text-btn .checkmark {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    color: #4CAF50;
+    text-shadow: none;
+}
+
+.color-btn:hover {
+    transform: scale(1.1);
+}
+
+.row {
+    display: flex;
+    gap: 30px;
+}
+
+.d-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mt-0 {
+    margin-top: 0px;
+}
+
+.additional-info {
+    .row {
+        display: flex;
+        gap: 30px;
+        justify-content: space-between;
+    }
+
+    .col-lg-8 {
+        width: 70%;
+    }
+
+    .col-lg-4 {
+        width: 30%;
+    }
+
+    .d-block {
+        display: block !important;
+    }
+
+    .mt-3 {
+        margin-top: 1rem !important;
+    }
+
+    #diamond-details-table thead,
+    #diamond-details-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    #diamond-details-table tr {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+#diamond-details-table {
+    display: block;
+    width: 100%;
+}
+
+#pincode-input,
+#pincode-input:focus,
+#pincode-input:active,
+#pincode-input:hover {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.col-lg-6.col-md-6.col-12 {
+    width: 50%;
+}
+
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .col-lg-6.col-md-6.col-12 {
+        width: 100%;
+    }
+
+    .additional-info {
+        .row {
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .col-lg-8 {
+            width: 100%;
+        }
+
+        .col-lg-4 {
+            width: 100%;
+        }
+
+        #diamond-details-table {
+            display: block;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #diamond-details-table tr {
+            min-width: 600px;
+        }
+    }
+}

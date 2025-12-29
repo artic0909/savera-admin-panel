@@ -102,6 +102,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/reports', [App\Http\Controllers\Admin\ReportController::class, 'index'])->name('admin.reports.index');
     Route::get('/admin/reports/export', [App\Http\Controllers\Admin\ReportController::class, 'export'])->name('admin.reports.export');
 
+    // Story Videos
+    Route::resource('admin/story-videos', \App\Http\Controllers\Admin\StoryVideoController::class)->names('admin.story-videos');
 
     // Profile ==================================================================================================================================>
     Route::get('/admin/profile', [AdminController::class, 'adminProfileView'])->name('admin.profile');

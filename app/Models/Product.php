@@ -135,4 +135,9 @@ class Product extends Model
     {
         return 'slug';
     }
+
+    public function storyVideos()
+    {
+        return $this->belongsToMany(StoryVideo::class, 'story_video_product');
+    }
 }

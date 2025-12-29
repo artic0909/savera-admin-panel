@@ -17,41 +17,45 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function showSlide(index, direction = 'next') {
-        if (index === currentSlide) return;
+        if (index === currentSlide || slides.length === 0) return;
 
         // Handle outgoing slide
         const outgoingSlide = slides[currentSlide];
-        outgoingSlide.classList.remove('active');
-        dots[currentSlide].classList.remove('active');
+        if (outgoingSlide) outgoingSlide.classList.remove('active');
+        if (dots[currentSlide]) dots[currentSlide].classList.remove('active');
 
         // Handle incoming slide
         currentSlide = index;
         const incomingSlide = slides[currentSlide];
-        dots[currentSlide].classList.add('active');
+        if (dots[currentSlide]) dots[currentSlide].classList.add('active');
 
-        // Prepare incoming slide position based on direction
-        incomingSlide.style.transition = 'none';
-        if (direction === 'next') {
-            incomingSlide.style.transform = 'translateX(100px)';
-        } else {
-            incomingSlide.style.transform = 'translateX(-100px)';
+        if (incomingSlide) {
+            // Prepare incoming slide position based on direction
+            incomingSlide.style.transition = 'none';
+            if (direction === 'next') {
+                incomingSlide.style.transform = 'translateX(100px)';
+            } else {
+                incomingSlide.style.transform = 'translateX(-100px)';
+            }
+
+            // Force reflow
+            void incomingSlide.offsetWidth;
+
+            // Animate in
+            incomingSlide.style.transition = 'all 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+            incomingSlide.classList.add('active');
+            incomingSlide.style.transform = 'translateX(0)';
         }
-
-        // Force reflow
-        void incomingSlide.offsetWidth;
-
-        // Animate in
-        incomingSlide.style.transition = 'all 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
-        incomingSlide.classList.add('active');
-        incomingSlide.style.transform = 'translateX(0)';
     }
 
     function nextSlide() {
+        if (slides.length === 0) return;
         let newIndex = (currentSlide + 1) % slides.length;
         showSlide(newIndex, 'next');
     }
 
     function prevSlide() {
+        if (slides.length === 0) return;
         let newIndex = (currentSlide - 1 + slides.length) % slides.length;
         showSlide(newIndex, 'prev');
     }
@@ -69,24 +73,30 @@ document.addEventListener('DOMContentLoaded', function () {
     startAutoPlay();
 
     // Event listeners
-    nextBtn.addEventListener('click', () => {
-        nextSlide();
-        resetAutoPlay();
-    });
-
-    prevBtn.addEventListener('click', () => {
-        prevSlide();
-        resetAutoPlay();
-    });
-
-    // Click on dots
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            let direction = index > currentSlide ? 'next' : 'prev';
-            showSlide(index, direction);
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
             resetAutoPlay();
         });
-    });
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            resetAutoPlay();
+        });
+    }
+
+    // Click on dots
+    if (dots) {
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                let direction = index > currentSlide ? 'next' : 'prev';
+                showSlide(index, direction);
+                resetAutoPlay();
+            });
+        });
+    }
     // Text Rotation Logic
     const dynamicTextElement = document.querySelector('.dynamic-text');
     let texts = [];

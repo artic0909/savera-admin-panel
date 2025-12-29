@@ -22,7 +22,18 @@ class FrontendController extends Controller
             $products = Product::where('category_id', $selectedCategory->id)->where('is_active', true)->take(10)->get();
         }
 
-        return view('frontend.home', compact('categories', 'selectedCategory', 'products', 'chooses'));
+        $storyVideos = \App\Models\StoryVideo::with(['products' => function ($query) {
+            $query->where('products.is_active', true);
+        }])->where('is_active', true)->latest()->get();
+
+        $wishlistProductIds = [];
+        if (\Illuminate\Support\Facades\Auth::guard('customer')->check()) {
+            $wishlistProductIds = \App\Models\Wishlist::where('customer_id', \Illuminate\Support\Facades\Auth::guard('customer')->id())
+                ->pluck('product_id')
+                ->toArray();
+        }
+
+        return view('frontend.home', compact('categories', 'selectedCategory', 'products', 'chooses', 'storyVideos', 'wishlistProductIds'));
     }
 
     public function ajaxProducts(Request $request)
@@ -150,7 +161,16 @@ class FrontendController extends Controller
                 ->exists();
         }
 
-        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'styles', 'sizes', 'colors', 'similarProducts', 'wishlistItem', 'categories', 'coupons', 'alreadyRequested'))->with(['pageclass' => 'hedersolution bg-1']);
+        // Fetch related story videos
+        $productStoryVideos = $product->storyVideos()
+            ->with(['products' => function ($query) {
+                $query->where('products.is_active', true);
+            }])
+            ->where('is_active', true)
+            ->latest()
+            ->get();
+
+        return view('frontend.product-details', compact('product', 'materials', 'shapes', 'styles', 'sizes', 'colors', 'similarProducts', 'wishlistItem', 'categories', 'coupons', 'alreadyRequested', 'productStoryVideos'))->with(['pageclass' => 'hedersolution bg-1']);
     }
 
     /**

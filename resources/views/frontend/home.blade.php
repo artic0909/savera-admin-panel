@@ -3,6 +3,9 @@
 @section('title', 'Home')
 
 @section('content')
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('assets/css/pages/home.css') }}">
+    @endpush
     <div class="banner">
         <div class="carousel-container">
             <!-- Slide 1 -->
@@ -70,47 +73,6 @@
         </div>
     </div>
 
-    <script>
-        function loadCategory(event, element) {
-            event.preventDefault();
-
-            // Remove active class from all
-            document.querySelectorAll('.cat-item').forEach(el => el.classList.remove('active'));
-            // Add to clicked
-            element.classList.add('active');
-
-            const categoryId = element.getAttribute('data-id');
-            const container = document.getElementById('product-container');
-            const loader = document.getElementById('product-loader');
-            const exploreBtn = document.getElementById('explore-more-btn');
-
-            container.style.opacity = '0.5';
-            loader.style.display = 'block';
-
-            fetch(`{{ route('ajax.products') }}?category_id=${categoryId}`)
-                .then(response => response.json())
-                .then(data => {
-                    container.innerHTML = data.html;
-                    container.style.opacity = '1';
-                    loader.style.display = 'none';
-
-                    // Update Explore More Link
-                    if (data.category_slug && data.category_slug !== '#') {
-                        // We need the base URL structure.
-                        // Simplest way: construct it or pass full url from backend.
-                        // Let's use a JS variable for route pattern if this was complex, 
-                        // but here we can just append if we know the root.
-                        // Better: Use the category_slug from response.
-                        exploreBtn.href = "{{ url('/category') }}/" + data.category_slug;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    container.style.opacity = '1';
-                    loader.style.display = 'none';
-                });
-        }
-    </script>
 
     <div class="beginning-section">
         <h2>For Every Beginning</h2>
@@ -169,45 +131,6 @@
             <div class="swiper-button-prev"></div>
         </div>
     </div>
-    <script>
-        function playVideo(card) {
-            const video = card.querySelector("video");
-            card.classList.add("playing");
-            video.play();
-        }
-    </script>
-    <style>
-        .media-card {
-            position: relative;
-            cursor: pointer;
-        }
-
-        .media-card video {
-            display: none;
-            width: 100%;
-            height: 100%;
-        }
-
-        .play-btn {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            color: #fff;
-            background: rgba(0, 0, 0, 0.4);
-        }
-
-        .media-card.playing img,
-        .media-card.playing .play-btn {
-            display: none;
-        }
-
-        .media-card.playing video {
-            display: block;
-        }
-    </style>
     <div class="media-section">
         <div class="wrapper">
             <h2>For the moments that matter</h2>
@@ -288,9 +211,129 @@
             <img src="{{ asset('assets/images/Priyanka-store-front-1.webp') }}" alt="Store Front" />
         </div>
         <!-- <div class="store-content">
-                                                        {{-- <h2>Store Front</h2>
+                                                                                                                                                                                                                            {{-- <h2>Store Front</h2>
             <p>Sub Text</p>
             <a href="#" class="find-store-btn">Find Store</a> --}}
-                                                    </div> -->
+                                                                                                                                                                                                                        </div> -->
     </div>
+
+    @php
+        $agent = request()->header('User-Agent');
+        $isMobile = preg_match(
+            '/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i',
+            $agent,
+        );
+    @endphp
+
+    @if ($isMobile && $storyVideos->count() > 0)
+        <div class="moments-sticky-container">
+            <div class="moments-vertical-wrapper">
+                <div class="swiper moments-vertical-swiper">
+                    <div class="swiper-wrapper">
+                        @foreach ($storyVideos as $storyVideo)
+                            <div class="swiper-slide">
+                                <div class="moments-section">
+                                    <div class="moments-container">
+                                        <!-- Background Video/Image -->
+                                        <div class="moments-bg">
+                                            <video class="story-video-bg" loop playsinline
+                                                poster="{{ asset('assets/images/loding.gif') }}"
+                                                style="width: 100%; height: 100%; object-fit: cover; position: absolute; top:0; left:0;">
+                                                <source src="{{ asset('storage/' . $storyVideo->video_path) }}"
+                                                    type="video/mp4">
+                                            </video>
+
+                                            <!-- Video Loader / Animated Thumbnail -->
+                                            <div class="video-loader">
+                                                <img src="{{ asset('assets/images/white-icon-logo.png') }}"
+                                                    alt="Loading" class="spinning-logo">
+                                            </div>
+
+                                            <!-- Play/Pause Icon Overlay -->
+                                            <div class="play-pause-overlay" style="display: none;">
+                                                <i class="fi fi-sr-play"></i>
+                                            </div>
+                                            <div class="moments-overlay"></div>
+                                        </div>
+
+                                        <!-- Top Navigation -->
+                                        <div class="moments-top">
+                                            <div class="moments-logo">
+                                                <a href="{{ route('home') }}"><img
+                                                        src="{{ asset('assets/images/white-icon-logo.png') }}"
+                                                        alt="Logo" /></a>
+                                            </div>
+                                            <div class="moments-actions">
+                                                @php
+                                                    $videoProductIds = $storyVideo->products->pluck('id')->toArray();
+                                                    $isAllInWishlist =
+                                                        count($videoProductIds) > 0 &&
+                                                        collect($videoProductIds)->every(
+                                                            fn($id) => in_array($id, $wishlistProductIds),
+                                                        );
+                                                @endphp
+                                                <!-- Mute/Unmute Toggle -->
+                                                <div class="action-item mute-toggle muted" onclick="toggleMute(this)">
+                                                    <i class="fi fi-rr-volume-mute"></i>
+                                                </div>
+                                                <div class="action-item bulk-wishlist {{ $isAllInWishlist ? 'wishlist-active' : '' }}"
+                                                    data-product-ids="{{ implode(',', $videoProductIds) }}"
+                                                    onclick="toggleBulkWishlist(this)">
+                                                    <i
+                                                        class="fi {{ $isAllInWishlist ? 'fi-sr-heart' : 'fi-rr-heart' }}"></i>
+                                                </div>
+                                                <div class="action-item share-moment"
+                                                    onclick="shareMoment('{{ $storyVideo->video_path }}', '{{ route('home') }}')">
+                                                    <i class="fi fi-rr-share"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Bottom Product Slider -->
+                                        <div class="moments-bottom">
+                                            <div class="swiper moments-products-swiper">
+                                                <div class="swiper-wrapper">
+                                                    @foreach ($storyVideo->products as $product)
+                                                        <div class="swiper-slide">
+                                                            <a href="{{ route('product.show', $product->slug) }}"
+                                                                class="moments-product-card text-decoration-none">
+                                                                <div class="product-img-circle">
+                                                                    <img src="{{ asset('storage/' . $product->main_image) }}"
+                                                                        alt="{{ $product->product_name }}">
+                                                                </div>
+                                                                <div class="product-info">
+                                                                    <h4 class="text-white">{{ $product->product_name }}
+                                                                    </h4>
+                                                                    <p class="text-white">₹{{ $product->display_price }}
+                                                                    </p>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
 @endsection
+
+@push('scripts')
+    <script>
+        const homeConfig = {
+            ajaxProductsUrl: "{{ route('ajax.products') }}",
+            categoryUrl: "{{ url('/category') }}",
+            wishlistAddUrl: "{{ route('wishlist.add') }}",
+            wishlistRemoveUrl: "{{ route('wishlist.removeByProduct') }}",
+            csrfToken: "{{ csrf_token() }}"
+        };
+    </script>
+    <script src="{{ asset('assets/js/pages/home.js') }}"></script>
+@endpush

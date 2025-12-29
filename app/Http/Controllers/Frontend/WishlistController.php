@@ -74,6 +74,26 @@ class WishlistController extends Controller
         ]);
     }
 
+    // Remove by Product ID (for toggle/bulk actions)
+    public function removeByProduct(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+        ]);
+
+        $customerId = Auth::guard('customer')->id();
+
+        Wishlist::where('customer_id', $customerId)
+            ->where('product_id', $request->product_id)
+            ->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Product removed from wishlist!',
+            'wishlist_count' => Wishlist::where('customer_id', $customerId)->count(),
+        ]);
+    }
+
     // Move wishlist item to cart
     public function moveToCart($id)
     {

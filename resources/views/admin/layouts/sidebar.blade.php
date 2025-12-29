@@ -90,6 +90,13 @@
             </a>
         </li>
 
+        <li class="menu-item {{ Request::routeIs('admin.story-videos.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.story-videos.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-video"></i>
+                <div data-i18n="storyVideos">Story Videos</div>
+            </a>
+        </li>
+
         <li class="menu-item {{ Request::routeIs('admin.coupons.*') ? 'active' : '' }}">
             <a href="{{ route('admin.coupons.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-gift"></i>

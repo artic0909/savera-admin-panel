@@ -78,6 +78,7 @@ Route::middleware('auth:customer')->group(function () {
     // Wishlist Routes
     Route::get('wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
+    Route::post('wishlist/remove-by-product', [WishlistController::class, 'removeByProduct'])->name('wishlist.removeByProduct');
     Route::delete('wishlist/remove/{id}', [WishlistController::class, 'remove'])->name('wishlist.remove');
     Route::post('wishlist/move-to-cart/{id}', [WishlistController::class, 'moveToCart'])->name('wishlist.moveToCart');
     Route::get('wishlist/count', [WishlistController::class, 'count'])->name('wishlist.count');

@@ -41,6 +41,8 @@
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
+    @stack('styles')
+
     <!-- Meta Pixel Code -->
     <script>
         ! function(f, b, e, v, n, t, s) {
