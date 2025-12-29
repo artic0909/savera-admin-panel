@@ -154,6 +154,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.log('Swiper initialized, waiting for visibility');
                 },
                 slideChange: function () {
+                    // Unmute on swipe (User Interaction)
+                    if (globalMuteState) {
+                        globalMuteState = false;
+                        updateAllMuteButtons(false);
+                        // Also remove any hints
+                        document.querySelectorAll('.unmute-hint').forEach(hint => hint.remove());
+                    }
+
                     // Pause all videos
                     document.querySelectorAll('.story-video-bg').forEach(v => {
                         v.pause();
@@ -316,40 +324,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let hasUserInteracted = false;
 
     // Function to play video with sound
-    // Function to play video with sound
-    async function playVideoWithSound(video) {
-        if (!video) return;
 
-        video.muted = false;
-        video.volume = 1.0;
-
-        try {
-            await video.play();
-            console.log('Video playing with sound');
-        } catch (error) {
-            // Handle AbortError specifically (caused by rapid play/pause toggling)
-            if (error.name === 'AbortError') {
-                console.log('Video playback aborted (likely due to scrolling or rapid interaction).');
-                return;
-            }
-
-            // If autoplay with sound fails, try muted first
-            console.log('Autoplay with sound blocked, attempting muted playback');
-            video.muted = true;
-            try {
-                await video.play();
-                // Show a visual indicator that user can tap to unmute
-                showUnmuteHint(video);
-            } catch (err) {
-                // If it still fails (even muted), or another AbortError happens
-                if (err.name !== 'AbortError') {
-                    console.error('Video playback failed:', err);
-                } else {
-                    console.log('Video playback aborted (muted retry).');
-                }
-            }
-        }
-    }
 
     // Show unmute hint
     function showUnmuteHint(video) {
