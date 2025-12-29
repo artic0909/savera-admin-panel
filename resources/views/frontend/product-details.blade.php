@@ -147,6 +147,22 @@
                 font-size: 14px;
             }
         }
+
+        /* Product Photo Zoom effect */
+        @media (hover: hover) {
+            .product-main-slider .swiper-slide {
+                overflow: hidden;
+            }
+
+            .product-main-slider .swiper-slide img {
+                transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+            }
+
+            .product-main-slider .swiper-slide:hover img {
+                transform: scale(2);
+                cursor: crosshair;
+            }
+        }
     </style>
     {{-- <link rel="stylesheet" href="{{ asset('assets/bootstrap.min.css') }}" /> --}}
 
@@ -959,6 +975,24 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                         });
                     }
                 }
+            });
+
+            // Product Image Zoom Effect
+            const mainSliderSlides = document.querySelectorAll('.product-main-slider .swiper-slide');
+            mainSliderSlides.forEach(slide => {
+                const img = slide.querySelector('img');
+                if (!img) return;
+
+                slide.addEventListener('mousemove', function(e) {
+                    const rect = slide.getBoundingClientRect();
+                    const x = ((e.clientX - rect.left) / rect.width) * 100;
+                    const y = ((e.clientY - rect.top) / rect.height) * 100;
+                    img.style.transformOrigin = `${x}% ${y}%`;
+                });
+
+                slide.addEventListener('mouseleave', function() {
+                    img.style.transformOrigin = 'center center';
+                });
             });
         });
     </script>
