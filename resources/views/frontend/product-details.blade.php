@@ -148,8 +148,8 @@
             }
         }
 
-        /* Product Photo Zoom effect */
-        @media (hover: hover) and (pointer: fine) {
+        /* Product Photo Zoom effect - Desktop */
+        @media (min-width: 992px) {
             .product-main-slider .swiper-slide {
                 overflow: hidden;
             }
@@ -164,10 +164,23 @@
             }
         }
 
-        /* Ensure vertical scroll works on touch devices */
-        @media (pointer: coarse) {
+        /* Mobile Zoom Effect (On Click) */
+        @media (max-width: 991px) {
+            .product-main-slider .swiper-slide {
+                overflow: hidden;
+                touch-action: pan-y pinch-zoom;
+                /* Allow vertical scroll and native pinch */
+            }
+
             .product-main-slider .swiper-slide img {
-                touch-action: pan-y !important;
+                transition: transform 0.3s ease;
+                cursor: zoom-in;
+            }
+
+            /* When zoomed on mobile */
+            .product-main-slider .swiper-slide.is-zoomed img {
+                transform: scale(2.5);
+                cursor: zoom-out;
             }
         }
     </style>
@@ -984,13 +997,15 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                 }
             });
 
-            // Product Image Zoom Effect (Only for devices with a precise pointer like a mouse)
-            if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-                const mainSliderSlides = document.querySelectorAll('.product-main-slider .swiper-slide');
-                mainSliderSlides.forEach(slide => {
-                    const img = slide.querySelector('img');
-                    if (!img) return;
+            // Product Image Zoom Logic
+            const mainSliderSlides = document.querySelectorAll('.product-main-slider .swiper-slide');
 
+            mainSliderSlides.forEach(slide => {
+                const img = slide.querySelector('img');
+                if (!img) return;
+
+                // Desktop: Mouse Move Zoom
+                if (window.innerWidth >= 992) {
                     slide.addEventListener('mousemove', function(e) {
                         const rect = slide.getBoundingClientRect();
                         const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -1001,8 +1016,25 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                     slide.addEventListener('mouseleave', function() {
                         img.style.transformOrigin = 'center center';
                     });
-                });
-            }
+                }
+                // Mobile: Click to Zoom
+                else {
+                    slide.addEventListener('click', function(e) {
+                        // Toggle zoom class
+                        const isZoomed = slide.classList.toggle('is-zoomed');
+
+                        if (isZoomed) {
+                            // Set transform origin based on click location
+                            const rect = slide.getBoundingClientRect();
+                            const x = ((e.clientX - rect.left) / rect.width) * 100;
+                            const y = ((e.clientY - rect.top) / rect.height) * 100;
+                            img.style.transformOrigin = `${x}% ${y}%`;
+                        } else {
+                            img.style.transformOrigin = 'center center';
+                        }
+                    });
+                }
+            });
         });
     </script>
 
