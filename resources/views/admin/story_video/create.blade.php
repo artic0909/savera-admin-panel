@@ -42,7 +42,8 @@
                             <label class="form-label" for="video">Upload Video <span class="text-danger">*</span></label>
                             <input type="file" class="form-control @error('video') is-invalid @enderror" id="video"
                                 name="video" accept="video/*" required>
-                            <div class="form-text">Max size: 20MB. Supported formats: MP4, MOV.</div>
+                            <div class="form-text">Max size: 20MB. Aspect Ratio: 9:16 (Vertical). Supported formats: MP4,
+                                MOV.</div>
                             @error('video')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

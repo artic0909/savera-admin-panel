@@ -44,7 +44,8 @@
                             <label class="form-label" for="video">Change Video (Optional)</label>
                             <input type="file" class="form-control @error('video') is-invalid @enderror" id="video"
                                 name="video" accept="video/*">
-                            <div class="form-text">Leave blank to keep current video. Max size: 20MB.</div>
+                            <div class="form-text">Leave blank to keep current video. Max size: 20MB. Aspect Ratio: 9:16
+                                (Vertical).</div>
 
                             <div class="mt-2">
                                 <label class="d-block mb-1">Current Video:</label>
