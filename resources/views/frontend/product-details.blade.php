@@ -149,7 +149,7 @@
         }
 
         /* Product Photo Zoom effect */
-        @media (hover: hover) {
+        @media (hover: hover) and (pointer: fine) {
             .product-main-slider .swiper-slide {
                 overflow: hidden;
             }
@@ -161,6 +161,13 @@
             .product-main-slider .swiper-slide:hover img {
                 transform: scale(2);
                 cursor: crosshair;
+            }
+        }
+
+        /* Ensure vertical scroll works on touch devices */
+        @media (pointer: coarse) {
+            .product-main-slider .swiper-slide img {
+                touch-action: pan-y !important;
             }
         }
     </style>
@@ -977,8 +984,8 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                 }
             });
 
-            // Product Image Zoom Effect (Only for devices with hover capability)
-            if (window.matchMedia('(hover: hover)').matches) {
+            // Product Image Zoom Effect (Only for devices with a precise pointer like a mouse)
+            if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
                 const mainSliderSlides = document.querySelectorAll('.product-main-slider .swiper-slide');
                 mainSliderSlides.forEach(slide => {
                     const img = slide.querySelector('img');
