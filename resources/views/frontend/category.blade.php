@@ -137,7 +137,7 @@
                         });
                     });
 
-                    function applyFilters() {
+                    function applyFilters(page = 1) {
                         const categoryId = document.getElementById('category_id').value;
 
                         // Collect values
@@ -154,6 +154,7 @@
                         const style = getValues('style');
 
                         const container = document.getElementById('product-list-container');
+                        const paginationContainer = document.getElementById('pagination-container');
 
                         if (container) {
                             container.style.opacity = '0.5';
@@ -161,19 +162,48 @@
                             const params = new URLSearchParams({
                                 category_id: categoryId,
                                 sort: sort,
-                                metal: metal, // Now sends "1,2" etc
+                                metal: metal,
                                 shape: shape,
-                                style: style
+                                style: style,
+                                page: page
                             });
 
                             fetch(`{{ route('ajax.products') }}?${params.toString()}`)
                                 .then(response => response.json())
                                 .then(data => {
                                     container.innerHTML = data.html;
+                                    if (paginationContainer) {
+                                        paginationContainer.innerHTML = data.pagination;
+                                        attachPaginationEvents();
+                                    }
                                     container.style.opacity = '1';
+
+                                    // Scroll to top of products on page change
+                                    if (page > 1) {
+                                        container.scrollIntoView({
+                                            behavior: 'smooth',
+                                            block: 'start'
+                                        });
+                                    }
                                 });
                         }
                     }
+
+                    function attachPaginationEvents() {
+                        const paginationLinks = document.querySelectorAll('.custom-pagination li a');
+                        paginationLinks.forEach(link => {
+                            link.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                const page = this.dataset.page;
+                                if (page) {
+                                    applyFilters(page);
+                                }
+                            });
+                        });
+                    }
+
+                    // Initial event attachment
+                    attachPaginationEvents();
                 });
             </script>
             <div class="wrapper" style="margin-top: 50px;">
@@ -183,6 +213,9 @@
                         'itemClass' => 'col-lg-3 col-md-3 col-sm-4 col-6 cetagory-item product-item',
                         'showName' => true,
                     ])
+                </div>
+                <div id="pagination-container">
+                    {{ $products->links('frontend.partials.custom_pagination') }}
                 </div>
             </div>
         </div>

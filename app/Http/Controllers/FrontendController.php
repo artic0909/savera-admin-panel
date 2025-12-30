@@ -91,18 +91,26 @@ class FrontendController extends Controller
             return (float) str_replace(',', '', $product->display_price);
         }, SORT_REGULAR, $sortOrder === 'price_desc');
 
-        // Limit results if it's home page (optional, but keep consistent with request)
-        if ($request->has('limit')) {
-            $products = $products->take($request->limit);
-        }
-
-        // Render the partial
-        $html = view('frontend.partials.product_loop', compact('products'))->render();
-
+        // Pagination
+        $perPage = 15;
+        $page = $request->get('page', 1);
         $category = Category::find($categoryId);
+        $path = $category ? route('category.show', $category->slug) : url()->current();
+
+        $paginatedProducts = new \Illuminate\Pagination\LengthAwarePaginator(
+            $products->forPage($page, $perPage),
+            $products->count(),
+            $perPage,
+            $page,
+            ['path' => $path, 'query' => $request->query()]
+        );
+
+        $html = view('frontend.partials.product_loop', ['products' => $paginatedProducts])->render();
+        $paginationHtml = $paginatedProducts->links('frontend.partials.custom_pagination')->toHtml();
 
         return response()->json([
             'html' => $html,
+            'pagination' => $paginationHtml,
             'category_slug' => $category ? $category->slug : '#'
         ]);
     }
@@ -116,6 +124,18 @@ class FrontendController extends Controller
         $products = $products->sortBy(function ($product) {
             return (float) str_replace(',', '', $product->display_price);
         });
+
+        // Manual Pagination
+        $perPage = 15;
+        $page = request()->get('page', 1);
+        $paginatedProducts = new \Illuminate\Pagination\LengthAwarePaginator(
+            $products->forPage($page, $perPage),
+            $products->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
         // Pass filter options
         $materials = \App\Models\Material::all();
         $shapes = \App\Models\Shape::all();
@@ -123,7 +143,14 @@ class FrontendController extends Controller
 
         $categories = Category::where('home_category', true)->take(5)->get();
 
-        return view('frontend.category', compact('category', 'products', 'materials', 'shapes', 'styles', 'categories'))->with(['pageclass' => 'hedersolution bg-1']);
+        return view('frontend.category', [
+            'category' => $category,
+            'products' => $paginatedProducts,
+            'materials' => $materials,
+            'shapes' => $shapes,
+            'styles' => $styles,
+            'categories' => $categories
+        ])->with(['pageclass' => 'hedersolution bg-1']);
     }
 
     public function productDetails($slug)
