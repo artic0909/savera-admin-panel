@@ -12,7 +12,6 @@ class FrontendController extends Controller
 {
     public function home(Request $request)
     {
-        $chooses = WhyChoose::all();
         $categories = Category::where('home_category', true)->take(5)->get();
         // Default to first category if none or invalid
         $selectedCategory = $categories->first();
@@ -41,7 +40,9 @@ class FrontendController extends Controller
                 ->toArray();
         }
 
-        return view('frontend.home', compact('categories', 'selectedCategory', 'products', 'chooses', 'storyVideos', 'wishlistProductIds'));
+        $homeSettings = \App\Models\HomePageSetting::all()->pluck('value', 'key');
+
+        return view('frontend.home', compact('categories', 'selectedCategory', 'products', 'storyVideos', 'wishlistProductIds', 'homeSettings'));
     }
 
     public function ajaxProducts(Request $request)

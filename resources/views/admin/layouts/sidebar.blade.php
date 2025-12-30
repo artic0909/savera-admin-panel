@@ -24,10 +24,10 @@
             </a>
         </li>
 
-        <li class="menu-item {{ Request::routeIs('admin.whychoose.index') ? 'active' : '' }}">
-            <a href="{{ route('admin.whychoose.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-list-check"></i>
-                <div data-i18n="WhyChooseUs">Why Choose Us</div>
+        <li class="menu-item {{ Request::routeIs('admin.home-settings.index') ? 'active' : '' }}">
+            <a href="{{ route('admin.home-settings.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-layout"></i>
+                <div data-i18n="HomeConfiguration">Home Configuration</div>
             </a>
         </li>
 
