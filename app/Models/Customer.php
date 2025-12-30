@@ -30,4 +30,9 @@ class Customer extends Authenticatable
         'password' => 'hashed',
         'status' => 'boolean',
     ];
+
+    public function addresses()
+    {
+        return $this->hasMany(CustomerAddress::class);
+    }
 }

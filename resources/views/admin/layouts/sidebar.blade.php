@@ -111,6 +111,13 @@
             </a>
         </li>
 
+        <li class="menu-item {{ Request::routeIs('admin.customers.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.customers.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-group"></i>
+                <div data-i18n="manageCustomers">Manage Customers</div>
+            </a>
+        </li>
+
         <li class="menu-item {{ Request::routeIs('admin.inventory.*') ? 'active' : '' }}">
             <a href="{{ route('admin.inventory.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-collection"></i>

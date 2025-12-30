@@ -85,7 +85,7 @@
 
             {{-- Total Customers --}}
             <div class="col-lg-3 col-md-6 col-6 mb-4">
-                <a href="{{ route('admin.orders.index') }}" class="text-decoration-none">
+                <a href="{{ route('admin.customers.index') }}" class="text-decoration-none">
                     <div class="card h-100">
                         <div class="card-body">
                             <div class="card-title d-flex align-items-start justify-content-between">

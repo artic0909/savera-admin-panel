@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PincodeController;
 use App\Http\Controllers\Admin\CouponController;
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
@@ -108,6 +109,10 @@ Route::middleware(['auth:admin'])->group(function () {
     // Home Page Settings
     Route::get('/admin/home-settings', [\App\Http\Controllers\Admin\HomePageSettingController::class, 'index'])->name('admin.home-settings.index');
     Route::post('/admin/home-settings/update/{section}', [\App\Http\Controllers\Admin\HomePageSettingController::class, 'updateSection'])->name('admin.home-settings.update-section');
+
+    // Customers
+    Route::get('/admin/customers', [CustomerController::class, 'index'])->name('admin.customers.index');
+    Route::delete('/admin/customers/{id}', [CustomerController::class, 'destroy'])->name('admin.customers.destroy');
 
     // Profile ==================================================================================================================================>
     Route::get('/admin/profile', [AdminController::class, 'adminProfileView'])->name('admin.profile');
