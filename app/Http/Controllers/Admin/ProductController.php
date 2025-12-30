@@ -106,11 +106,27 @@ class ProductController extends Controller
                 $data['additional_images'] = $media;
             }
 
+            if ($request->has('metal_configurations')) {
+                $configs = $request->input('metal_configurations');
+                $pairs = [];
+                foreach ($configs as $config) {
+                    $mId = $config['material_id'] ?? null;
+                    $sId = $config['size_id'] ?? null;
+                    if ($mId && $sId) {
+                        $key = $mId . '-' . $sId;
+                        if (in_array($key, $pairs)) {
+                            return redirect()->back()->with('error', 'Duplicate Material and Size combination found in variants.')->withInput();
+                        }
+                        $pairs[] = $key;
+                    }
+                }
+            }
+
             Product::create($data);
 
             return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to create product. Please try again.');
+            return redirect()->back()->with('error', 'Failed to create product: ' . $e->getMessage())->withInput();
         }
     }
 
@@ -229,11 +245,27 @@ class ProductController extends Controller
 
             $data['additional_images'] = $currentMedia;
 
+            if ($request->has('metal_configurations')) {
+                $configs = $request->input('metal_configurations');
+                $pairs = [];
+                foreach ($configs as $config) {
+                    $mId = $config['material_id'] ?? null;
+                    $sId = $config['size_id'] ?? null;
+                    if ($mId && $sId) {
+                        $key = $mId . '-' . $sId;
+                        if (in_array($key, $pairs)) {
+                            return redirect()->back()->with('error', 'Duplicate Material and Size combination found in variants.')->withInput();
+                        }
+                        $pairs[] = $key;
+                    }
+                }
+            }
+
             $product->update($data);
 
             return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to update product. Please try again.');
+            return redirect()->back()->with('error', 'Failed to update product: ' . $e->getMessage())->withInput();
         }
     }
 

@@ -19,7 +19,15 @@ class FrontendController extends Controller
 
         $products = collect();
         if ($selectedCategory) {
-            $products = Product::where('category_id', $selectedCategory->id)->where('is_active', true)->take(10)->get();
+            $products = Product::where('category_id', $selectedCategory->id)
+                ->where('is_active', true)
+                ->take(10)
+                ->get();
+
+            // Always sort home products by price low to high
+            $products = $products->sortBy(function ($product) {
+                return (float) str_replace(',', '', $product->display_price);
+            });
         }
 
         $storyVideos = \App\Models\StoryVideo::with(['products' => function ($query) {
@@ -42,7 +50,6 @@ class FrontendController extends Controller
         $query = Product::where('category_id', $categoryId)->where('is_active', true);
 
         // 1. Get all candidates from DB (filtering by category)
-        // We will filter by other attributes in memory because they are in complex JSON or computed.
         $products = $query->get();
 
         // 2. Filter by Metal (material_id in metal_configurations)
@@ -52,7 +59,6 @@ class FrontendController extends Controller
                 if (empty($product->metal_configurations))
                     return false;
                 foreach ($product->metal_configurations as $config) {
-                    // Check direct material_id or nested
                     if (isset($config['material_id']) && in_array($config['material_id'], $metalIds))
                         return true;
                 }
@@ -63,8 +69,6 @@ class FrontendController extends Controller
         // 3. Filter by Shape (in diamond_gemstone_info)
         if ($request->has('shape') && $request->shape != '') {
             $shapeNames = explode(',', $request->shape);
-            // Case insensitive search needed?
-            // Let's normalize both to lowercase for comparison if needed, or just exact match from DB
             $products = $products->filter(function ($product) use ($shapeNames) {
                 if (empty($product->metal_configurations))
                     return false;
@@ -81,19 +85,12 @@ class FrontendController extends Controller
         }
 
         // 4. Sort by Price
-        // Calculate price for sorting
-        if ($request->has('sort') && in_array($request->sort, ['price_asc', 'price_desc'])) {
-            $products = $products->sortBy(function ($product) {
-                // Remove commas and cast to float
-                return floatval(str_replace(',', '', $product->display_price));
-            }, SORT_REGULAR, $request->sort === 'price_desc');
-        }
+        $sortOrder = $request->input('sort', 'price_asc'); // Default to price_asc
+        $products = $products->sortBy(function ($product) {
+            return (float) str_replace(',', '', $product->display_price);
+        }, SORT_REGULAR, $sortOrder === 'price_desc');
 
         // Limit results if it's home page (optional, but keep consistent with request)
-        // Use pagination logic if needed, but for now just take all or limit
-        // User didn't specify limit for category page, but likely wants all.
-        // For Home page strict limit of 10 might apply, but let's return all matching for category page.
-        // We can add a 'limit' param.
         if ($request->has('limit')) {
             $products = $products->take($request->limit);
         }
@@ -113,6 +110,11 @@ class FrontendController extends Controller
     {
         $category = Category::where('slug', $slug)->firstOrFail();
         $products = Product::where('category_id', $category->id)->where('is_active', true)->get();
+
+        // Always sort by price low to high
+        $products = $products->sortBy(function ($product) {
+            return (float) str_replace(',', '', $product->display_price);
+        });
         // Pass filter options
         $materials = \App\Models\Material::all();
         $shapes = \App\Models\Shape::all();
@@ -258,6 +260,11 @@ class FrontendController extends Controller
             $products = Product::where('product_name', 'like', '%' . $search . '%')
                 ->where('is_active', true)
                 ->get();
+
+            // Always sort by price low to high
+            $products = $products->sortBy(function ($product) {
+                return (float) str_replace(',', '', $product->display_price);
+            });
         }
 
         // Fetch categories for layout if needed (mimicking other methods typically, 

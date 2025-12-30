@@ -35,7 +35,7 @@
                                 <div class="mb-3 col-md-6">
                                     <label for="category_id" class="form-label">Category</label>
                                     <select id="category_id" name="category_id" class="form-select" required>
-                                        <option value="">Select Category</option>
+                                        <option value="">--Select Category--</option>
                                         @foreach ($categories as $category)
                                             <option value="{{ $category->id }}"
                                                 {{ $product->category_id == $category->id ? 'selected' : '' }}>
@@ -184,7 +184,7 @@
                                                     <label class="form-label">Material</label>
                                                     <select name="metal_configurations[{{ $index }}][material_id]"
                                                         class="form-select" required>
-                                                        <option value="">Select</option>
+                                                        <option value="">--Select--</option>
                                                         @foreach ($materials as $material)
                                                             <option value="{{ $material->id }}"
                                                                 {{ isset($config['material_id']) && $config['material_id'] == $material->id ? 'selected' : '' }}>
@@ -197,6 +197,7 @@
                                                     <label class="form-label">Size</label>
                                                     <select name="metal_configurations[{{ $index }}][size_id]"
                                                         class="form-select" required>
+                                                        <option value="">--Select--</option>
                                                         @foreach ($sizes as $size)
                                                             <option value="{{ $size->id }}"
                                                                 {{ isset($config['size_id']) && $config['size_id'] == $size->id ? 'selected' : '' }}>
@@ -374,7 +375,7 @@
                     <div class="col-md-3">
                         <label class="form-label">Material</label>
                         <select name="metal_configurations[INDEX][material_id]" class="form-select" required>
-                            <option value="">Select</option>
+                            <option value="">--Select--</option>
                             @foreach ($materials as $material)
                                 <option value="{{ $material->id }}">{{ $material->name }}</option>
                             @endforeach
@@ -384,6 +385,7 @@
                     <div class="col-md-2">
                         <label class="form-label">Size</label>
                         <select name="metal_configurations[INDEX][size_id]" class="form-select" required>
+                            <option value="">--Select--</option>
                             @foreach ($sizes as $size)
                                 <option value="{{ $size->id }}">{{ $size->size_name }}</option>
                             @endforeach
@@ -556,11 +558,50 @@
             const metalTemplate = document.getElementById('metal-config-template').innerHTML;
             const diamondTemplate = document.getElementById('diamond-template').innerHTML;
 
+            function refreshSizeOptions() {
+                const rows = metalContainer.querySelectorAll('.metal-config-row');
+                const selectedPairs = [];
+
+                // First pass: collect all selected material+size pairs
+                rows.forEach(row => {
+                    const materialId = row.querySelector('select[name*="[material_id]"]').value;
+                    const sizeId = row.querySelector('select[name*="[size_id]"]').value;
+                    if (materialId && sizeId) {
+                        selectedPairs.push({
+                            materialId,
+                            sizeId,
+                            row
+                        });
+                    }
+                });
+
+                // Second pass: disable/enable options
+                rows.forEach(row => {
+                    const currentMaterialId = row.querySelector('select[name*="[material_id]"]').value;
+                    const sizeSelect = row.querySelector('select[name*="[size_id]"]');
+                    const currentSizeId = sizeSelect.value;
+
+                    Array.from(sizeSelect.options).forEach(option => {
+                        const optionSizeId = option.value;
+                        if (!optionSizeId) return;
+
+                        const isDuplicate = selectedPairs.some(pair =>
+                            pair.materialId === currentMaterialId &&
+                            pair.sizeId === optionSizeId &&
+                            pair.row !== row
+                        );
+
+                        option.disabled = isDuplicate;
+                    });
+                });
+            }
+
             // Initialize existing rows
             const existingRows = metalContainer.querySelectorAll('.metal-config-row');
             existingRows.forEach((row, index) => {
                 setupMetalRowResults(row, index);
             });
+            refreshSizeOptions();
 
             document.getElementById('add-metal-config').addEventListener('click', function() {
                 const index = metalContainer.children.length + Math.floor(Math.random() *
@@ -575,14 +616,24 @@
 
                 setupMetalRowResults(metalRow, index);
                 metalContainer.appendChild(metalRow);
+                refreshSizeOptions();
             });
 
             function setupMetalRowResults(metalRow, index) {
                 // Remove Metal
                 const removeMetalBtn = metalRow.querySelector('.remove-metal');
                 if (removeMetalBtn) {
-                    removeMetalBtn.onclick = () => metalRow.remove();
+                    removeMetalBtn.onclick = () => {
+                        metalRow.remove();
+                        refreshSizeOptions();
+                    }
                 }
+
+                const materialSelect = metalRow.querySelector('select[name*="[material_id]"]');
+                const sizeSelect = metalRow.querySelector('select[name*="[size_id]"]');
+
+                if (materialSelect) materialSelect.addEventListener('change', refreshSizeOptions);
+                if (sizeSelect) sizeSelect.addEventListener('change', refreshSizeOptions);
 
                 // Diamond Checkbox
                 const checkbox = metalRow.querySelector('.use-diamond');

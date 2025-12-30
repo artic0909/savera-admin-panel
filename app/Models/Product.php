@@ -32,9 +32,8 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function getDisplayPriceAttribute()
+    private function getNormalizedConfigs()
     {
-        // 1. Normalize Configurations
         $allConfigs = [];
         $configs = $this->metal_configurations;
 
@@ -58,6 +57,12 @@ class Product extends Model
                 }
             }
         }
+        return $allConfigs;
+    }
+
+    public function getDisplayPriceAttribute()
+    {
+        $allConfigs = $this->getNormalizedConfigs();
 
         if (empty($allConfigs)) {
             return '--';
@@ -66,8 +71,7 @@ class Product extends Model
         // 2. Get the LAST configuration
         $config = end($allConfigs);
 
-        // 3. Fetch Materials (Optimize by fetching all needed once or just simple find)
-        // Since this is per-product, we'll just fetch what we need.
+        // 3. Fetch Materials
         $materialPrice = 0;
         if (isset($config['material_id'])) {
             $material = Material::find($config['material_id']);
@@ -76,24 +80,11 @@ class Product extends Model
             }
         }
 
-        // Diamond Price
-        // $diamondPricePerCarat = 0;
-        // $diamondMaterial = Material::where('name', 'Diamond')->first();
-        // if ($diamondMaterial) {
-        //     $diamondPricePerCarat = $diamondMaterial->price;
-        // }
-
         // 4. Calculate
         $netWt = floatval($config['net_weight_gold'] ?? 0);
         $materialCost = $netWt * $materialPrice;
 
-        $diamondTotalWt = 0;
-        if (isset($config['diamond_info']) && is_array($config['diamond_info'])) {
-            foreach ($config['diamond_info'] as $dInfo) {
-                $diamondTotalWt += floatval($dInfo['total_weight'] ?? 0);
-            }
-        }
-        $diamondCost = floatval($config['total_diamond_price'] ?? 0);;
+        $diamondCost = floatval($config['total_diamond_price'] ?? 0);
 
         $makingCharge = floatval($config['making_charge'] ?? 0);
 
@@ -103,6 +94,20 @@ class Product extends Model
         $finalPrice = $basePrice + $gstAmount;
 
         return number_format($finalPrice, 2);
+    }
+
+    public function getMrpAttribute()
+    {
+        $allConfigs = $this->getNormalizedConfigs();
+
+        if (empty($allConfigs)) {
+            return 0;
+        }
+
+        // Consistent with display_price, use the LAST configuration
+        $config = end($allConfigs);
+
+        return floatval($config['mrp'] ?? 0);
     }
 
     protected static function booted()

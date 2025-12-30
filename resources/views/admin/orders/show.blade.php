@@ -39,6 +39,11 @@
                                     style="width: 80px; height: 80px; object-fit: cover;">
                                 <div class="flex-grow-1">
                                     <h6 class="mb-1">{{ $item->product_name }}</h6>
+                                    @if ($item->product && $item->product->sku)
+                                        <div class="mb-1">
+                                            <span class="badge bg-label-secondary">SKU: {{ $item->product->sku }}</span>
+                                        </div>
+                                    @endif
                                     @if ($item->metal_configuration)
                                         <small class="text-muted d-block">
                                             Material: {{ $item->metal_configuration['material_name'] ?? 'N/A' }} |
