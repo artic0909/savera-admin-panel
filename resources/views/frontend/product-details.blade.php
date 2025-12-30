@@ -588,7 +588,7 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                         Certified Jewellery
                                     </li>
                                 </ul>
-                                <div class="certificate text-center">
+                                {{-- <div class="certificate text-center">
                                     <h6>
                                         certificate of authenticity
                                     </h6>
@@ -596,7 +596,8 @@ if (!empty($shownDiamondInfo) && is_array($shownDiamondInfo)) {
                                         laboratories like IGI and SGL.<br>
                                         Our certification guarantees the authenticity, quality, and transparency of every
                                         product—because fine jewellery should always come with complete trust.</p>
-                                </div>
+                                </div> --}}
+                                <img src="{{ asset('assets/images/certificate.webp') }}" alt="...">
                             </div>
                         </div>
                     </div>
