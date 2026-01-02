@@ -500,9 +500,10 @@
                 });
             });
 
-            // Check URL parameters for pagination
+            // Check URL parameters for tab selection or pagination
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('page')) {
+            const tabParam = urlParams.get('tab');
+            if (tabParam === 'orders' || urlParams.has('page')) {
                 switchTab('orders');
 
                 // Scroll to top of orders section

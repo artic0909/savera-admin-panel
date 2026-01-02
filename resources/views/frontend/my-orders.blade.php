@@ -40,9 +40,14 @@
                             ; color: white; border-radius: 20px; font-size: 12px; text-transform: uppercase;">{{ $order->status }}</span>
                             </div>
 
-                            <div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                @if ($order->tracking_url)
+                                    <a href="{{ $order->tracking_url }}" target="_blank"
+                                        style="padding: 10px 15px; background: #2196F3; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 13px;">
+                                        <i class="fi fi-rr-truck-side" style="margin-right: 5px;"></i> Track Order</a>
+                                @endif
                                 <a href="{{ route('order.details', $order->order_number) }}"
-                                    style="padding: 10px 25px; background: #000; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">View
+                                    style="padding: 10px 25px; border: 1px solid #000; color: #000; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">View
                                     Details</a>
                             </div>
                         </div>

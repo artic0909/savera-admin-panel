@@ -3,6 +3,97 @@
 @section('title', 'Order Details - ' . $order->order_number)
 
 @section('content')
+    <style>
+        .custom-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+            animation: modalSlideDown 0.3s ease-out;
+        }
+
+        @keyframes modalSlideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-icon {
+            font-size: 3rem;
+            color: #F44336;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .modal-desc {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn-modal {
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 14px;
+        }
+
+        .btn-modal-cancel {
+            background: #eee;
+            color: #333;
+        }
+
+        .btn-modal-confirm {
+            background: #F44336;
+            color: white;
+        }
+
+        .btn-modal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
     <section style="padding: 60px 0;">
         <div class="wrapper">
             <div style="max-width: 900px; margin: 0 auto;">
@@ -13,15 +104,48 @@
                             <h3 style="margin-bottom: 10px;">Order #{{ $order->order_number }}</h3>
                             <p style="color: #666;">Placed on {{ $order->created_at->format('d M, Y h:i A') }}</p>
                         </div>
-                        <span
-                            style="padding: 10px 20px; background: 
-                        @if ($order->status == 'pending') #FFC107
-                        @elseif($order->status == 'processing') #2196F3
-                        @elseif($order->status == 'shipped') #9C27B0
-                        @elseif($order->status == 'delivered') #4CAF50
-                        @else #F44336 @endif
-                    ; color: white; border-radius: 25px; font-weight: bold; text-transform: uppercase;">{{ $order->status }}</span>
+                        <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                            @if (in_array($order->status, ['pending', 'processing']))
+                                <button type="button" onclick="showCancelModal()"
+                                    style="padding: 10px 20px; background: #fff; color: #F44336; border: 1px solid #F44336; border-radius: 25px; font-weight: bold; cursor: pointer; transition: all 0.3s ease;">
+                                    <i class="fi fi-rr-cross-circle" style="margin-right: 5px; vertical-align: middle;"></i>
+                                    Cancel Order
+                                </button>
+
+                                <form id="cancelOrderForm" action="{{ route('order.cancel', $order->order_number) }}"
+                                    method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                            @endif
+                            <span
+                                style="padding: 10px 20px; background: 
+                            @if ($order->status == 'pending') #FFC107
+                            @elseif($order->status == 'processing') #2196F3
+                            @elseif($order->status == 'shipped') #9C27B0
+                            @elseif($order->status == 'delivered') #4CAF50
+                            @elseif($order->status == 'cancelled') #F44336
+                            @else #F44336 @endif
+                        ; color: white; border-radius: 25px; font-weight: bold; text-transform: uppercase;">{{ $order->status }}</span>
+                        </div>
                     </div>
+
+                    @if ($order->tracking_url)
+                        <div
+                            style="background: #e7f3ff; border-left: 5px solid #2196F3; padding: 20px; border-radius: 5px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                            <div>
+                                <h5 style="margin-bottom: 5px; color: #0d6efd;"><i class="fi fi-rr-truck-side"></i> Shipment
+                                    Tracking</h5>
+                                <p style="margin-bottom: 0; font-size: 14px;">AWB Code:
+                                    <strong>{{ $order->awb_code ?? 'N/A' }}</strong>
+                                </p>
+                            </div>
+                            <a href="{{ $order->tracking_url }}" target="_blank"
+                                style="padding: 10px 20px; background: #2196F3; color: white; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 14px;">
+                                Track on Shiprocket <i class="fi fi-rr-external-link"
+                                    style="margin-left: 5px; font-size: 12px;"></i>
+                            </a>
+                        </div>
+                    @endif
 
                     <h4 style="margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Order Items</h4>
 
@@ -125,11 +249,51 @@
                 </div>
 
                 <div style="margin-top: 20px; text-align: center;">
-                    <a href="{{ route('orders.index') }}"
+                    <a href="{{ route('profile') }}?tab=orders"
                         style="padding: 12px 30px; background: #000; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Back
                         to Orders</a>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Custom Cancel Modal -->
+    <div id="cancelModal" class="custom-modal">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fi fi-rr-interrogation"></i>
+            </div>
+            <div class="modal-title">Cancel Order?</div>
+            <div class="modal-desc">Are you sure you want to cancel this order? This action will also cancel the shipment in
+                Shiprocket and cannot be undone.</div>
+            <div class="modal-actions">
+                <button type="button" class="btn-modal btn-modal-cancel" onclick="closeCancelModal()">No, Keep
+                    Order</button>
+                <button type="button" class="btn-modal btn-modal-confirm" onclick="confirmCancelOrder()">Yes, Cancel
+                    Order</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showCancelModal() {
+            document.getElementById('cancelModal').style.display = 'flex';
+        }
+
+        function closeCancelModal() {
+            document.getElementById('cancelModal').style.display = 'none';
+        }
+
+        function confirmCancelOrder() {
+            document.getElementById('cancelOrderForm').submit();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('cancelModal');
+            if (event.target == modal) {
+                closeCancelModal();
+            }
+        }
+    </script>
 @endsection

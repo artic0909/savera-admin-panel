@@ -25,6 +25,10 @@ class Order extends Model
         'coupon_code',
         'discount_amount',
         'notes',
+        'shiprocket_order_id',
+        'shiprocket_shipment_id',
+        'awb_code',
+        'tracking_url',
     ];
 
     protected $casts = [

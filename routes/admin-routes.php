@@ -71,12 +71,19 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/orders/{id}', [OrderController::class, 'show'])->name('admin.orders.show');
     Route::put('/admin/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
     Route::put('/admin/orders/{id}/payment-status', [OrderController::class, 'updatePaymentStatus'])->name('admin.orders.updatePaymentStatus');
+    Route::post('/admin/orders/{id}/push-shiprocket', [OrderController::class, 'pushToShiprocket'])->name('admin.orders.pushShiprocket');
+    Route::post('/admin/orders/{id}/update-shiprocket-status', [OrderController::class, 'updateShiprocketStatus'])->name('admin.orders.updateShiprocketStatus');
     Route::delete('/admin/orders/{id}', [OrderController::class, 'destroy'])->name('admin.orders.destroy');
 
 
     // Payment Settings
     Route::get('/admin/payment-settings', [App\Http\Controllers\Admin\PaymentSettingController::class, 'index'])->name('admin.payment-settings.index');
     Route::post('/admin/payment-settings', [App\Http\Controllers\Admin\PaymentSettingController::class, 'update'])->name('admin.payment-settings.update');
+
+    // Shipping Settings
+    Route::get('/admin/shipping-settings', [App\Http\Controllers\Admin\ShippingSettingController::class, 'index'])->name('admin.shipping-settings.index');
+    Route::post('/admin/shipping-settings', [App\Http\Controllers\Admin\ShippingSettingController::class, 'update'])->name('admin.shipping-settings.update');
+    Route::post('/admin/shipping-settings/test', [App\Http\Controllers\Admin\ShippingSettingController::class, 'testConnection'])->name('admin.shipping-settings.test');
 
 
     // SEO Settings

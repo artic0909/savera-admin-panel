@@ -208,6 +208,67 @@
                     </div>
                 </div>
 
+                <!-- Shiprocket Shipping -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">Shiprocket Shipping</h6>
+                        @if ($order->shiprocket_shipment_id)
+                            <span class="badge bg-label-info">Pushed</span>
+                        @endif
+                    </div>
+                    <div class="card-body">
+                        @if (!$order->shiprocket_shipment_id)
+                            <p class="text-muted small mb-3">Push this order to Shiprocket to generate shipment and
+                                tracking.</p>
+                            <form action="{{ route('admin.orders.pushShiprocket', $order->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-primary w-100">
+                                    <i class="bx bx-rocket me-1"></i> Push to Shiprocket
+                                </button>
+                            </form>
+                        @else
+                            <div class="mb-3">
+                                <label class="form-label small text-muted">Shiprocket Order ID Status</label>
+                                <div>
+                                    @if ($shiprocketStatus)
+                                        <span class="badge bg-label-info">{{ $shiprocketStatus }}</span>
+                                    @else
+                                        <span class="text-muted small">Not available yet</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small text-muted">Shiprocket Order ID</label>
+                                <div class="fw-bold">{{ $order->shiprocket_order_id }}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small text-muted">Shipment ID</label>
+                                <div class="fw-bold">{{ $order->shiprocket_shipment_id }}</div>
+                            </div>
+                            @if ($order->awb_code)
+                                <div class="mb-3">
+                                    <label class="form-label small text-muted">AWB Code</label>
+                                    <div class="fw-bold">{{ $order->awb_code }}</div>
+                                </div>
+                            @endif
+                            @if ($order->tracking_url)
+                                <div class="mb-3">
+                                    <a href="{{ $order->tracking_url }}" target="_blank"
+                                        class="btn btn-sm btn-outline-secondary w-100">
+                                        <i class="bx bx-map-pin me-1"></i> Track Shipment
+                                    </a>
+                                </div>
+                            @endif
+                            <form action="{{ route('admin.orders.updateShiprocketStatus', $order->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="bx bx-refresh me-1"></i> Update Status
+                                </button>
+                            </form>
+                        @endif
+                    </div>
+                </div>
+
                 <!-- Order Summary -->
                 <div class="card">
                     <div class="card-header">
@@ -219,6 +280,14 @@
                                 <span class="text-muted">Order Number:</span>
                                 <strong>{{ $order->order_number }}</strong>
                             </li>
+                            @if ($order->tracking_url)
+                                <li class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted">Tracking:</span>
+                                    <a href="{{ $order->tracking_url }}" target="_blank"
+                                        class="text-primary fw-bold">Track on Shiprocket <i
+                                            class="bx bx-link-external small"></i></a>
+                                </li>
+                            @endif
                             <li class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Order Date:</span>
                                 <span>{{ $order->created_at->format('d M, Y') }}</span>

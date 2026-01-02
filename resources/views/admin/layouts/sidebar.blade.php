@@ -166,5 +166,12 @@
                 <div data-i18n="PaymentSettings">Payment Settings</div>
             </a>
         </li>
+
+        <li class="menu-item {{ Request::routeIs('admin.shipping-settings.index') ? 'active' : '' }}">
+            <a href="{{ route('admin.shipping-settings.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-truck"></i>
+                <div data-i18n="ShippingSettings">Shipping Settings</div>
+            </a>
+        </li>
     </ul>
 </aside>

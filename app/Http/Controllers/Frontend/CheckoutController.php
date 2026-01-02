@@ -259,6 +259,37 @@ class CheckoutController extends Controller
 
             DB::commit();
 
+            // Push to Shiprocket if enabled
+            try {
+                $shippingSetting = \App\Models\ShippingSetting::first();
+                if ($shippingSetting && $shippingSetting->is_shiprocket_enabled) {
+                    $shiprocketService = new \App\Services\ShiprocketService();
+                    $result = $shiprocketService->createOrder($order->load('customer', 'items.product'));
+                    if ($result['success']) {
+                        $order->update([
+                            'shiprocket_order_id' => $result['data']['order_id'],
+                            'shiprocket_shipment_id' => $result['data']['shipment_id'],
+                            'status' => 'processing'
+                        ]);
+
+                        // Try to assign AWB immediately
+                        try {
+                            $awbResult = $shiprocketService->assignAwb($result['data']['shipment_id']);
+                            if ($awbResult['success']) {
+                                $order->update([
+                                    'awb_code' => $awbResult['awb_code'],
+                                    'tracking_url' => "https://shiprocket.co/tracking/" . $awbResult['awb_code']
+                                ]);
+                            }
+                        } catch (\Exception $e) {
+                            \Illuminate\Support\Facades\Log::warning('Auto AWB Assignment Failed: ' . $e->getMessage());
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Auto Shiprocket Push Failed: ' . $e->getMessage());
+            }
+
             return redirect()->route('order.success', $order->order_number)
                 ->with('success', 'Order placed successfully!');
         } catch (\Exception $e) {
@@ -296,15 +327,45 @@ class CheckoutController extends Controller
     // Order details page
     public function orderDetails($orderNumber)
     {
-        $categories = Category::where('home_category', true)->take(5)->get();
-
-        $order = Order::with('items.product')
+        $order = Order::with(['items.product', 'customer'])
             ->where('order_number', $orderNumber)
             ->where('customer_id', Auth::guard('customer')->id())
             ->firstOrFail();
 
-        return view('frontend.order-details', compact('order', 'categories'))
-            ->with('pageclass', 'hedersolution bg-1');
+        return view('frontend.order-details', compact('order'))->with(['pageclass' => 'hedersolution bg-1']);
+    }
+
+    // Cancel order
+    public function cancelOrder($orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)
+            ->where('customer_id', Auth::guard('customer')->id())
+            ->firstOrFail();
+
+        // Allow cancellation only if status is pending or processing
+        if (!in_array($order->status, ['pending', 'processing'])) {
+            return redirect()->back()->with('error', 'This order cannot be cancelled anymore.');
+        }
+
+        // Try to cancel in Shiprocket if it was pushed
+        if ($order->shiprocket_order_id) {
+            $shiprocketService = new \App\Services\ShiprocketService();
+            $result = $shiprocketService->cancelOrder($order->shiprocket_order_id);
+            if (!$result['success']) {
+                \Illuminate\Support\Facades\Log::warning('Shiprocket User Cancel Failed: ' . ($result['message'] ?? 'Unknown error'), ['order' => $order->order_number]);
+            }
+        }
+
+        // Restore Stock
+        foreach ($order->load('items.product')->items as $item) {
+            if ($item->product) {
+                $item->product->increment('stock_quantity', $item->quantity);
+            }
+        }
+
+        $order->update(['status' => 'cancelled']);
+
+        return redirect()->back()->with('success', 'Order has been cancelled successfully.');
     }
     // Direct Checkout (Buy Now)
     public function directCheckout(Request $request)
@@ -382,6 +443,7 @@ class CheckoutController extends Controller
             return response()->json(['error' => 'Payment gateway not configured'], 500);
         }
 
+        /** @var \Illuminate\Http\Client\Response $response */
         $response = Http::withBasicAuth($settings->razorpay_key, $settings->razorpay_secret)
             ->post('https://api.razorpay.com/v1/orders', [
                 'amount' => (int) round($total * 100),
@@ -390,7 +452,7 @@ class CheckoutController extends Controller
                 'payment_capture' => 1
             ]);
 
-        if ($response->successful()) {
+        if ($response && $response->successful()) {
             $orderData = $response->json();
             $user = Auth::guard('customer')->user();
             return response()->json([

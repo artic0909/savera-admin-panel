@@ -24,6 +24,7 @@ Route::get('/search-product', [FrontendController::class, 'searchProduct'])->nam
 Route::post('/api/check-pincode', [FrontendController::class, 'checkPincode'])->name('api.checkPincode');
 Route::post('/api/check-coupon', [FrontendController::class, 'checkCoupon'])->name('api.checkCoupon');
 Route::post('/api/product-notify', [FrontendController::class, 'notifyProduct'])->name('product.notify');
+Route::post('/webhooks/shiprocket', [\App\Http\Controllers\Api\ShiprocketWebhookController::class, 'handleStatusUpdate']);
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -91,4 +92,5 @@ Route::middleware('auth:customer')->group(function () {
     Route::get('order-success/{orderNumber}', [CheckoutController::class, 'success'])->name('order.success');
     Route::get('my-orders', [CheckoutController::class, 'myOrders'])->name('orders.index');
     Route::get('order/{orderNumber}', [CheckoutController::class, 'orderDetails'])->name('order.details');
+    Route::post('order/cancel/{orderNumber}', [CheckoutController::class, 'cancelOrder'])->name('order.cancel');
 });
