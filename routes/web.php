@@ -24,7 +24,7 @@ Route::get('/search-product', [FrontendController::class, 'searchProduct'])->nam
 Route::post('/api/check-pincode', [FrontendController::class, 'checkPincode'])->name('api.checkPincode');
 Route::post('/api/check-coupon', [FrontendController::class, 'checkCoupon'])->name('api.checkCoupon');
 Route::post('/api/product-notify', [FrontendController::class, 'notifyProduct'])->name('product.notify');
-Route::post('/webhooks/shiprocket', [\App\Http\Controllers\Api\ShiprocketWebhookController::class, 'handleStatusUpdate']);
+Route::post('/webhooks/shipping-updates', [\App\Http\Controllers\Api\ShiprocketWebhookController::class, 'handleStatusUpdate']);
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

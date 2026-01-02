@@ -17,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->validateCsrfTokens(except: [
-            '/webhooks/shiprocket'
+            '/webhooks/shipping-updates'
         ]);
         $middleware->alias([
             'guest' => RedirectIfAuthenticated::class,
