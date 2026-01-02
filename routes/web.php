@@ -90,7 +90,7 @@ Route::middleware('auth:customer')->group(function () {
     Route::post('checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.placeOrder');
     Route::post('checkout/initiate-payment', [CheckoutController::class, 'initiatePayment'])->name('checkout.initiatePayment');
     Route::get('order-success/{orderNumber}', [CheckoutController::class, 'success'])->name('order.success');
-    Route::get('my-orders', [CheckoutController::class, 'myOrders'])->name('orders.index');
+
     Route::get('order/{orderNumber}', [CheckoutController::class, 'orderDetails'])->name('order.details');
     Route::post('order/cancel/{orderNumber}', [CheckoutController::class, 'cancelOrder'])->name('order.cancel');
 });

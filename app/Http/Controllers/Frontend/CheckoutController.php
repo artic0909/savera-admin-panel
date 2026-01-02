@@ -322,16 +322,7 @@ class CheckoutController extends Controller
         return view('frontend.order-success', compact('order', 'categories'))->with('pageclass', 'hedersolution bg-1');
     }
 
-    // My orders page
-    public function myOrders()
-    {
-        $categories = Category::where('home_category', true)->take(5)->get();
-        $orders = Order::where('customer_id', Auth::guard('customer')->id())
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
 
-        return view('frontend.my-orders', compact('orders', 'categories'))->with('pageclass', 'hedersolution bg-1');
-    }
 
     // Order details page
     public function orderDetails($orderNumber)

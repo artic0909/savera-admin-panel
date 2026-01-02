@@ -129,7 +129,7 @@
                         </div>
                     </div>
 
-                    @if ($order->tracking_url)
+                    @if ($order->tracking_url && $order->status !== 'cancelled')
                         <div
                             style="background: #e7f3ff; border-left: 5px solid #2196F3; padding: 20px; border-radius: 5px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
                             <div>
