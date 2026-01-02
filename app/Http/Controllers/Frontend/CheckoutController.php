@@ -263,6 +263,7 @@ class CheckoutController extends Controller
             try {
                 $shippingSetting = \App\Models\ShippingSetting::first();
                 if ($shippingSetting && $shippingSetting->is_shiprocket_enabled) {
+                    \Illuminate\Support\Facades\Log::info('Shiprocket: Attempting automatic push for Order ' . $order->order_number);
                     $shiprocketService = new \App\Services\ShiprocketService();
                     $result = $shiprocketService->createOrder($order->load('customer', 'items.product'));
                     if ($result['success']) {
@@ -271,6 +272,7 @@ class CheckoutController extends Controller
                             'shiprocket_shipment_id' => $result['data']['shipment_id'],
                             'status' => 'processing'
                         ]);
+                        \Illuminate\Support\Facades\Log::info('Shiprocket: Automatic push successful for Order ' . $order->order_number . '. SR ID: ' . $result['data']['order_id']);
 
                         // Try to assign AWB immediately
                         try {
@@ -280,14 +282,21 @@ class CheckoutController extends Controller
                                     'awb_code' => $awbResult['awb_code'],
                                     'tracking_url' => "https://shiprocket.co/tracking/" . $awbResult['awb_code']
                                 ]);
+                                \Illuminate\Support\Facades\Log::info('Shiprocket: AWB auto-assigned for Order ' . $order->order_number . ': ' . $awbResult['awb_code']);
+                            } else {
+                                \Illuminate\Support\Facades\Log::warning('Shiprocket: AWB auto-assignment failed for Order ' . $order->order_number . ': ' . ($awbResult['message'] ?? 'Unknown Error'));
                             }
                         } catch (\Exception $e) {
                             \Illuminate\Support\Facades\Log::warning('Auto AWB Assignment Failed: ' . $e->getMessage());
                         }
+                    } else {
+                        \Illuminate\Support\Facades\Log::warning('Shiprocket: Automatic push failed for Order ' . $order->order_number . ': ' . ($result['message'] ?? 'Unknown reason'));
                     }
+                } else {
+                    \Illuminate\Support\Facades\Log::info('Shiprocket: Automatic push skipped for Order ' . $order->order_number . ' (Not enabled or settings missing)');
                 }
             } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error('Auto Shiprocket Push Failed: ' . $e->getMessage());
+                \Illuminate\Support\Facades\Log::error('Auto Shiprocket Push Exception: ' . $e->getMessage());
             }
 
             return redirect()->route('order.success', $order->order_number)
