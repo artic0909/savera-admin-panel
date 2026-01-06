@@ -1,8 +1,12 @@
 <header class="header">
     <div class="top">
-        <span class="dynamic-text"
-            data-texts='["Launch day exclusive drop: Flat 50% OFF", "An Exclusive 50% OFF + Extra 10% with Coupon — First 100 Customers", "Unlock Your Savera Privilege with Your Coupon"]'>Launch
-            day exclusive drop: Flat 50% OFF</span>
+        @php
+            $topTexts = json_decode($homeSettings['top_bar_texts'] ?? '[]', true);
+            $defaultText = $topTexts[0] ?? 'Launch day exclusive drop: Flat 50% OFF';
+        @endphp
+        <span class="dynamic-text" data-texts="{{ json_encode($topTexts) }}">
+            {{ $defaultText }}
+        </span>
     </div>
     <div class="main">
         <div class="wrapper">

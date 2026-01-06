@@ -74,6 +74,13 @@ class HomePageSettingController extends Controller
     public function updateSection(Request $request, $section)
     {
         switch ($section) {
+            case 'top_bar':
+                if ($request->has('top_bar_texts')) {
+                    $texts = array_filter($request->input('top_bar_texts'), fn($value) => !is_null($value) && $value !== '');
+                    HomePageSetting::where('key', 'top_bar_texts')->update(['value' => json_encode(array_values($texts))]);
+                }
+                break;
+
             case 'banners':
                 for ($i = 1; $i <= 4; $i++) {
                     if ($request->hasFile("banner_$i")) {

@@ -92,6 +92,15 @@ class HomePageSettingSeeder extends Seeder
                 'value' => 'assets/images/Priyanka-store-front-1.webp',
                 'type' => 'image',
             ],
+            [
+                'key' => 'top_bar_texts',
+                'value' => json_encode([
+                    'Launch day exclusive drop: Flat 50% OFF',
+                    'An Exclusive 50% OFF + Extra 10% with Coupon — First 100 Customers',
+                    'Unlock Your Savera Privilege with Your Coupon'
+                ]),
+                'type' => 'json',
+            ],
         ];
 
         foreach ($settings as $setting) {

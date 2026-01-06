@@ -7,6 +7,41 @@
         <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Settings /</span> Home Page Configuration</h4>
 
         <div class="row">
+            <!-- 0. Top Bar Section -->
+            <div class="col-md-12 mb-4">
+                <div class="card">
+                    <h5 class="card-header">Top Bar Configuration (Dynamic Scrolling Text)</h5>
+                    <div class="card-body">
+                        <form action="{{ route('admin.home-settings.update-section', 'top_bar') }}" method="POST">
+                            @csrf
+                            <div id="top-bar-texts-container">
+                                @php
+                                    $topBarTexts = json_decode($settings['top_bar_texts'] ?? '[]', true);
+                                    if (empty($topBarTexts)) {
+                                        $topBarTexts = [''];
+                                    }
+                                @endphp
+                                @foreach ($topBarTexts as $index => $text)
+                                    <div class="input-group mb-2 text-item">
+                                        <input type="text" name="top_bar_texts[]" class="form-control"
+                                            value="{{ $text }}" placeholder="Enter scrolling text">
+                                        <button class="btn btn-outline-danger remove-text" type="button"
+                                            {{ count($topBarTexts) <= 1 ? 'disabled' : '' }}><i
+                                                class="bx bx-trash"></i></button>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="add-text-btn">
+                                <i class="bx bx-plus"></i> Add More Text
+                            </button>
+                            <div class="mt-3">
+                                <button type="submit" class="btn btn-primary">Update Top Bar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <!-- 1. Top Banner Section -->
             <div class="col-md-12 mb-4">
                 <div class="card">
@@ -123,7 +158,8 @@
                                                                 type="video/mp4">
                                                         </video>
                                                     </div>
-                                                    <input type="hidden" name="moments_video_existing_{{ $i }}"
+                                                    <input type="hidden"
+                                                        name="moments_video_existing_{{ $i }}"
                                                         value="{{ $moments[$i]['video'] }}">
                                                 @endif
                                                 <input type="file" name="moments_video_{{ $i }}"
@@ -252,6 +288,44 @@
                     if (btn) btn.innerText = 'Update ' + val;
                 });
             });
+            // Top Bar Texts Dynamic Inputs
+            const container = document.getElementById('top-bar-texts-container');
+            const addBtn = document.getElementById('add-text-btn');
+
+            if (addBtn && container) {
+                addBtn.addEventListener('click', function() {
+                    const newItem = document.createElement('div');
+                    newItem.className = 'input-group mb-2 text-item';
+                    newItem.innerHTML = `
+                        <input type="text" name="top_bar_texts[]" class="form-control" value="" placeholder="Enter scrolling text">
+                        <button class="btn btn-outline-danger remove-text" type="button"><i class="bx bx-trash"></i></button>
+                    `;
+                    container.appendChild(newItem);
+                    updateRemoveButtons();
+                });
+
+                container.addEventListener('click', function(e) {
+                    if (e.target.closest('.remove-text')) {
+                        const items = container.querySelectorAll('.text-item');
+                        if (items.length > 1) {
+                            e.target.closest('.text-item').remove();
+                            updateRemoveButtons();
+                        }
+                    }
+                });
+
+                function updateRemoveButtons() {
+                    const items = container.querySelectorAll('.text-item');
+                    items.forEach(item => {
+                        const btn = item.querySelector('.remove-text');
+                        if (items.length <= 1) {
+                            btn.setAttribute('disabled', 'disabled');
+                        } else {
+                            btn.removeAttribute('disabled');
+                        }
+                    });
+                }
+            }
         });
     </script>
 @endpush
