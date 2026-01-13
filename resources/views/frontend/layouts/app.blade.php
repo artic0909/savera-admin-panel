@@ -186,17 +186,19 @@
                     display: none !important;
                 }
 
-                .moments-video-thumbale.active {
-                    display: block !important;
-                }
-
                 .s-tkey-thumble-moments {
                     transition: opacity 0.3s ease, visibility 0.3s ease;
+                    display: none;
+                    /* Hide by default */
                 }
 
                 @media (max-width: 768px) {
                     .s-tkey-thumble-moments {
                         display: block;
+                    }
+
+                    .moments-video-thumbale.active {
+                        display: block !important;
                     }
                 }
             </style>
