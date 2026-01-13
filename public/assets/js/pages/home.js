@@ -468,9 +468,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Less than 20% visible or not intersecting at all - PAUSE IMMEDIATELY
                     // This ensures strict play/pause behavior
                     if (entry.intersectionRatio < 0.2) {
-                        console.log('Moments section not visible enough, pausing videos');
+                        console.log('Moments section not visible enough, stopping videos');
                         document.querySelectorAll('.story-video-bg').forEach(video => {
-                            if (!video.paused) video.pause();
+                            if (!video.paused) {
+                                video.pause();
+                                video.currentTime = 0; // Force full stop/reset
+                            }
                         });
                     }
                 }
