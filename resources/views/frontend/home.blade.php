@@ -165,10 +165,10 @@
             @endif
         </div>
         <!-- <div class="store-content">
-                                                                                                                                                                                                                                        {{-- <h2>Store Front</h2>
+                                                                                                                                                                                                                                                                                {{-- <h2>Store Front</h2>
             <p>Sub Text</p>
             <a href="#" class="find-store-btn">Find Store</a> --}}
-                                                                                                                                                                                                                                    </div> -->
+                                                                                                                                                                                                                                                                            </div> -->
     </div>
 
     @php
@@ -256,9 +256,13 @@
                                                                         alt="{{ $product->product_name }}">
                                                                 </div>
                                                                 <div class="product-info">
-                                                                    <h4 class="text-white">{{ $product->product_name }}
+                                                                    <h4 class="text-white">
+                                                                        {{ substr($product->product_name, 0, 20) }}...
                                                                     </h4>
                                                                     <p class="text-white">₹{{ $product->display_price }}
+                                                                        <span
+                                                                            style="text-decoration: line-through; color: #999; margin-left: 5px">
+                                                                            ₹{{ $product->mrp }}</span>
                                                                     </p>
                                                                 </div>
                                                             </a>
