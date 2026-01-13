@@ -186,17 +186,20 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (pBtn) pBtn.style.opacity = '1';
                     });
 
-                    // Always auto-play the active video when swiping
-                    const activeSlide = this.slides[this.activeIndex];
-                    const video = activeSlide.querySelector('video');
-                    if (video) {
-                        // Reset loader visibility for new slide
-                        const loader = activeSlide.querySelector('.video-loader');
-                        if (loader) loader.classList.remove('hidden');
+                    // Only auto-play if the section is actually visible in the viewport
+                    const stickySection = document.querySelector('.moments-sticky-container');
+                    if (stickySection && isElementInViewport(stickySection)) {
+                        const activeSlide = this.slides[this.activeIndex];
+                        const video = activeSlide.querySelector('video');
+                        if (video) {
+                            // Reset loader visibility for new slide
+                            const loader = activeSlide.querySelector('.video-loader');
+                            if (loader) loader.classList.remove('hidden');
 
-                        playVideoWithSound(video);
-                        const playBtn = activeSlide.querySelector('.toggle-video');
-                        if (playBtn) playBtn.style.opacity = '0';
+                            playVideoWithSound(video);
+                            const playBtn = activeSlide.querySelector('.toggle-video');
+                            if (playBtn) playBtn.style.opacity = '0';
+                        }
                     }
                 }
             }
@@ -333,6 +336,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+
+    // Initial full stop on page load
+    document.querySelectorAll('.story-video-bg').forEach(video => {
+        video.pause();
+        video.currentTime = 0;
+    });
 
     // Auto-fit / Scroll Snapping Logic with Sound Enablement
     const stickySection = document.querySelector('.moments-sticky-container');
