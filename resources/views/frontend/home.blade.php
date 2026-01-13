@@ -165,10 +165,10 @@
             @endif
         </div>
         <!-- <div class="store-content">
-                                                                                                                                                                                                                                {{-- <h2>Store Front</h2>
+                                                                                                                                                                                                                                        {{-- <h2>Store Front</h2>
             <p>Sub Text</p>
             <a href="#" class="find-store-btn">Find Store</a> --}}
-                                                                                                                                                                                                                            </div> -->
+                                                                                                                                                                                                                                    </div> -->
     </div>
 
     @php
@@ -180,12 +180,12 @@
     @endphp
 
     @if ($isMobile && $storyVideos->count() > 0)
-        <div class="moments-sticky-container">
+        <div class="moments-sticky-container" id="moments-section">
             <div class="moments-vertical-wrapper">
                 <div class="swiper moments-vertical-swiper">
                     <div class="swiper-wrapper">
                         @foreach ($storyVideos as $storyVideo)
-                            <div class="swiper-slide">
+                            <div class="swiper-slide" data-id="{{ $storyVideo->id }}">
                                 <div class="moments-section">
                                     <div class="moments-container">
                                         <!-- Background Video/Image -->

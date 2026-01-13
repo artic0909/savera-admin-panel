@@ -150,8 +150,24 @@ document.addEventListener('DOMContentLoaded', function () {
             speed: 800,
             on: {
                 init: function () {
-                    // Don't auto-play on init - wait for section to be visible
                     console.log('Swiper initialized, waiting for visibility');
+
+                    // Check for video_id in URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const videoId = urlParams.get('video_id');
+
+                    if (videoId) {
+                        // Find slide with this data-id
+                        const slides = this.slides;
+                        for (let i = 0; i < slides.length; i++) {
+                            const slideId = slides[i].getAttribute('data-id');
+                            if (slideId === videoId) {
+                                // Slide to it (no animation if it's the target upon landing)
+                                this.slideTo(i, 0);
+                                break;
+                            }
+                        }
+                    }
                 },
                 slideChange: function () {
                     // Unmute on swipe (User Interaction)

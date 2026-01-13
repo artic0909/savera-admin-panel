@@ -113,6 +113,96 @@
     <!-- End Google Tag Manager (noscript) -->
     @include('frontend.includes.header')
     @yield('content')
+    <!-- Global Floating Moments Widget (Mobile Only) -->
+    @php
+        $latestStory = \App\Models\StoryVideo::where('is_active', true)->with('products')->latest()->first();
+    @endphp
+    @if ($latestStory)
+        <div class="s-tkey-thumble-moments">
+            <a href="{{ route('home') }}?video_id={{ $latestStory->id }}#moments-section"
+                class="moments-video-thumbale active" id="momentsThumb">
+                <video src="{{ asset('storage/' . $latestStory->video_path) }}" class="thumb-img" preload="metadata"
+                    muted playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+                <div class="thumb-overlay">
+                    <!-- Top Icons -->
+                    <div class="thumb-top-icons">
+                        <div class="thumb-logo">
+                            <img src="{{ asset('assets/images/white-icon-logo.png') }}" alt="Logo">
+                        </div>
+                        <div class="thumb-actions">
+                            <div class="thumb-action-item">
+                                <i class="fi fi-rr-heart"></i>
+                            </div>
+                            <div class="thumb-action-item">
+                                <i class="fi fi-rr-share"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="thumb-play-btn">
+                        <i class="fi fi-sr-play"></i>
+                    </div>
+                </div>
+            </a>
+            <a href="javascript:void(0)" class="global-moments-btn" onclick="toggleMomentsThumb()">
+                <img src="{{ asset('assets/images/white-icon-logo.png') }}" alt="Moments">
+            </a>
+
+            <script>
+                function toggleMomentsThumb() {
+                    const thumb = document.getElementById('momentsThumb');
+                    if (thumb) {
+                        thumb.classList.toggle('active');
+                    }
+                }
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    const widgetWrapper = document.querySelector('.s-tkey-thumble-moments');
+                    const stickySection = document.getElementById('moments-section');
+
+                    if (widgetWrapper && stickySection) {
+                        const observer = new IntersectionObserver((entries) => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) {
+                                    widgetWrapper.style.visibility = 'hidden';
+                                    widgetWrapper.style.opacity = '0';
+                                    widgetWrapper.style.pointerEvents = 'none';
+                                } else {
+                                    widgetWrapper.style.visibility = 'visible';
+                                    widgetWrapper.style.opacity = '1';
+                                    widgetWrapper.style.pointerEvents = 'auto';
+                                }
+                            });
+                        }, {
+                            threshold: 0.1
+                        });
+
+                        observer.observe(stickySection);
+                    }
+                });
+            </script>
+
+            <style>
+                .moments-video-thumbale {
+                    display: none !important;
+                }
+
+                .moments-video-thumbale.active {
+                    display: block !important;
+                }
+
+                .s-tkey-thumble-moments {
+                    transition: opacity 0.3s ease, visibility 0.3s ease;
+                }
+
+                @media (max-width: 768px) {
+                    .s-tkey-thumble-moments {
+                        display: block;
+                    }
+                }
+            </style>
+    @endif
+    </div>
+
     @include('frontend.includes.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
