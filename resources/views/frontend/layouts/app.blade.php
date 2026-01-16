@@ -115,7 +115,10 @@
     @yield('content')
     <!-- Global Floating Moments Widget (Mobile Only) -->
     @php
-        $latestStory = \App\Models\StoryVideo::where('is_active', true)->with('products')->latest()->first();
+        $latestStory = \App\Models\StoryVideo::where('always_visible', true)
+            ->where('is_active', true)
+            ->with('products')
+            ->first();
     @endphp
     @if ($latestStory)
         <div class="s-tkey-thumble-moments">

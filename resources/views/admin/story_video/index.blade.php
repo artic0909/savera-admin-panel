@@ -21,6 +21,7 @@
                                 <th>Title</th>
                                 <th>Linked Products</th>
                                 <th>Status</th>
+                                <th>Always Visible</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -43,6 +44,13 @@
                                             <span class="badge bg-success">Active</span>
                                         @else
                                             <span class="badge bg-danger">Inactive</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($video->always_visible)
+                                            <span class="badge bg-primary">1</span>
+                                        @else
+                                            <span class="badge bg-secondary">0</span>
                                         @endif
                                     </td>
                                     <td>

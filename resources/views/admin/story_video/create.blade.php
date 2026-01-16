@@ -66,11 +66,20 @@
                             @enderror
                         </div>
 
-                        <div class="col-md-12 mb-3">
-                            <div class="form-check form-switch">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check form-switch mt-4">
                                 <input class="form-check-input" type="checkbox" id="is_active" name="is_active"
                                     value="1" checked>
                                 <label class="form-check-label" for="is_active">Active</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check form-switch mt-4">
+                                <input class="form-check-input" type="checkbox" id="always_visible" name="always_visible"
+                                    value="1">
+                                <label class="form-check-label" for="always_visible">Always Visible (Show on Home
+                                    Thumbnail)</label>
                             </div>
                         </div>
                     </div>

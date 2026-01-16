@@ -39,11 +39,17 @@ class StoryVideoController extends Controller
             'product_ids' => 'required|array',
             'product_ids.*' => 'exists:products,id',
             'is_active' => 'sometimes|boolean',
+            'always_visible' => 'sometimes|boolean',
         ]);
+
+        if ($request->has('always_visible')) {
+            StoryVideo::where('always_visible', true)->update(['always_visible' => false]);
+        }
 
         $data = [
             'title' => $request->title,
             'is_active' => $request->has('is_active'),
+            'always_visible' => $request->has('always_visible'),
         ];
 
         if ($request->hasFile('video')) {
@@ -79,11 +85,17 @@ class StoryVideoController extends Controller
             'product_ids' => 'required|array',
             'product_ids.*' => 'exists:products,id',
             'is_active' => 'sometimes|boolean',
+            'always_visible' => 'sometimes|boolean',
         ]);
+
+        if ($request->has('always_visible')) {
+            StoryVideo::where('id', '!=', $id)->where('always_visible', true)->update(['always_visible' => false]);
+        }
 
         $data = [
             'title' => $request->title,
             'is_active' => $request->has('is_active'),
+            'always_visible' => $request->has('always_visible'),
         ];
 
         if ($request->hasFile('video')) {

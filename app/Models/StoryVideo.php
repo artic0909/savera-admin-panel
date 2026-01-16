@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StoryVideo extends Model
 {
-    protected $fillable = ['title', 'video_path', 'is_active'];
+    protected $fillable = ['title', 'video_path', 'is_active', 'always_visible'];
 
     public function products()
     {
