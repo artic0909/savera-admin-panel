@@ -91,6 +91,12 @@ class HomePageSettingController extends Controller
                         $path = $request->file("banner_$i")->store('home-settings', 'public');
                         $setting->update(['value' => $path]);
                     }
+
+                    if ($request->has("banner_{$i}_link")) {
+                        HomePageSetting::where('key', "banner_{$i}_link")->update([
+                            'value' => $request->input("banner_{$i}_link")
+                        ]);
+                    }
                 }
                 break;
 

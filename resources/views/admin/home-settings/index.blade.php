@@ -60,7 +60,16 @@
                                                     class="img-fluid rounded border" style="max-height: 150px;">
                                             @endif
                                         </div>
-                                        <input type="file" name="banner_{{ $i }}" class="form-control">
+                                        <div class="mb-2">
+                                            <label class="form-label">Banner Image</label>
+                                            <input type="file" name="banner_{{ $i }}" class="form-control">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label class="form-label">Banner Link</label>
+                                            <input type="text" name="banner_{{ $i }}_link"
+                                                class="form-control" value="{{ $settings["banner_{$i}_link"] ?? '#' }}"
+                                                placeholder="Enter redirection link">
+                                        </div>
                                     </div>
                                 @endfor
                             </div>

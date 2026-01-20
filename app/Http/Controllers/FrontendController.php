@@ -153,6 +153,54 @@ class FrontendController extends Controller
         ])->with(['pageclass' => 'hedersolution bg-1']);
     }
 
+    public function collections()
+    {
+        $collections = \App\Models\Collection::where('is_active', true)->latest()->paginate(9);
+
+        $categories = Category::where('home_category', true)->take(5)->get();
+
+        $banner = \App\Models\HomePageSetting::where('key', 'collections_page_banner')->value('value');
+
+        return view('frontend.collections', compact('collections', 'categories', 'banner'))->with(['pageclass' => 'hedersolution bg-1']);
+    }
+
+    public function collection($slug)
+    {
+        $collection = \App\Models\Collection::where('slug', $slug)->with('products')->firstOrFail();
+        $products = $collection->products()->where('is_active', true)->get();
+
+        // Always sort by price low to high
+        $products = $products->sortBy(function ($product) {
+            return (float) str_replace(',', '', $product->display_price);
+        });
+
+        // Manual Pagination
+        $perPage = 15;
+        $page = request()->get('page', 1);
+        $paginatedProducts = new \Illuminate\Pagination\LengthAwarePaginator(
+            $products->forPage($page, $perPage),
+            $products->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        // Pass filter options (if needed, reusing category structure)
+        $materials = \App\Models\Material::all();
+        $shapes = \App\Models\Shape::all();
+        $styles = \App\Models\Style::all();
+        $categories = Category::where('home_category', true)->take(5)->get();
+
+        return view('frontend.collection', [
+            'collection' => $collection,
+            'products' => $paginatedProducts,
+            'materials' => $materials,
+            'shapes' => $shapes,
+            'styles' => $styles,
+            'categories' => $categories
+        ])->with(['pageclass' => 'hedersolution bg-1']);
+    }
+
     public function productDetails($slug)
     {
         $product = Product::with('category')->where('slug', $slug)->where('is_active', true)->firstOrFail();

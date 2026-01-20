@@ -17,6 +17,8 @@ Route::get('/privacy-policy', [FrontendController::class, 'privacyPolicyView'])-
 Route::get('/', [FrontendController::class, 'home'])->name('home');
 Route::get('/ajax/products', [FrontendController::class, 'ajaxProducts'])->name('ajax.products');
 Route::get('/category/{slug}', [FrontendController::class, 'category'])->name('category.show');
+Route::get('/collections', [FrontendController::class, 'collections'])->name('collections.index');
+Route::get('/collection/{slug}', [FrontendController::class, 'collection'])->name('collection.show');
 Route::get('/product/{slug}', [FrontendController::class, 'productDetails'])->name('product.show');
 Route::get('/search-product', [FrontendController::class, 'searchProduct'])->name('search-product');
 

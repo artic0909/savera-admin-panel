@@ -6,9 +6,10 @@
 
     <!-- inner banner -->
     <section>
-        <div class="inner-banner-sec">
+        <div class="inner-banner-sec"
+            style="background-image:url({{ $category->banner_image ? asset($category->banner_image) : asset('assets/images/bg-carrasol-1.webp') }})">
             <div class="wrapper">
-                <div class="inner-banner-div ">
+                <div class="inner-banner-div">
                     {{-- <div class="inner-banner-left">
 
                     </div>

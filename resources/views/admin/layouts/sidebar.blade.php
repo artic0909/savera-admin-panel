@@ -97,6 +97,13 @@
             </a>
         </li>
 
+        <li class="menu-item {{ Request::routeIs('admin.collections.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.collections.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-images"></i>
+                <div data-i18n="Collections">Collections</div>
+            </a>
+        </li>
+
         <li class="menu-item {{ Request::routeIs('admin.coupons.*') ? 'active' : '' }}">
             <a href="{{ route('admin.coupons.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-gift"></i>

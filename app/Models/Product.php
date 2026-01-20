@@ -141,6 +141,11 @@ class Product extends Model
         return 'slug';
     }
 
+    public function collections()
+    {
+        return $this->belongsToMany(Collection::class, 'collection_product');
+    }
+
     public function storyVideos()
     {
         return $this->belongsToMany(StoryVideo::class, 'story_video_product');

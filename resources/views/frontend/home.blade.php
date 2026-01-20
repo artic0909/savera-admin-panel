@@ -11,8 +11,17 @@
             @for ($i = 1; $i <= 4; $i++)
                 @if (isset($homeSettings["banner_$i"]))
                     <div class="carousel-slide {{ $i == 1 ? 'active' : '' }}">
+                        @php
+                            $bannerLink = $homeSettings["banner_{$i}_link"] ?? null;
+                        @endphp
+                        @if ($bannerLink && $bannerLink !== '#')
+                            <a href="{{ $bannerLink }}">
+                        @endif
                         <img src="{{ str_contains($homeSettings["banner_$i"], 'assets/images/') ? asset($homeSettings["banner_$i"]) : asset('storage/' . $homeSettings["banner_$i"]) }}"
                             alt="Model" />
+                        @if ($bannerLink && $bannerLink !== '#')
+                            </a>
+                        @endif
                     </div>
                 @endif
             @endfor
@@ -165,10 +174,10 @@
             @endif
         </div>
         <!-- <div class="store-content">
-                                                                                                                                                                                                                                                                                {{-- <h2>Store Front</h2>
+                                                                                                                                                                                                                                                                                    {{-- <h2>Store Front</h2>
             <p>Sub Text</p>
             <a href="#" class="find-store-btn">Find Store</a> --}}
-                                                                                                                                                                                                                                                                            </div> -->
+                                                                                                                                                                                                                                                                                </div> -->
     </div>
 
     @php

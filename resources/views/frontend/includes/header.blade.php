@@ -51,6 +51,9 @@
                         <a href="{{ route('category.show', $category->slug) }}">{{ $category->name }}</a>
                     </li>
                 @endforeach
+                <li>
+                    <a href="{{ route('collections.index') }}">Collections</a>
+                </li>
             </ul>
         </nav>
     </div>

@@ -185,6 +185,17 @@
                         @enderror
                     </div>
 
+                    <!-- Banner Image Upload -->
+                    <div class="mb-3">
+                        <label class="form-label">Banner Image (Resolution: 3134x1390 px, Max: 2MB)</label>
+                        <input type="file" name="banner_image"
+                            class="form-control @error('banner_image') is-invalid @enderror" accept="image/*">
+                        @error('banner_image')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <div class="form-text">Leave blank to use default banner.</div>
+                    </div>
+
                     <!-- Category Name -->
                     <div class="mb-3">
                         <label class="form-label">Category Name <span class="text-danger">*</span></label>
@@ -246,6 +257,21 @@
                         <!-- Image Upload -->
                         <label for="editImage" class="form-label">Category Image</label>
                         <input type="file" name="image" id="editImage" class="form-control mb-3">
+
+                        <!-- Banner Image Upload -->
+                        <label for="editBannerImage{{ $category->id }}" class="form-label">Banner Image (Resolution:
+                            3134x1390 px, Max: 2MB)</label>
+                        <input type="file" name="banner_image" id="editBannerImage{{ $category->id }}"
+                            class="form-control mb-3">
+                        @if ($category->banner_image && !str_contains($category->banner_image, 'assets/images/'))
+                            <div class="mb-2">
+                                <small class="text-muted">Current custom banner:</small><br>
+                                <img src="{{ asset($category->banner_image) }}" width="150" height="67"
+                                    style="object-fit: cover;" class="mt-1">
+                            </div>
+                        @endif
+                        <div class="form-text mb-3">Leave blank to keep current banner.</div>
+
                         <!-- Category Name -->
                         <label for="editName" class="form-label">Category Name</label>
                         <input type="text" name="name" id="editName" class="form-control"

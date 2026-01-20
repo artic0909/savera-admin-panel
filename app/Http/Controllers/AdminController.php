@@ -98,6 +98,7 @@ class AdminController extends Controller
             $validated = $request->validate([
                 'name'  => 'required|string|max:255',
                 'image' => 'required|image|mimes:jpg,jpeg,png,gif,svg,webp',
+                'banner_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg,webp|max:2048',
             ]);
 
             $imagePath = null;
@@ -108,6 +109,16 @@ class AdminController extends Controller
                 $request->image->move(public_path('category'), $imageName);
 
                 $imagePath = 'category/' . $imageName;
+            }
+
+            $bannerPath = 'assets/images/bg-carrasol-1.webp';
+            if ($request->hasFile('banner_image')) {
+                if (!file_exists(public_path('category/banners'))) {
+                    mkdir(public_path('category/banners'), 0777, true);
+                }
+                $bannerName = 'banner_' . time() . '_' . uniqid() . '.' . $request->banner_image->extension();
+                $request->banner_image->move(public_path('category/banners'), $bannerName);
+                $bannerPath = 'category/banners/' . $bannerName;
             }
 
             $slug = Str::slug($validated['name']);
@@ -136,6 +147,7 @@ class AdminController extends Controller
                 'name'  => $validated['name'],
                 'slug'  => $slug,
                 'image' => $imagePath,
+                'banner_image' => $bannerPath,
                 'menu'  => $isMenu,
                 'home_category' => $isHomeCategory,
                 'footer' => $isFooter,
@@ -172,6 +184,7 @@ class AdminController extends Controller
             $validated = $request->validate([
                 'name'  => 'required|string|max:255',
                 'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg,webp',
+                'banner_image' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg,webp|max:2048',
             ]);
 
             $imagePath = $category->image;
@@ -184,6 +197,19 @@ class AdminController extends Controller
                 $imageName = time() . '_' . uniqid() . '.' . $request->image->extension();
                 $request->image->move(public_path('category'), $imageName);
                 $imagePath = 'category/' . $imageName;
+            }
+
+            $bannerPath = $category->banner_image ?? 'assets/images/bg-carrasol-1.webp';
+            if ($request->hasFile('banner_image')) {
+                if ($category->banner_image && !str_contains($category->banner_image, 'assets/images/') && file_exists(public_path($category->banner_image))) {
+                    unlink(public_path($category->banner_image));
+                }
+                if (!file_exists(public_path('category/banners'))) {
+                    mkdir(public_path('category/banners'), 0777, true);
+                }
+                $bannerName = 'banner_' . time() . '_' . uniqid() . '.' . $request->banner_image->extension();
+                $request->banner_image->move(public_path('category/banners'), $bannerName);
+                $bannerPath = 'category/banners/' . $bannerName;
             }
 
             $slug = $category->slug;
@@ -217,6 +243,7 @@ class AdminController extends Controller
                 'name'  => $validated['name'],
                 'slug'  => $slug,
                 'image' => $imagePath,
+                'banner_image' => $bannerPath,
                 'menu'  => $isMenu,
                 'home_category' => $isHomeCategory,
                 'footer' => $isFooter,

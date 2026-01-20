@@ -113,6 +113,10 @@ Route::middleware(['auth:admin'])->group(function () {
     // Story Videos
     Route::resource('admin/story-videos', \App\Http\Controllers\Admin\StoryVideoController::class)->names('admin.story-videos');
 
+    // Collections
+    Route::post('admin/collections/banner', [\App\Http\Controllers\Admin\CollectionController::class, 'updateBanner'])->name('admin.collections.banner');
+    Route::resource('admin/collections', \App\Http\Controllers\Admin\CollectionController::class)->names('admin.collections');
+
     // Home Page Settings
     Route::get('/admin/home-settings', [\App\Http\Controllers\Admin\HomePageSettingController::class, 'index'])->name('admin.home-settings.index');
     Route::post('/admin/home-settings/update/{section}', [\App\Http\Controllers\Admin\HomePageSettingController::class, 'updateSection'])->name('admin.home-settings.update-section');
