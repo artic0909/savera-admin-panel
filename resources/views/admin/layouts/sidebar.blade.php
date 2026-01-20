@@ -35,6 +35,12 @@
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Category & Material</span>
         </li>
+        <li class="menu-item {{ Request::routeIs('admin.collections.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.collections.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-images"></i>
+                <div data-i18n="Collections">Manage Collections</div>
+            </a>
+        </li>
         <li class="menu-item {{ Request::routeIs('admin.categories.*') ? 'active' : '' }}">
             <a href="{{ route('admin.categories.index') }}" class="menu-link">
                 <i class='menu-icon tf-icons bx bx-list-check'></i>
@@ -97,12 +103,7 @@
             </a>
         </li>
 
-        <li class="menu-item {{ Request::routeIs('admin.collections.*') ? 'active' : '' }}">
-            <a href="{{ route('admin.collections.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-images"></i>
-                <div data-i18n="Collections">Collections</div>
-            </a>
-        </li>
+
 
         <li class="menu-item {{ Request::routeIs('admin.coupons.*') ? 'active' : '' }}">
             <a href="{{ route('admin.coupons.index') }}" class="menu-link">
