@@ -16,12 +16,13 @@ class ShiprocketService
         $this->token = $this->getToken();
     }
 
-    protected function getToken()
+    public function getToken($force = false)
     {
         $setting = ShippingSetting::first();
         if (!$setting) return null;
 
-        if ($setting->shiprocket_token && $setting->shiprocket_token_expiry > now()) {
+        // If not forcing, and token exists and expires more than 24 hours from now, return current token
+        if (!$force && $setting->shiprocket_token && $setting->shiprocket_token_expiry > now()->addDay()) {
             return $setting->shiprocket_token;
         }
 
