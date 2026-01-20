@@ -37,11 +37,13 @@
                                 <label for="products" class="form-label">Select Products</label>
                                 <select class="form-select select2" id="products" name="products[]" multiple>
                                     @foreach ($products as $product)
-                                        <option value="{{ $product->id }}">{{ $product->product_name }} (ID:
-                                            {{ $product->id }})</option>
+                                        <option value="{{ $product->id }}" data-sku="{{ $product->sku }}"
+                                            data-name="{{ $product->product_name }}">
+                                            {{ $product->product_name }} - SKU: {{ $product->sku ?? 'N/A' }}
+                                        </option>
                                     @endforeach
                                 </select>
-                                <div class="form-text">Hold Ctrl/Cmd to select multiple products.</div>
+                                <div class="form-text">Search by product name or SKU</div>
                             </div>
                             <div class="mb-3">
                                 <div class="form-check form-switch mb-2">
@@ -65,8 +67,29 @@
     <script>
         $(document).ready(function() {
             $('#products').select2({
-                placeholder: "Select Products",
-                allowClear: true
+                placeholder: "Search by product name or SKU",
+                allowClear: true,
+                matcher: function(params, data) {
+                    // If there are no search terms, return all data
+                    if ($.trim(params.term) === '') {
+                        return data;
+                    }
+
+                    // Use custom data attributes for searching
+                    var term = params.term.toLowerCase();
+                    var text = data.text.toLowerCase();
+                    var sku = $(data.element).data('sku');
+                    var name = $(data.element).data('name');
+
+                    // Search in text, SKU, or name
+                    if (text.indexOf(term) > -1 ||
+                        (sku && sku.toString().toLowerCase().indexOf(term) > -1) ||
+                        (name && name.toLowerCase().indexOf(term) > -1)) {
+                        return data;
+                    }
+
+                    return null;
+                }
             });
         });
     </script>

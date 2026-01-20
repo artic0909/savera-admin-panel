@@ -30,6 +30,12 @@
                 <div data-i18n="HomeConfiguration">Home Configuration</div>
             </a>
         </li>
+        <li class="menu-item {{ Request::routeIs('admin.pincodes.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.pincodes.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-map-pin"></i>
+                <div data-i18n="availableArea">Available Area (Pin)</div>
+            </a>
+        </li>
 
         <!-- Category -->
         <li class="menu-header small text-uppercase">
@@ -75,13 +81,13 @@
             <span class="menu-header-text">Mange Product</span>
         </li>
 
-        <li class="menu-item {{ Request::routeIs('admin.pincodes.*') ? 'active' : '' }}">
-            <a href="{{ route('admin.pincodes.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-map-pin"></i>
-                <div data-i18n="availableArea">Available Area (Pin)</div>
+
+        <li class="menu-item {{ Request::routeIs('admin.products.index') ? 'active' : '' }}">
+            <a href="{{ route('admin.products.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-box"></i>
+                <div data-i18n="viewProduct">All Products</div>
             </a>
         </li>
-
         <li class="menu-item {{ Request::routeIs('admin.products.create') ? 'active' : '' }}">
             <a href="{{ route('admin.products.create') }}" class="menu-link">
                 <i class='menu-icon tf-icons bx bx-plus-circle'></i>
@@ -89,12 +95,7 @@
             </a>
         </li>
 
-        <li class="menu-item {{ Request::routeIs('admin.products.index') ? 'active' : '' }}">
-            <a href="{{ route('admin.products.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-box"></i>
-                <div data-i18n="viewProduct">View Products</div>
-            </a>
-        </li>
+
 
         <li class="menu-item {{ Request::routeIs('admin.story-videos.*') ? 'active' : '' }}">
             <a href="{{ route('admin.story-videos.index') }}" class="menu-link">
@@ -147,9 +148,11 @@
             </a>
         </li>
 
-        <!-- Setting -->
+
+
+
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Settings</span>
+            <span class="menu-header-text">Mange Profile & Settings</span>
         </li>
         <li class="menu-item {{ Request::routeIs('admin.seo.index') ? 'active' : '' }}">
             <a href="{{ route('admin.seo.index') }}" class="menu-link">
@@ -158,15 +161,6 @@
             </a>
         </li>
 
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Mange Profile</span>
-        </li>
-        <li class="menu-item {{ Request::routeIs('admin.profile') ? 'active' : '' }}">
-            <a href="{{ route('admin.profile') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-user"></i>
-                <div data-i18n="Enquiry">Profile Details</div>
-            </a>
-        </li>
 
         <li class="menu-item {{ Request::routeIs('admin.payment-settings.index') ? 'active' : '' }}">
             <a href="{{ route('admin.payment-settings.index') }}" class="menu-link">
@@ -177,8 +171,14 @@
 
         <li class="menu-item {{ Request::routeIs('admin.shipping-settings.index') ? 'active' : '' }}">
             <a href="{{ route('admin.shipping-settings.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-truck"></i>
+                <i class="menu-icon tf-icons bx bx-package"></i>
                 <div data-i18n="ShippingSettings">Shipping Settings</div>
+            </a>
+        </li>
+        <li class="menu-item {{ Request::routeIs('admin.profile') ? 'active' : '' }}">
+            <a href="{{ route('admin.profile') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-user"></i>
+                <div data-i18n="Enquiry">Profile Details</div>
             </a>
         </li>
     </ul>

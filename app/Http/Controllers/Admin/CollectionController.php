@@ -39,7 +39,7 @@ class CollectionController extends Controller
 
     public function create()
     {
-        $products = Product::where('is_active', true)->get(['id', 'product_name']);
+        $products = Product::where('is_active', true)->get(['id', 'product_name', 'sku']);
         return view('admin.collections.create', compact('products'));
     }
 
@@ -84,7 +84,7 @@ class CollectionController extends Controller
 
     public function edit(Collection $collection)
     {
-        $products = Product::where('is_active', true)->get(['id', 'product_name']);
+        $products = Product::where('is_active', true)->get(['id', 'product_name', 'sku']);
         $collection->load('products');
         return view('admin.collections.edit', compact('collection', 'products'));
     }
