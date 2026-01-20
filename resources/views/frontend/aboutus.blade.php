@@ -209,7 +209,7 @@
 
                     <!-- Priyanka Bhattacharya -->
                     <div class="founder-card">
-                        <h3>Priyanka Bhattacharya</h3>
+                        <h3>Priyanka Bhattacharjee</h3>
                         <span class="role">Co-Founder</span>
                         <p>
                             Priyanka brings a rare blend of cultural influence and consumer intuition to Savera. With a
